@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">MySummerApp</string>
+    <string name="splas_himg_backgroud">Splash Background</string>
+    <string name="usuario">Usuario</string>
+    <string name="seccion_1">Home</string>
+    <string name="seccion_2">Chat</string>
+    <string name="seccion_3">Calculator</string>
+    <string name="seccion_4">Funny Moments</string>
+    <string name="chat_seccion_1">Save Images</string>
+    <string name="otras_opciones">Otras opciones</string>
+    <string name="opcion_1">Opcion 1</string>
+    <string name="opcion_sing_out">Cerrar sesión</string>
+    <string name="sign_in">Sign In</string>
+    <string name="pantin_classic_2017">Pantin Classic 2017</string>
+
+    <string name="email">Email</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+
+    <string name="refrence_chat_photos">chat_photos</string>
+    <string name="refrence_gallery_photos">gallery_photos</string>
+
+    <string name="sp_store_chat_images">store_chat_images</string>
+    <string name="progress_downloading">Downloading…</string>
+    <string name="progress_uploading">Uploading…</string>
+
+    <string name="upload_success">Upload finished</string>
+    <string name="upload_failure">Upload failed</string>\
+
+    <string name="download_success">Download finished</string>
+    <string name="download_failure">Download failure</string>
+
+    <plurals name="days">
+        <item quantity="zero">%d Days</item>
+        <item quantity="one">%d Day</item>
+        <item quantity="other">%d Days</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="zero">%d Hours</item>
+        <item quantity="one">%d Hour</item>
+        <item quantity="other">%d Hours</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="zero">%d Minutes</item>
+        <item quantity="one">%d Minute</item>
+        <item quantity="other">%d Minutes</item>
+    </plurals>
+    <plurals name="seconds">
+        <item quantity="zero">%d Seconds</item>
+        <item quantity="one">%d Second</item>
+        <item quantity="other">%d Seconds</item>
+    </plurals>
+
+
+
+
+</resources>

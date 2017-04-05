@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".views.splash.SplashActivity">
+
+    <!-- Background-->
+    <ImageView
+        android:id="@+id/splash_img_backgroud"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:contentDescription="@string/splas_himg_backgroud"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pantin1" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_splash_background_transparent_dark" />
+
+    <!-- Body -->
+
+    <!--     <com.google.android.gms.common.SignInButton
+         android:id="@+id/sign_in_button_google"
+         android:layout_width="125dp"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center"
+         android:layout_marginBottom="13dp"
+         android:layout_alignParentBottom="true"
+         android:layout_alignStart="@+id/sign_in_button_splash"
+         android:visibility="gone"/>-->
+
+    <!--    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/vd_beach"
+        android:visibility="invisible"
+        android:layout_below="@+id/textView"
+        android:layout_alignParentStart="true" />-->
+
+    <TextView
+        android:id="@+id/mainTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="62dp"
+        android:fontFamily="sans-serif-condensed"
+        android:text="@string/pantin_classic_2017"
+        android:textAlignment="center"
+        android:textColor="#ffffff"
+        android:textSize="36sp"
+        android:typeface="sans" />
+
+    <!--    <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/vd_more_vert"
+            android:background="@android:color/transparent"
+            android:layout_marginTop="33dp"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/email"
+            android:id="@+id/imageButton" />-->
+
+    <Button
+        android:id="@+id/sign_in_button_splash"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginBottom="43dp"
+        android:background="@color/colorAccent"
+        android:text="@string/sign_in"
+        android:textAppearance="@style/TextAppearance.AppCompat"
+        android:textColor="#ffffff" />
+
+    <EditText
+        android:id="@+id/email"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/password"
+        android:layout_below="@+id/mainTitle"
+        android:layout_marginTop="54dp"
+        android:enabled="false"
+        android:hint="@string/email"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white" />
+
+    <EditText
+        android:id="@+id/password"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/email"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:enabled="false"
+        android:focusableInTouchMode="true"
+        android:hint="@string/hint_password"
+        android:imeActionId="@+id/login"
+        android:imeOptions="actionUnspecified"
+        android:inputType="textPassword"
+        android:maxLines="1"
+        android:textColor="@android:color/white"
+        android:textColorHint="@android:color/white" />
+
+
+</RelativeLayout>

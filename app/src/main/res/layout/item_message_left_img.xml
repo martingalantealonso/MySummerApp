@@ -1,67 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:emojicon="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="20dp"
+    android:layout_marginTop="30dp"
+    android:gravity="end"
     android:orientation="horizontal"
-    android:paddingTop="5dp"
-    android:paddingLeft="16dp"
-    android:paddingRight="16dp">
+    android:padding="5dp">
 
-    <ImageView
-        android:layout_alignBottom="@+id/contentMessageChat"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
-        android:id="@+id/ivUserChat" />
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/chat_user_img"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:elevation="12dp"
+        android:src="@drawable/vd_user" />
 
-    <me.himanshusoni.chatmessageview.ChatMessageView
-        android:id="@+id/contentMessageChat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cmv_backgroundColor="#fff"
-        app:cmv_backgroundColorPressed="#FFBABABA"
-        app:cmv_arrowGravity="end"
-        app:cmv_arrowPosition="left"
-        app:cmv_cornerRadius="3dp"
-        app:cmv_showArrow="true"
-        android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/ivUserChat">
-
-    <ImageView
-        android:id="@+id/img_chat"
-        android:minWidth="100dp"
-        android:minHeight="100dp"
-        android:maxWidth="150dp"
-        android:maxHeight="150dp"
-        android:background="#000"
+    <LinearLayout
+        android:id="@+id/main_message_holder"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginStart="@dimen/default_message_chat_padding"
+        android:layout_weight="1"
+        android:background="@drawable/gradient_shadow"
+        android:orientation="vertical"
+        android:padding="@dimen/default_message_chat_padding">
+
 
         <TextView
-            android:visibility="gone"
-            android:id="@+id/tvLocation"
-            android:layout_marginTop="2dp"
-            android:layout_below="@+id/img_chat"
-            android:textSize="10sp"
-            android:text="Localização Recebida"
+            android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"/>
+            android:gravity="end"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/colorWhite"
+            tools:text="Name" />
 
-    </me.himanshusoni.chatmessageview.ChatMessageView>
+        <TextView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/messageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            tools:text="Message"
+            android:visibility="gone"/>
 
-    <TextView
-        android:text="22/06/2016"
-        android:id="@+id/timestamp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:paddingLeft="10dp"
-        android:paddingTop="3dp"
-        android:textSize="10sp"
-        android:layout_below="@+id/contentMessageChat"
-        android:layout_toEndOf="@+id/ivUserChat" />
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/photoImageView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true" />
+    </LinearLayout>
+
+
+</LinearLayout>
+

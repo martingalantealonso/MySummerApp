@@ -119,9 +119,6 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
 
     private SharedPreferences prefs;
 
-
-    /*@BindView(R.id.messageListView)
-    ListView mMessageListView;*/
     @BindView(R.id.photoPickerButton)
     ImageButton mPhotoPickerButton;
     @BindView(R.id.messageEditText)
@@ -144,22 +141,12 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
             presenter = new FragmentChatPresenter();
         }
         presenter.attach(getContext(), this);
-
-
-        // Initialize message ListView and its adapter
-        /*List<FriendlyMessage> friendlyMessages = new ArrayList<>();
-        mMessageAdapter = new MessageAdapter(getContext(), R.layout.chat_message_right, friendlyMessages,this);
-        mMessageListView.setAdapter(mMessageAdapter);*/
-
+        mSendButton.setEnabled(false);
 
         // ImagePickerButton shows an image picker to upload a image for a message
         mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/jpeg");
-                intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);*/
                 Intent intent = new Intent();
                 intent.setType("image/*");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -177,8 +164,10 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 if (charSequence.toString().trim().length() > 0) {
                     mSendButton.setEnabled(true);
+                    mSendButton.setImageResource((R.drawable.vd_send_blue));
                 } else {
                     mSendButton.setEnabled(false);
+                    mSendButton.setImageResource((R.drawable.vd_send));
                 }
             }
 
@@ -193,15 +182,14 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
             @Override
             public void onClick(View view) {
                 // TODO: Send messages on click
-                //    public FriendlyMessage(String text, String name, String senderUid, String photoUrl, String receiver, long timestamp) {
-             /*   FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, user.getUid(), null, null, String.valueOf(Calendar.getInstance().getTime().getTime()), String.valueOf(user.getPhotoUrl()));
-                mMessagesDatabaseReference.push().setValue(friendlyMessage);
-*/
+
                 ChatModel model = new ChatModel(userModel, mMessageEditText.getText().toString(), Calendar.getInstance().getTime().getTime() + "", null);
                 mMessagesDatabaseReference.push().setValue(model);
 
                 // Clear input box
                 mMessageEditText.setText("");
+                mSendButton.setEnabled(false);
+                mSendButton.setImageResource((R.drawable.vd_send));
             }
         });
 
@@ -345,26 +333,6 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
 
         StorageReference storageRef = storage.getReferenceFromUrl(Util.URL_STORAGE_REFERENCE).child(Util.FOLDER_STORAGE_IMG);
 
-      /*  if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
-            Uri selectedUri = data.getData();
-            StorageReference photoRef = mChatPhotosReference.child(selectedUri.getLastPathSegment());
-
-            //Upload file to Firebase Storage
-            photoRef.putFile(selectedUri).addOnSuccessListener(getActivity(), new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    FriendlyMessage friendlyMessage = new FriendlyMessage(null, mUsername, downloadUrl.toString());
-                    mMessagesDatabaseReference.push().setValue(friendlyMessage);
-                }
-            });
-        }*/
-
-        if (requestCode == RC_TAKE_PICTURE && resultCode == RESULT_OK) {
-            Uri imageUri = data.getData();
-            StorageReference photoRef = mChatPhotosReference.child(imageUri.getLastPathSegment());
-        }
-
         if (requestCode == IMAGE_GALLERY_REQUEST) {
             if (resultCode == RESULT_OK) {
                 Uri selectedImageUri = data.getData();
@@ -386,30 +354,6 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
             }
         }
     }
-
-
-    String mCurrentPhotoPath;
-
-    private void uploadFromUri(Uri fileUri) {
-        Log.d(TAG, "uploadFromUri:src:" + fileUri.toString());
-
-        // Save the File URI
-        mFileUri = fileUri;
-
-        // Clear the last download, if any
-        //updateUI(mAuth.getCurrentUser());
-        mDownloadUrl = null;
-
-        // Start MyUploadService to upload the file, so that the file is uploaded
-        // even if this Activity is killed or put in the background
-        getContext().startService(new Intent(getContext(), MyUploadService.class)
-                .putExtra(MyUploadService.EXTRA_FILE_URI, fileUri)
-                .setAction(MyUploadService.ACTION_UPLOAD));
-
-        // Show loading spinner
-        //showProgressDialog(getString(R.string.progress_uploading));
-    }
-
 
     private void launchCamera() {
         Log.d(TAG, "launchCamera");

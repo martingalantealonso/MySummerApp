@@ -67,19 +67,19 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
         SharedPreferences userDetails = mContext.getSharedPreferences("appPreferences", MODE_PRIVATE);
         String UName = userDetails.getString(mContext.getString(R.string.firebase_user_id), null);
 
-        /*if (model.getMapModel() != null) {
-            if (model.getUserModel().getName().equals(nameUser)) {
+        if (model.getMapModel() != null) {
+            if (model.getUserModel().getUid().equals(userId)) {
                 return RIGHT_MSG_IMG;
             } else {
                 return LEFT_MSG_IMG;
             }
         } else if (model.getFile() != null) {
-            if (model.getFile().getType().equals("img") && model.getUserModel().getName().equals(nameUser)) {
+            if (model.getFile().getType().equals("img") && model.getUserModel().getUid().equals(userId)) {
                 return RIGHT_MSG_IMG;
             } else {
                 return LEFT_MSG_IMG;
             }
-        } else if (model.getUserModel().getName().equals(nameUser)) {
+        }/* else if (model.getUserModel().getName().equals(nameUser)) {
             return RIGHT_MSG;
         } else {
             return LEFT_MSG;
@@ -96,11 +96,13 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
         viewHolder.setIvUser(model.getUserModel().getPhotoUrl());
         viewHolder.setTxtMessage(model.getMessage());
         viewHolder.setTvTimestamp(model.getTimeStamp());
-       /* viewHolder.tvIsLocation(View.GONE);
+        viewHolder.tvIsLocation(View.GONE);
         if (model.getFile() != null) {
-            viewHolder.tvIsLocation(View.GONE);
+            //viewHolder.tvIsLocation(View.GONE);
             viewHolder.setIvChatPhoto(model.getFile().getUrl_file());
-        } else if (model.getMapModel() != null) {
+        }else if(model.getFile() == null){
+            viewHolder.hideIvChatPhoto();
+        } /*else if (model.getMapModel() != null) {
             viewHolder.setIvChatPhoto(Util.local(model.getMapModel().getLatitude(), model.getMapModel().getLongitude()));
             viewHolder.tvIsLocation(View.VISIBLE);
         }*/
@@ -155,11 +157,14 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
 
         public void setIvChatPhoto(String url) {
             if (ivChatPhoto == null) return;
-            Glide.with(ivChatPhoto.getContext()).load(url)
+           /* Glide.with(ivChatPhoto.getContext()).load(url)
                     .override(100, 100)
                     .fitCenter()
+                    .into(ivChatPhoto);*/
+            Glide.with(ivChatPhoto.getContext()).load(url)
                     .into(ivChatPhoto);
             ivChatPhoto.setOnClickListener(this);
+            ivChatPhoto.setVisibility(View.VISIBLE);
         }
 
         public void tvIsLocation(int visible) {
@@ -167,6 +172,9 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
             tvLocation.setVisibility(visible);
         }
 
+        public void hideIvChatPhoto(){
+            ivChatPhoto.setVisibility(View.GONE);
+        }
     }
 
     private CharSequence convertTimestamp(String mileSegundos) {

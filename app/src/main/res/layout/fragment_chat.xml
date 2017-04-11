@@ -36,8 +36,8 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".1"
-            android:src="@drawable/vd_photo_camera"
-            />
+            android:background="@color/colorWhite"
+            android:src="@drawable/vd_photo_camera" />
 
         <EditText
             android:id="@+id/messageEditText"
@@ -53,6 +53,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".1"
+            android:background="@color/colorWhite"
             android:enabled="false"
             android:src="@drawable/vd_send" />
 
@@ -61,6 +62,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".1"
+            android:background="@color/colorWhite"
             android:src="@drawable/vd_image" />
 
     </LinearLayout>

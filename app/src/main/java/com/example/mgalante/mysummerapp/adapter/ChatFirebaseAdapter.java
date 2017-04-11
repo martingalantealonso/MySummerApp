@@ -150,7 +150,7 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
 
         public void setTvTimestamp(String timestamp) {
             if (tvTimestamp == null) return;
-            tvTimestamp.setText(converteTimestamp(timestamp));
+            tvTimestamp.setText(convertTimestamp(timestamp));
         }
 
         public void setIvChatPhoto(String url) {
@@ -169,7 +169,7 @@ public class ChatFirebaseAdapter extends FirebaseRecyclerAdapter<ChatModel, Chat
 
     }
 
-    private CharSequence converteTimestamp(String mileSegundos) {
+    private CharSequence convertTimestamp(String mileSegundos) {
         return DateUtils.getRelativeTimeSpanString(Long.parseLong(mileSegundos), System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
     }
 

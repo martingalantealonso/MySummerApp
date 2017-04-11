@@ -3,11 +3,14 @@ package com.example.mgalante.mysummerapp.views.main.Fragment2Chat;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,11 +29,16 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import com.example.mgalante.mysummerapp.BuildConfig;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ChatFirebaseAdapter;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
 import com.example.mgalante.mysummerapp.entities.ChatModel;
+import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.services.MyUploadService;
+import com.example.mgalante.mysummerapp.utils.Util;
+import com.example.mgalante.mysummerapp.views.main.MainActivity;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -67,13 +76,28 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
 
     private FragmentChatPresenter presenter;
 
+    static final String CHAT_REFERENCE = "chatmodel";
+
     public static final String ANONYMOUS = "anonymous";
     private static final String CHAT_DIRECTORY = "PantinClassic/PantinChat/";
     private static final int RC_SIGN_IN = 1;
     private static final int RC_PHOTO_PICKER = 2;
+    private static final int IMAGE_GALLERY_REQUEST = 3;
+    private static final int IMAGE_CAMERA_REQUEST = 4;
+    private static final int PLACE_PICKER_REQUEST = 5;
     private static final int RC_TAKE_PICTURE = 101;
     public String mUsername;
     public static final int DEFAULT_MSG_LENGTH_LIMIT = 1000;
+
+    // Storage Permissions
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+    };
+
+    //File
+    private File filePathImageCamera;
 
     private MessageAdapter mMessageAdapter;
 
@@ -84,6 +108,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
     private FirebaseAuth mFirebaseAuth;
     //private FirebaseAuth.AuthStateListener mAuthStateListener;
     private FirebaseStorage mFirebaseStorage;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
     private StorageReference mChatPhotosReference;
     public FirebaseRemoteConfig mFirebaseRemoteConfig;
     private Uri mDownloadUrl = null;
@@ -131,10 +156,14 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
         mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                /*Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
                 intent.setType("image/jpeg");
                 intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);
+                startActivityForResult(Intent.createChooser(intent, "Complete action using"), RC_PHOTO_PICKER);*/
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
             }
         });
 
@@ -168,7 +197,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
              /*   FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, user.getUid(), null, null, String.valueOf(Calendar.getInstance().getTime().getTime()), String.valueOf(user.getPhotoUrl()));
                 mMessagesDatabaseReference.push().setValue(friendlyMessage);
 */
-                ChatModel model = new ChatModel(userModel,mMessageEditText.getText().toString(), Calendar.getInstance().getTime().getTime()+"",null);
+                ChatModel model = new ChatModel(userModel, mMessageEditText.getText().toString(), Calendar.getInstance().getTime().getTime() + "", null);
                 mMessagesDatabaseReference.push().setValue(model);
 
                 // Clear input box
@@ -272,7 +301,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-                   // mMessageAdapter.add(friendlyMessage);
+                    // mMessageAdapter.add(friendlyMessage);
                 }
 
                 @Override
@@ -314,7 +343,9 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
+        StorageReference storageRef = storage.getReferenceFromUrl(Util.URL_STORAGE_REFERENCE).child(Util.FOLDER_STORAGE_IMG);
+
+      /*  if (requestCode == RC_PHOTO_PICKER && resultCode == RESULT_OK) {
             Uri selectedUri = data.getData();
             StorageReference photoRef = mChatPhotosReference.child(selectedUri.getLastPathSegment());
 
@@ -327,30 +358,37 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
                     mMessagesDatabaseReference.push().setValue(friendlyMessage);
                 }
             });
-        }
+        }*/
+
         if (requestCode == RC_TAKE_PICTURE && resultCode == RESULT_OK) {
             Uri imageUri = data.getData();
             StorageReference photoRef = mChatPhotosReference.child(imageUri.getLastPathSegment());
         }
+
+        if (requestCode == IMAGE_GALLERY_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Uri selectedImageUri = data.getData();
+                if (selectedImageUri != null) {
+                    sendFileFirebase(storageRef, selectedImageUri);
+                } else {
+                    //URI IS NULL
+                }
+            }
+        }
+        if (requestCode == IMAGE_CAMERA_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                if (filePathImageCamera != null && filePathImageCamera.exists()) {
+                    StorageReference imageCameraRef = storageRef.child(filePathImageCamera.getName() + "_camera");
+                    sendFileFirebase(imageCameraRef, filePathImageCamera);
+                } else {
+                    //IS NULL
+                }
+            }
+        }
     }
+
 
     String mCurrentPhotoPath;
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storagePath = new File(Environment.getExternalStorageDirectory(), CHAT_DIRECTORY);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storagePath      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
 
     private void uploadFromUri(Uri fileUri) {
         Log.d(TAG, "uploadFromUri:src:" + fileUri.toString());
@@ -375,24 +413,96 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
 
     private void launchCamera() {
         Log.d(TAG, "launchCamera");
+        String photoName = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString();
+        filePathImageCamera = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), photoName + "camera.jpg");
+        Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri photoURI = FileProvider.getUriForFile(getContext(),
+                "com.example.android.fileprovider",
+                filePathImageCamera);
+        it.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+        startActivityForResult(it, IMAGE_CAMERA_REQUEST);
 
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    }
 
-        File photoFile = null;
-        try {
-            photoFile = createImageFile();
-        } catch (IOException ex) {
-            // Error occurred while creating the File
+    /**
+     * Envia o arvquivo para o firebase
+     */
+    private void sendFileFirebase(StorageReference storageReference, final Uri file) {
+        if (storageReference != null) {
+            final String name = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString();
+            StorageReference imageGalleryRef = storageReference.child(name + "_gallery");
+            UploadTask uploadTask = imageGalleryRef.putFile(file);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "onFailure sendFileFirebase " + e.getMessage());
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i(TAG, "onSuccess sendFileFirebase");
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    FileModel fileModel = new FileModel("img", downloadUrl.toString(), name, "");
+                    ChatModel chatModel = new ChatModel(userModel, "", Calendar.getInstance().getTime().getTime() + "", fileModel);
+                    mMessagesDatabaseReference.push().setValue(chatModel);
+                }
+            });
+        } else {
+            //IS NULL
         }
 
-        if (photoFile != null) {
+    }
+
+    /**
+     * Send file to the firebase
+     */
+    private void sendFileFirebase(StorageReference storageReference, final File file) {
+        if (storageReference != null) {
             Uri photoURI = FileProvider.getUriForFile(getContext(),
                     "com.example.android.fileprovider",
-                    photoFile);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            startActivityForResult(takePictureIntent, RC_TAKE_PICTURE);
+                    file);
+            UploadTask uploadTask = storageReference.putFile(photoURI);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "onFailure sendFileFirebase " + e.getMessage());
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.i(TAG, "onSuccess sendFileFirebase");
+                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    FileModel fileModel = new FileModel("img", downloadUrl.toString(), file.getName(), file.length() + "");
+                    ChatModel chatModel = new ChatModel(userModel, "", Calendar.getInstance().getTime().getTime() + "", fileModel);
+                    mMessagesDatabaseReference.push().setValue(chatModel);
+                }
+            });
+        } else {
+            //IS NULL
         }
 
+    }
+
+    /**
+     * Checks if the app has permission to write to device storage
+     * <p>
+     * If the app does not has permission then the user will be prompted to grant permissions
+     */
+    public void verifyStoragePermissions() {
+        // Check if we have write permission
+        int permission = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            // We don't have permission so prompt the user
+            ActivityCompat.requestPermissions(
+                    getActivity(),
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        } else {
+            // we already have permission, lets go ahead and call camera intent
+            launchCamera();
+        }
     }
 
     @Override
@@ -404,4 +514,6 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
     public void clickImageMapChat(View view, int position, String latitude, String longitude) {
 
     }
+
+
 }

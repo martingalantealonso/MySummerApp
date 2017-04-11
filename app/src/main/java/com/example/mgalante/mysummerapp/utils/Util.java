@@ -9,8 +9,8 @@ import android.widget.Toast;
  */
 public class Util {
 
-    public static final String URL_STORAGE_REFERENCE = "gs://alefirebase-b6a81.appspot.com";
-    public static final String FOLDER_STORAGE_IMG = "images";
+    public static final String URL_STORAGE_REFERENCE = "gs://pantinapp-c16a0.appspot.com";
+    public static final String FOLDER_STORAGE_IMG = "chat_photos";
 
     public static void initToast(Context c, String message){
         Toast.makeText(c,message, Toast.LENGTH_SHORT).show();

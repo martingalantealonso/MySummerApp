@@ -13,6 +13,7 @@ public class FriendlyMessage {
     private String photoUrl;
     public String receiver;
     public String timestamp;
+    public String userPhotoUrl;
 
     public FriendlyMessage() {
     }
@@ -23,13 +24,14 @@ public class FriendlyMessage {
         this.photoUrl = photoUrl;
     }
 
-    public FriendlyMessage(String text, String name, String senderUid, String photoUrl, String receiver, String timestamp) {
+    public FriendlyMessage(String text, String name, String senderUid, String photoUrl, String receiver, String timestamp, String userPhotoUrl) {
         this.text = text;
         this.name = name;
         this.senderUid = senderUid;
         this.photoUrl = photoUrl;
         this.receiver = receiver;
         this.timestamp = timestamp;
+        this.userPhotoUrl = userPhotoUrl;
     }
 
     public String getText() {
@@ -56,4 +58,11 @@ public class FriendlyMessage {
         this.photoUrl = photoUrl;
     }
 
+    public String getUserPhotoUrl() {
+        return userPhotoUrl;
+    }
+
+    public void setUserPhotoUrl(String userPhotoUrl) {
+        this.userPhotoUrl = userPhotoUrl;
+    }
 }

@@ -29,6 +29,7 @@
 
     <string name="download_success">Download finished</string>
     <string name="download_failure">Download failure</string>
+    <string name="firebase_storage_directory_chat">PantinClassic/PantinChat/</string>
 
     <plurals name="days">
         <item quantity="zero">%d Days</item>

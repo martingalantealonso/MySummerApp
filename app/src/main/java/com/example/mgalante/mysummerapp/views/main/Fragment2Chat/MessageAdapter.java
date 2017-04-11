@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,6 +38,13 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
 
+    private static final int RIGHT_MSG = 0;
+    private static final int LEFT_MSG = 1;
+    private static final int RIGHT_MSG_IMG = 2;
+    private static final int LEFT_MSG_IMG = 3;
+
+    private ClickListenerChatFirebase mClickListenerChatFirebase;
+
     private static final String CHAT_DIRECTORY = "PantinClassic/PantinChat/";
     private Context mContext;
     private SharedPreferences settings;
@@ -47,9 +55,11 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
 
     private LruCache<String, Bitmap> mMemoryCache;
 
-    public MessageAdapter(Context context, int resource, List<FriendlyMessage> objects) {
+    public MessageAdapter(Context context, int resource, List<FriendlyMessage> objects, ClickListenerChatFirebase mClickListenerChatFirebase) {
         super(context, resource, objects);
         mContext = context;
+        this.mClickListenerChatFirebase = mClickListenerChatFirebase;
+
         // Create a storage reference from our app
         storage = FirebaseStorage.getInstance();
         settings = context.getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
@@ -72,12 +82,13 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.chat_message_right, parent, false);
+            convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.chat_message, parent, false);
         }
 
         LinearLayout messageHolder = (LinearLayout) convertView.findViewById(R.id.main_message_holder);
         final ImageView photoImageView = (ImageView) convertView.findViewById(R.id.photoImageView);
         ImageView userPhoto = (ImageView) convertView.findViewById(R.id.chat_user_img);
+        ImageView nonUserPhoto = (ImageView) convertView.findViewById(R.id.chat_non_user_img);
         TextView messageTextView = (TextView) convertView.findViewById(R.id.messageTextView);
         TextView authorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
 
@@ -88,18 +99,25 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
         final String imageKey = user.getUid();
 
 
-        if (message.getName() != null) {
-            final Bitmap bitmap = getBitmapFromMemCache(imageKey);
-            if (message.getName().equals(user.getDisplayName())) {
+        if (message.getUserPhotoUrl() != null) {
+            //final Bitmap bitmap = getBitmapFromMemCache(imageKey);
+            if (message.getName() != null && message.getName().equals(user.getDisplayName())) {
                 //If the message was sent by the current user
-                if (bitmap != null) {
-                    userPhoto.setVisibility(View.VISIBLE);
-                    userPhoto.setImageBitmap(bitmap);
-                }
-            } else {
-                if (bitmap != null) {
-                    userPhoto.setVisibility(View.GONE);
-                }
+                userPhoto.setVisibility(View.VISIBLE);
+                nonUserPhoto.setVisibility(View.GONE);
+                Glide.with(photoImageView.getContext())
+                        .load(message.getUserPhotoUrl())
+                        .override(100, 100)
+                        .fitCenter()
+                        .into(userPhoto);
+            } else if (message.getName() != null) {
+                userPhoto.setVisibility(View.GONE);
+                nonUserPhoto.setVisibility(View.VISIBLE);
+                Glide.with(photoImageView.getContext())
+                        .load(message.getUserPhotoUrl())
+                        .override(100, 100)
+                        .fitCenter()
+                        .into(nonUserPhoto);
             }
         }
         //endregion

@@ -25,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
 import com.example.mgalante.mysummerapp.services.MyUploadService;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -60,7 +61,7 @@ import static com.facebook.GraphRequest.TAG;
 //TODO image click listener
 //TODO add time
 //TODO add notification
-public class FragmentChat extends Fragment implements FragmentChatContract.View {
+public class FragmentChat extends Fragment implements FragmentChatContract.View, ClickListenerChatFirebase {
 
     private FragmentChatPresenter presenter;
 
@@ -115,7 +116,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View 
 
         // Initialize message ListView and its adapter
         List<FriendlyMessage> friendlyMessages = new ArrayList<>();
-        mMessageAdapter = new MessageAdapter(getContext(), R.layout.chat_message_right, friendlyMessages);
+        mMessageAdapter = new MessageAdapter(getContext(), R.layout.chat_message_right, friendlyMessages,this);
         mMessageListView.setAdapter(mMessageAdapter);
 
         // ImagePickerButton shows an image picker to upload a image for a message
@@ -157,7 +158,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View 
                 // TODO: Send messages on click
                 //    public FriendlyMessage(String text, String name, String senderUid, String photoUrl, String receiver, long timestamp) {
                 //FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, null);
-                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, user.getUid(), String.valueOf(user.getPhotoUrl()), null, String.valueOf(Calendar.getInstance().getTime().getTime()));
+                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, user.getUid(), null, null, String.valueOf(Calendar.getInstance().getTime().getTime()), String.valueOf(user.getPhotoUrl()));
                 mMessagesDatabaseReference.push().setValue(friendlyMessage);
                 // Clear input box
                 mMessageEditText.setText("");
@@ -362,4 +363,13 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View 
 
     }
 
+    @Override
+    public void clickImageChat(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
+
+    }
+
+    @Override
+    public void clickImageMapChat(View view, int position, String latitude, String longitude) {
+
+    }
 }

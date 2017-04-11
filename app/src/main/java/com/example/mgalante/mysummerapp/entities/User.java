@@ -20,6 +20,13 @@ public class User {
         this.firebaseToken = firebaseToken;
     }
 
+    public User(String displayName, String s, String uid) {
+        //User userModel = new User(user.getDisplayName(), user.getPhotoUrl().toString(), user.getUid());
+        this.uid = uid;
+        this.name = displayName;
+        this.photoUrl = s;
+    }
+
     public String getUid() {
         return uid;
     }

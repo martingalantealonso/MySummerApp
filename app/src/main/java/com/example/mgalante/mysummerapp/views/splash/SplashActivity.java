@@ -37,6 +37,8 @@ import butterknife.ButterKnife;
 
 public class SplashActivity extends BaseActivity {
 
+    public static User userModel;
+
     public static final String ANONYMOUS = "anonymous";
     private static final int RC_SIGN_IN = 1;
     private static final int RC_SIGNED = 2;
@@ -93,9 +95,11 @@ public class SplashActivity extends BaseActivity {
                             SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("email", user.getEmail());
-                            editor.putString("name", user.getDisplayName());
-                            editor.putString(getString(R.string.firebase_user_id),user.getUid());
+                            editor.putString("display_name", user.getDisplayName());
+                            editor.putString(getString(R.string.firebase_user_id), user.getUid());
                             editor.apply();
+
+                            userModel = new User(user.getDisplayName(), user.getPhotoUrl().toString(), user.getUid());
 
                           /*  User mUser = new User(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), user.getToken(true).toString());
                             FirebaseDatabase.getInstance()

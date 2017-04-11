@@ -10,6 +10,8 @@ import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
@@ -22,10 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListView;
 
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.adapter.ChatFirebaseAdapter;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
+import com.example.mgalante.mysummerapp.entities.ChatModel;
 import com.example.mgalante.mysummerapp.services.MyUploadService;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,15 +46,14 @@ import com.google.firebase.storage.UploadTask;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.mgalante.mysummerapp.views.splash.SplashActivity.userModel;
 import static com.facebook.GraphRequest.TAG;
 
 /**
@@ -87,11 +89,14 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
     private Uri mDownloadUrl = null;
     private Uri mFileUri = null;
 
+
+    private LinearLayoutManager mLinearLayoutManager;
+
     private SharedPreferences prefs;
 
 
-    @BindView(R.id.messageListView)
-    ListView mMessageListView;
+    /*@BindView(R.id.messageListView)
+    ListView mMessageListView;*/
     @BindView(R.id.photoPickerButton)
     ImageButton mPhotoPickerButton;
     @BindView(R.id.messageEditText)
@@ -100,6 +105,8 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
     ImageButton mSendButton;
     @BindView(R.id.cameraButton)
     ImageButton mCameraButton;
+    @BindView(R.id.messageRecyclerView)
+    RecyclerView rvListMessage;
 
     @Nullable
     @Override
@@ -115,9 +122,10 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
 
 
         // Initialize message ListView and its adapter
-        List<FriendlyMessage> friendlyMessages = new ArrayList<>();
+        /*List<FriendlyMessage> friendlyMessages = new ArrayList<>();
         mMessageAdapter = new MessageAdapter(getContext(), R.layout.chat_message_right, friendlyMessages,this);
-        mMessageListView.setAdapter(mMessageAdapter);
+        mMessageListView.setAdapter(mMessageAdapter);*/
+
 
         // ImagePickerButton shows an image picker to upload a image for a message
         mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
@@ -157,9 +165,12 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
             public void onClick(View view) {
                 // TODO: Send messages on click
                 //    public FriendlyMessage(String text, String name, String senderUid, String photoUrl, String receiver, long timestamp) {
-                //FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, null);
-                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, user.getUid(), null, null, String.valueOf(Calendar.getInstance().getTime().getTime()), String.valueOf(user.getPhotoUrl()));
+             /*   FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, user.getUid(), null, null, String.valueOf(Calendar.getInstance().getTime().getTime()), String.valueOf(user.getPhotoUrl()));
                 mMessagesDatabaseReference.push().setValue(friendlyMessage);
+*/
+                ChatModel model = new ChatModel(userModel,mMessageEditText.getText().toString(), Calendar.getInstance().getTime().getTime()+"",null);
+                mMessagesDatabaseReference.push().setValue(model);
+
                 // Clear input box
                 mMessageEditText.setText("");
             }
@@ -176,8 +187,27 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
             onSignedInIntialize(user.getDisplayName());
         }
 
-
         return view;
+    }
+
+    private void initializeMessages() {
+
+        final ChatFirebaseAdapter firebaseAdapter = new ChatFirebaseAdapter(getContext(), mMessagesDatabaseReference, user.getUid(), this);
+        firebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int friendlyMessageCount = firebaseAdapter.getItemCount();
+                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (friendlyMessageCount - 1) &&
+                                lastVisiblePosition == (positionStart - 1))) {
+                    rvListMessage.scrollToPosition(positionStart);
+                }
+            }
+        });
+        rvListMessage.setLayoutManager(mLinearLayoutManager);
+        rvListMessage.setAdapter(firebaseAdapter);
     }
 
     @Override
@@ -196,6 +226,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
         mChatPhotosReference = mFirebaseStorage.getReference().child("chat_photos");
 
         prefs = getActivity().getApplicationContext().getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
 
     }
 
@@ -231,7 +262,8 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
 
     private void onSignedInIntialize(String displayName) {
         mUsername = displayName;
-        attachDatabaseReadListener();
+        initializeMessages();
+        //attachDatabaseReadListener();
     }
 
     private void attachDatabaseReadListener() {
@@ -240,7 +272,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     FriendlyMessage friendlyMessage = dataSnapshot.getValue(FriendlyMessage.class);
-                    mMessageAdapter.add(friendlyMessage);
+                   // mMessageAdapter.add(friendlyMessage);
                 }
 
                 @Override

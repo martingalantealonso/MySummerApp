@@ -7,16 +7,23 @@
     android:orientation="vertical">
 
 
-    <ListView
-        android:id="@+id/messageListView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="15dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1"
-        android:stackFromBottom="true"
-        android:transcriptMode="alwaysScroll"
-        tools:listitem="@layout/chat_message_right" />
+        android:layout_weight="1">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/messageRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="none" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient_shadow_top" />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/linearLayout"

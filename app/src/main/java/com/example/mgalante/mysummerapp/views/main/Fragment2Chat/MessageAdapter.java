@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -81,142 +80,116 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.chat_message, parent, false);
-        }
-
-        LinearLayout messageHolder = (LinearLayout) convertView.findViewById(R.id.main_message_holder);
-        final ImageView photoImageView = (ImageView) convertView.findViewById(R.id.photoImageView);
-        ImageView userPhoto = (ImageView) convertView.findViewById(R.id.chat_user_img);
-        ImageView nonUserPhoto = (ImageView) convertView.findViewById(R.id.chat_non_user_img);
-        TextView messageTextView = (TextView) convertView.findViewById(R.id.messageTextView);
-        TextView authorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
-
         final FriendlyMessage message = getItem(position);
+        SharedPreferences userDetails = mContext.getSharedPreferences("appPreferences", MODE_PRIVATE);
+        String UId = userDetails.getString(mContext.getString(R.string.firebase_user_id), null);
 
-        //region merda
-        FirebaseUser user = mFirebaseAuth.getCurrentUser();
-        final String imageKey = user.getUid();
+        if (convertView == null) {
+
+            if (message.getSenderUid() != null && message.getSenderUid().equals(UId)) {
+                convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.chat_message_right, parent, false);
+            } else {
+                convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.chat_message_left, parent, false);
+            }
+
+            LinearLayout messageHolder = (LinearLayout) convertView.findViewById(R.id.main_message_holder);
+            final ImageView photoImageView = (ImageView) convertView.findViewById(R.id.photoImageView);
+            ImageView userPhoto = (ImageView) convertView.findViewById(R.id.chat_user_img);
+            TextView messageTextView = (TextView) convertView.findViewById(R.id.messageTextView);
+            TextView authorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
 
 
-        if (message.getUserPhotoUrl() != null) {
-            //final Bitmap bitmap = getBitmapFromMemCache(imageKey);
-            if (message.getName() != null && message.getName().equals(user.getDisplayName())) {
-                //If the message was sent by the current user
-                userPhoto.setVisibility(View.VISIBLE);
-                nonUserPhoto.setVisibility(View.GONE);
+            //region merda
+            FirebaseUser user = mFirebaseAuth.getCurrentUser();
+            final String imageKey = user.getUid();
+
+
+            if (message.getUserPhotoUrl() != null) {
                 Glide.with(photoImageView.getContext())
                         .load(message.getUserPhotoUrl())
                         .override(100, 100)
                         .fitCenter()
                         .into(userPhoto);
-            } else if (message.getName() != null) {
-                userPhoto.setVisibility(View.GONE);
-                nonUserPhoto.setVisibility(View.VISIBLE);
-                Glide.with(photoImageView.getContext())
-                        .load(message.getUserPhotoUrl())
-                        .override(100, 100)
-                        .fitCenter()
-                        .into(nonUserPhoto);
             }
-        }
-        //endregion
+            //endregion
 
-        boolean isPhoto = message.getPhotoUrl() != null;
-        if (isPhoto) {
-            messageTextView.setVisibility(View.GONE);
-            photoImageView.setVisibility(View.VISIBLE);
+            boolean isPhoto = message.getPhotoUrl() != null;
+            if (isPhoto) {
+                messageTextView.setVisibility(View.GONE);
+                photoImageView.setVisibility(View.VISIBLE);
 
-            // 1º get the reference
-            StorageReference httpsReference = storage.getReferenceFromUrl(message.getPhotoUrl());
-            // 2º get the metada
-            httpsReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
-                @Override
-                public void onSuccess(StorageMetadata storageMetadata) {
+                // 1º get the reference
+                StorageReference httpsReference = storage.getReferenceFromUrl(message.getPhotoUrl());
+                // 2º get the metada
+                httpsReference.getMetadata().addOnSuccessListener(new OnSuccessListener<StorageMetadata>() {
+                    @Override
+                    public void onSuccess(StorageMetadata storageMetadata) {
 
-                    // region 3º We check if the image exist in files
-                    try {
+                        // region 3º We check if the image exist in files
+                        try {
 
-                        File storagePath = new File(Environment.getExternalStorageDirectory(), CHAT_DIRECTORY);
-                        File file = new File(storagePath.getAbsolutePath(), storageMetadata.getName() + ".jpg");
+                            File storagePath = new File(Environment.getExternalStorageDirectory(), CHAT_DIRECTORY);
+                            File file = new File(storagePath.getAbsolutePath(), storageMetadata.getName() + ".jpg");
 
-                        if (file.exists()) {
-                            //Get the file and display it in the view
-                            Log.i("IsImage", "file.exists()");
+                            if (file.exists()) {
+                                //Get the file and display it in the view
+                                Log.i("IsImage", "file.exists()");
 
-                            Uri imageUri = Uri.fromFile(file);
-                            Glide.with(photoImageView.getContext())
-                                    .load(imageUri)
-                                    .into(photoImageView);
-                        } else {
-                            Log.i("IsImage", "file.NOTexists()");
+                                Uri imageUri = Uri.fromFile(file);
+                                Glide.with(photoImageView.getContext())
+                                        .load(imageUri)
+                                        .into(photoImageView);
+                            } else {
+                                Log.i("IsImage", "file.NOTexists()");
 
-                            Glide.with(photoImageView.getContext())
-                                    .load(message.getPhotoUrl())
-                                    .into(photoImageView);
+                                Glide.with(photoImageView.getContext())
+                                        .load(message.getPhotoUrl())
+                                        .into(photoImageView);
 
-                            //4º IF not exist, check for storage option
-                            if (settings.getBoolean("store_chat_images", false)) {
-                                //Storage the image and displayIt
-                                Log.i("IsImage", "file.storage()");
+                                //4º IF not exist, check for storage option
+                                if (settings.getBoolean("store_chat_images", false)) {
+                                    //Storage the image and displayIt
+                                    Log.i("IsImage", "file.storage()");
 
-                                if (!storagePath.exists()) {
-                                    storagePath.mkdirs();
+                                    if (!storagePath.exists()) {
+                                        storagePath.mkdirs();
+                                    }
+
+                                    DownloadManager mgr = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
+
+                                    Uri downloadUri = Uri.parse(storageMetadata.getDownloadUrl().toString());
+                                    DownloadManager.Request request = new DownloadManager.Request(
+                                            downloadUri);
+
+                                    request.setAllowedNetworkTypes(
+                                            DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                                            .setAllowedOverRoaming(false).setTitle("Downloading Pantin Images")
+                                            .setDescription("Something useful. No, really.")
+                                            .setDestinationInExternalPublicDir(CHAT_DIRECTORY, storageMetadata.getName() + ".jpg");
+
+                                    mgr.enqueue(request);
                                 }
-
-                                DownloadManager mgr = (DownloadManager) getContext().getSystemService(Context.DOWNLOAD_SERVICE);
-
-                                Uri downloadUri = Uri.parse(storageMetadata.getDownloadUrl().toString());
-                                DownloadManager.Request request = new DownloadManager.Request(
-                                        downloadUri);
-
-                                request.setAllowedNetworkTypes(
-                                        DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                                        .setAllowedOverRoaming(false).setTitle("Downloading Pantin Images")
-                                        .setDescription("Something useful. No, really.")
-                                        .setDestinationInExternalPublicDir(CHAT_DIRECTORY, storageMetadata.getName() + ".jpg");
-
-                                mgr.enqueue(request);
                             }
+
+                        } catch (Exception ex) {
+                            Log.e("Ficheros", "Error al escribir fichero a tarjeta SD");
+                            Log.e("Ficheros", ex.getMessage());
                         }
+                        //endregion
 
-                    } catch (Exception ex) {
-                        Log.e("Ficheros", "Error al escribir fichero a tarjeta SD");
-                        Log.e("Ficheros", ex.getMessage());
                     }
-                    //endregion
+                });
+            } else {
+                messageTextView.setVisibility(View.VISIBLE);
+                photoImageView.setVisibility(View.GONE);
+                messageTextView.setText(message.getText());
+            }
 
-                }
-            });
-        } else {
-            messageTextView.setVisibility(View.VISIBLE);
-            photoImageView.setVisibility(View.GONE);
-            messageTextView.setText(message.getText());
+            authorTextView.setText(String.format("%s:", message.getName()));
         }
-
-        //region LayoutRules
-        authorTextView.setText(String.format("%s:", message.getName()));
-
-        String author = message.getName();
-        SharedPreferences userDetails = mContext.getSharedPreferences("appPreferences", MODE_PRIVATE);
-        String Uname = userDetails.getString("name", null);
-
-        if (author != null && Uname != null && author.equals(Uname)) {
-            // If the message was sent by this user, design it differently
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-            params.addRule(RelativeLayout.ALIGN_PARENT_END);
-            //authorTextView.setTextColor(convertView.getResources().getColor(R.color.lblFromName));
-            messageHolder.setLayoutParams(params);
-        } else {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-
-            params.removeRule(RelativeLayout.ALIGN_PARENT_END);
-
-            messageHolder.setLayoutParams(params);
-        }
-        //endregion
 
         return convertView;
+
     }
 
     private void checkSdState() {

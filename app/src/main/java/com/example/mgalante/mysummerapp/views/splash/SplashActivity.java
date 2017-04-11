@@ -94,6 +94,7 @@ public class SplashActivity extends BaseActivity {
                             SharedPreferences.Editor editor = prefs.edit();
                             editor.putString("email", user.getEmail());
                             editor.putString("name", user.getDisplayName());
+                            editor.putString(getString(R.string.firebase_user_id),user.getUid());
                             editor.apply();
 
                           /*  User mUser = new User(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), user.getToken(true).toString());

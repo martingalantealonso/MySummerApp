@@ -50,6 +50,14 @@ public class FriendlyMessage {
         this.name = name;
     }
 
+    public String getSenderUid() {
+        return senderUid;
+    }
+
+    public void setSenderUid(String senderUid) {
+        this.senderUid = senderUid;
+    }
+
     public String getPhotoUrl() {
         return photoUrl;
     }

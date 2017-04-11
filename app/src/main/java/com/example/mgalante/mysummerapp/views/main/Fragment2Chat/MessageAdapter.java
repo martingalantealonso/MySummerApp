@@ -21,6 +21,7 @@ import com.bumptech.glide.Glide;
 import com.example.mgalante.mysummerapp.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
@@ -71,20 +72,19 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.chat_message, parent, false);
+            convertView = ((Activity) getContext()).getLayoutInflater().inflate(R.layout.chat_message_right, parent, false);
         }
 
         LinearLayout messageHolder = (LinearLayout) convertView.findViewById(R.id.main_message_holder);
         final ImageView photoImageView = (ImageView) convertView.findViewById(R.id.photoImageView);
         ImageView userPhoto = (ImageView) convertView.findViewById(R.id.chat_user_img);
-        ImageView nonUserPhoto = (ImageView) convertView.findViewById(R.id.chat_non_user_img);
         TextView messageTextView = (TextView) convertView.findViewById(R.id.messageTextView);
         TextView authorTextView = (TextView) convertView.findViewById(R.id.nameTextView);
 
         final FriendlyMessage message = getItem(position);
 
         //region merda
-       /* FirebaseUser user = mFirebaseAuth.getCurrentUser();
+        FirebaseUser user = mFirebaseAuth.getCurrentUser();
         final String imageKey = user.getUid();
 
 
@@ -95,16 +95,13 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
                 if (bitmap != null) {
                     userPhoto.setVisibility(View.VISIBLE);
                     userPhoto.setImageBitmap(bitmap);
-                    nonUserPhoto.setVisibility(View.GONE);
                 }
-            }else{
+            } else {
                 if (bitmap != null) {
-                    nonUserPhoto.setVisibility(View.VISIBLE);
-                    nonUserPhoto.setImageBitmap(bitmap);
                     userPhoto.setVisibility(View.GONE);
                 }
             }
-        }*/
+        }
         //endregion
 
         boolean isPhoto = message.getPhotoUrl() != null;

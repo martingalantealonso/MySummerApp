@@ -1,4 +1,4 @@
-package com.example.mgalante.mysummerapp.views.main.services;
+package com.example.mgalante.mysummerapp.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -13,7 +13,7 @@ import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.events.PushNotificationEvent;
 import com.example.mgalante.mysummerapp.views.main.MainActivity;
-import com.example.mgalante.mysummerapp.views.main.utils.Constants;
+import com.example.mgalante.mysummerapp.utils.Constants;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 

@@ -16,7 +16,7 @@
         android:layout_weight="1"
         android:stackFromBottom="true"
         android:transcriptMode="alwaysScroll"
-        tools:listitem="@layout/chat_message" />
+        tools:listitem="@layout/chat_message_right" />
 
     <LinearLayout
         android:id="@+id/linearLayout"

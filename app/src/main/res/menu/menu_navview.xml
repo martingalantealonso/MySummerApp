@@ -11,7 +11,7 @@
             android:title="@string/seccion_2"/>
         <item
             android:id="@+id/menu_seccion_3"
-            android:icon="@drawable/vd_sentiment_very_dissatisfied"
+            android:icon="@drawable/vd_calculator"
             android:title="@string/seccion_3"/>
         <item
             android:id="@+id/menu_seccion_4"

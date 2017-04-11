@@ -36,6 +36,7 @@ public class FragmentPresenter implements FragmentMainContract.Presenter {
         StringBuilder countdownText = new StringBuilder();
         String sDays = "";
         String sHours = "";
+        String sMinutes = "";
         String sSeconds = "";
 
         ArrayList<String[]> arrayRemaining = new ArrayList<>();
@@ -78,6 +79,7 @@ public class FragmentPresenter implements FragmentMainContract.Presenter {
                 countdownText.append(resources.getQuantityString(R.plurals.minutes, minutes, minutes));
                 countdownText.append(" ");
                 arrayRemaining.add(new String[]{"minutes", resources.getQuantityString(R.plurals.minutes, minutes, minutes)});
+                sMinutes=resources.getQuantityString(R.plurals.minutes, minutes, minutes);
             }
             if (days > 0 || hours > 0 || minutes > 0 || seconds > 0) {
                 countdownText.append(resources.getQuantityString(R.plurals.seconds, seconds, seconds));
@@ -88,7 +90,7 @@ public class FragmentPresenter implements FragmentMainContract.Presenter {
         }
 
         //mView.updateView(countdownText.toString());
-        mView.updateView(sDays, sHours, sSeconds);
+        mView.updateView(sDays, sHours,sMinutes, sSeconds);
         for (String[] result : arrayRemaining) {
             Log.i("TEST", result.toString());
         }

@@ -18,10 +18,10 @@ import android.widget.Toast;
 
 import com.example.mgalante.mysummerapp.BaseActivity;
 import com.example.mgalante.mysummerapp.R;
-import com.example.mgalante.mysummerapp.views.main.Entities.User;
+import com.example.mgalante.mysummerapp.entities.User;
 import com.example.mgalante.mysummerapp.views.main.MainActivity;
-import com.example.mgalante.mysummerapp.views.main.utils.Constants;
-import com.example.mgalante.mysummerapp.views.main.utils.SharedPrefUtil;
+import com.example.mgalante.mysummerapp.utils.Constants;
+import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

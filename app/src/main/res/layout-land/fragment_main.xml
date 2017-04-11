@@ -9,13 +9,14 @@
     tools:context=".views.main.FragmentMain">
 
     <android.support.v7.widget.GridLayout
-        android:layout_width="294dp"
-        android:layout_height="148dp"
+        android:layout_width="248dp"
+        android:layout_height="match_parent"
         android:layout_marginEnd="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         app:columnCount="2"
-        android:layout_gravity="center|top"
+        android:layout_gravity="center|left"
         android:background="@drawable/gradient_shadow">
 
         <TextView

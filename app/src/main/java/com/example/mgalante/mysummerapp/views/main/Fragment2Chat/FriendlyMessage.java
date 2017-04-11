@@ -12,7 +12,7 @@ public class FriendlyMessage {
     public String senderUid;
     private String photoUrl;
     public String receiver;
-    public long timestamp;
+    public String timestamp;
 
     public FriendlyMessage() {
     }
@@ -23,7 +23,7 @@ public class FriendlyMessage {
         this.photoUrl = photoUrl;
     }
 
-    public FriendlyMessage(String text, String name, String senderUid, String photoUrl, String receiver, long timestamp) {
+    public FriendlyMessage(String text, String name, String senderUid, String photoUrl, String receiver, String timestamp) {
         this.text = text;
         this.name = name;
         this.senderUid = senderUid;

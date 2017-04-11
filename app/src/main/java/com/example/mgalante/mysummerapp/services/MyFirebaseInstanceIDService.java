@@ -1,9 +1,9 @@
-package com.example.mgalante.mysummerapp.views.main.services;
+package com.example.mgalante.mysummerapp.services;
 
 import android.util.Log;
 
-import com.example.mgalante.mysummerapp.views.main.utils.Constants;
-import com.example.mgalante.mysummerapp.views.main.utils.SharedPrefUtil;
+import com.example.mgalante.mysummerapp.utils.Constants;
+import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;

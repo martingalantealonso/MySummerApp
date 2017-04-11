@@ -1,7 +1,6 @@
 package com.example.mgalante.mysummerapp.views.main;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -20,9 +19,9 @@ import com.bumptech.glide.Glide;
 import com.example.mgalante.mysummerapp.BaseActivity;
 import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
-import com.example.mgalante.mysummerapp.views.main.Entities.User;
+import com.example.mgalante.mysummerapp.entities.User;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
-import com.example.mgalante.mysummerapp.views.main.utils.Constants;
+import com.example.mgalante.mysummerapp.utils.Constants;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -31,9 +30,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -73,7 +69,7 @@ public class MainActivity extends BaseActivity {
                 return bitmap.getByteCount() / 1024;
             }
         };
-
+        getAllUsersFromFirebase();
         setupWindowAnimations();
         getWindow().setBackgroundDrawable(getDrawable(R.drawable.mainbackground_image));
 
@@ -200,15 +196,6 @@ public class MainActivity extends BaseActivity {
                         }
                         // All users are retrieved except the one who is currently logged
                         // in device.
-                        for (User usr : users) {
-                            try {
-                                Bitmap bitmap = BitmapFactory.decodeStream((InputStream) new URL(usr.getPhotoUrl()).getContent());
-                                addBitmapToMemoryCache(usr.getUid(), bitmap);
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
                     }
 
                     @Override

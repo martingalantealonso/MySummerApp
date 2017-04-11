@@ -1,4 +1,4 @@
-package com.example.mgalante.mysummerapp.views.main.utils;
+package com.example.mgalante.mysummerapp.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

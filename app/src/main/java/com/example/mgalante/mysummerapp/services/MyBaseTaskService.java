@@ -1,4 +1,4 @@
-package com.example.mgalante.mysummerapp.views.main.services;
+package com.example.mgalante.mysummerapp.services;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;

@@ -29,6 +29,8 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View 
     TextView mRemainingDays;
     @BindView(R.id.hours_number)
     TextView mRemainingHours;
+    @BindView(R.id.minutes_number)
+    TextView mRemainingMinutes;
     @BindView(R.id.seconds_number)
     TextView mRemainingSeconds;
 
@@ -149,9 +151,10 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View 
     }
 
     @Override
-    public void updateView(String futureDay, String remainingHours, String remainingSeconds) {
+    public void updateView(String futureDay, String remainingHours, String remaininMinutes, String remainingSeconds) {
         mRemainingDays.setText(futureDay);
         mRemainingHours.setText(remainingHours);
+        mRemainingMinutes.setText(remaininMinutes);
         mRemainingSeconds.setText(remainingSeconds);
     }
 }

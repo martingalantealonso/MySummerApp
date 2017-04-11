@@ -1,4 +1,4 @@
-package com.example.mgalante.mysummerapp.views.main.utils;
+package com.example.mgalante.mysummerapp.utils;
 
 /**
  * Created by mgalante on 5/04/17.

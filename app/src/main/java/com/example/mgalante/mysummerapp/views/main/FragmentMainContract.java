@@ -12,7 +12,7 @@ import com.example.mgalante.mysummerapp.BaseView;
 public interface FragmentMainContract {
 
     interface View extends BaseView<Presenter> {
-        void updateView(String futureDay, String remainingHours, String remainingSeconds);
+        void updateView(String futureDay, String remainingHours, String remainingMinutes, String remainingSeconds);
     }
 
     interface Presenter extends BasePresenter<Context, View> {

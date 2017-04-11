@@ -25,7 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.mgalante.mysummerapp.R;
-import com.example.mgalante.mysummerapp.views.main.services.MyUploadService;
+import com.example.mgalante.mysummerapp.services.MyUploadService;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,6 +43,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -74,6 +75,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View 
     private MessageAdapter mMessageAdapter;
 
     private FirebaseDatabase mFirebaseDatabase;
+    private FirebaseUser user;
     private DatabaseReference mMessagesDatabaseReference;
     private ChildEventListener mChildEventListener;
     private FirebaseAuth mFirebaseAuth;
@@ -113,7 +115,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View 
 
         // Initialize message ListView and its adapter
         List<FriendlyMessage> friendlyMessages = new ArrayList<>();
-        mMessageAdapter = new MessageAdapter(getContext(), R.layout.chat_message, friendlyMessages);
+        mMessageAdapter = new MessageAdapter(getContext(), R.layout.chat_message_right, friendlyMessages);
         mMessageListView.setAdapter(mMessageAdapter);
 
         // ImagePickerButton shows an image picker to upload a image for a message
@@ -153,9 +155,10 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View 
             @Override
             public void onClick(View view) {
                 // TODO: Send messages on click
-                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, null);
+                //    public FriendlyMessage(String text, String name, String senderUid, String photoUrl, String receiver, long timestamp) {
+                //FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, null);
+                FriendlyMessage friendlyMessage = new FriendlyMessage(mMessageEditText.getText().toString(), mUsername, user.getUid(), String.valueOf(user.getPhotoUrl()), null, String.valueOf(Calendar.getInstance().getTime().getTime()));
                 mMessagesDatabaseReference.push().setValue(friendlyMessage);
-
                 // Clear input box
                 mMessageEditText.setText("");
             }
@@ -167,7 +170,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View 
                 launchCamera();
             }
         });
-        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+        user = mFirebaseAuth.getCurrentUser();
         if (user != null) {
             onSignedInIntialize(user.getDisplayName());
         }

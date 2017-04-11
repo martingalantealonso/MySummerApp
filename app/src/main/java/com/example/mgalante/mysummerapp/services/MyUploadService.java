@@ -1,4 +1,4 @@
-package com.example.mgalante.mysummerapp.views.main.services;
+package com.example.mgalante.mysummerapp.services;
 
 import android.content.Intent;
 import android.content.IntentFilter;

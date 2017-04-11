@@ -1,4 +1,4 @@
-package com.example.mgalante.mysummerapp.views.main.Entities;
+package com.example.mgalante.mysummerapp.entities;
 
 /**
  * Created by mgalante on 5/04/17.

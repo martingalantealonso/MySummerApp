@@ -29,15 +29,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.example.mgalante.mysummerapp.BuildConfig;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ChatFirebaseAdapter;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
 import com.example.mgalante.mysummerapp.entities.ChatModel;
 import com.example.mgalante.mysummerapp.entities.FileModel;
-import com.example.mgalante.mysummerapp.services.MyUploadService;
 import com.example.mgalante.mysummerapp.utils.Util;
-import com.example.mgalante.mysummerapp.views.main.MainActivity;
+import com.example.mgalante.mysummerapp.views.main.FullScreenImageActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,8 +51,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -70,8 +66,8 @@ import static com.facebook.GraphRequest.TAG;
  */
 
 //TODO image click listener
-//TODO add time
 //TODO add notification
+//TODO Image Full Screen Activity
 public class FragmentChat extends Fragment implements FragmentChatContract.View, ClickListenerChatFirebase {
 
     private FragmentChatPresenter presenter;
@@ -181,8 +177,6 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
         mSendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // TODO: Send messages on click
-
                 ChatModel model = new ChatModel(userModel, mMessageEditText.getText().toString(), Calendar.getInstance().getTime().getTime() + "", null);
                 mMessagesDatabaseReference.push().setValue(model);
 
@@ -451,7 +445,11 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
 
     @Override
     public void clickImageChat(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
-
+        Intent intent = new Intent(getContext(),FullScreenImageActivity.class);
+        intent.putExtra("nameUser",nameUser);
+        intent.putExtra("urlPhotoUser",urlPhotoUser);
+        intent.putExtra("urlPhotoClick",urlPhotoClick);
+        startActivity(intent);
     }
 
     @Override

@@ -42,6 +42,7 @@
     </android.support.v7.widget.Toolbar>
 
     <com.example.mgalante.mysummerapp.views.TouchImageView
+        android:transitionName="@string/image_chat_transition"
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

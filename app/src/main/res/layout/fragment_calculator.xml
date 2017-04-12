@@ -1,6 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary_dark"
+    android:orientation="vertical">
 
+    <LinearLayout
+        android:id="@+id/calculator_main_holder"
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:background="@color/primary"
+        android:elevation="@dimen/appbar_elevation"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/default_small_margin"
+            app:columnCount="2">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:padding="@dimen/default_medium_padding"
+                android:id="@+id/calculator_user_photo"
+                app:layout_columnSpan="2"
+                app:layout_columnWeight="1"
+                app:layout_rowWeight=".3"
+                tools:src="@drawable/vd_user"
+                android:elevation="@dimen/circularimageview_elevation"/>
+
+            <TextView
+                android:id="@+id/calculator_txtv_spent_info"
+                android:layout_width="0dp"
+                android:text="Spent: "
+                android:textAlignment="textEnd"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                app:layout_columnWeight="1"
+                tools:text="Spent: " />
+
+            <TextView
+                android:id="@+id/calculator_txtv_spent"
+                android:layout_width="0dp"
+                android:text="200€ "
+                android:textAlignment="textStart"
+                android:textColor="@color/colorWhite"
+                android:textSize="24sp"
+                app:layout_columnWeight="1"
+                tools:text="200€ " />
+            <!--  <de.hdodenhof.circleimageview.CircleImageView
+                  android:id="@+id/calculator_user_photo"
+                  android:layout_width="wrap_content"
+                  android:layout_height="match_parent"
+                  app:layout_columnSpan="2"
+                  app:layout_rowWeight="1"
+                  app:layout_columnWeight="1"
+                  tools:src="@drawable/vd_user" />
+
+              <TextView
+                  android:id="@+id/calculator_txtv_spent_info"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  app:layout_columnWeight="1"
+                  tools:text="Total spent: "
+                 />
+
+              <TextView
+                  android:id="@+id/calculator_txtv_spent"
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  app:layout_columnSpan="1"
+                  tools:text="Total spent: "
+                  />
+  -->
+        </android.support.v7.widget.GridLayout>
+
+    </LinearLayout>
 </LinearLayout>

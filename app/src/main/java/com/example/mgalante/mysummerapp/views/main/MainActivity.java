@@ -26,6 +26,7 @@ import com.example.mgalante.mysummerapp.entities.users.all.GetUsersContract;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
+import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -36,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends BaseActivity implements GetUsersContract.View{
+public class MainActivity extends BaseActivity implements GetUsersContract.View {
 
     private GetUsersPresenter mGetUsersPresenter;
 
@@ -93,11 +94,11 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View{
                                 fragment = new FragmentChat();
                                 fragmentTransaction = true;
                                 break;
-                            /*
+
                             case R.id.menu_seccion_3:
-                                fragment = new Fragment3();
+                                fragment = new FragmentCalculator();
                                 fragmentTransaction = true;
-                                break;*/
+                                break;
                             case R.id.menu_opcion_2:
                                 Log.i("NavigationView", "Pulsada opción 2");
                                 singOut();
@@ -123,7 +124,9 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View{
 
         View headerView = navView.getHeaderView(0);
         TextView mUserTxtView = (TextView) headerView.findViewById(R.id.user_name);
-        mUserTxtView.setText(user.getDisplayName());
+        if (user!= null) {
+            mUserTxtView.setText(user.getDisplayName());
+        }
         CircleImageView mUserPhoto = (CircleImageView) headerView.findViewById(R.id.imageViewUserPhoto);
         Bitmap userCachePhoto = CacheStore.getInstance().getCacheFile(user.getUid());
         if (userCachePhoto != null) {

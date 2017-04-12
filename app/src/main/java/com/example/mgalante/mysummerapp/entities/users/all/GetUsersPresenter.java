@@ -26,11 +26,6 @@ public class GetUsersPresenter implements GetUsersContract.Presenter, GetUsersCo
     }
 
     @Override
-    public void getChatUsers() {
-        mGetUsersInteractor.getChatUsersFromFirebase();
-    }
-
-    @Override
     public void onGetAllUsersSuccess(List<User> users) {
         mView.onGetAllUsersSuccess(users);
     }

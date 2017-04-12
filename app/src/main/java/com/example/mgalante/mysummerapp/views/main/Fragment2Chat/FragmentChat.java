@@ -11,8 +11,10 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -25,9 +27,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ChatFirebaseAdapter;
@@ -59,6 +64,7 @@ import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
 import static com.example.mgalante.mysummerapp.views.splash.SplashActivity.userModel;
+import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.facebook.GraphRequest.TAG;
 
 /**
@@ -446,11 +452,35 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
 
     @Override
     public void clickImageChat(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
-        Intent intent = new Intent(getContext(),FullScreenImageActivity.class);
-        intent.putExtra("nameUser",nameUser);
-        intent.putExtra("urlPhotoUser",urlPhotoUser);
-        intent.putExtra("urlPhotoClick",urlPhotoClick);
+
+      /*  ImageView image = (ImageView) view.findViewById(R.id.photoImageView);
+        Pair<View, String> holderPair = Pair.create((View) image, getString(R.string.image_chat_transition));
+        Pair<View, String> navPair = null;
+        Pair<View, String> statusPair = null;
+        View navigationBar = view.findViewById(android.R.id.navigationBarBackground);
+        View statusBar = view.findViewById(android.R.id.statusBarBackground);
+        navPair = Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
+        statusPair = Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);*/
+
+
+        Intent intent = new Intent(getContext(), FullScreenImageActivity.class);
+        intent.putExtra("nameUser", nameUser);
+        intent.putExtra("urlPhotoUser", urlPhotoUser);
+        intent.putExtra("urlPhotoClick", urlPhotoClick);
+
         startActivity(intent);
+
+
+      /*  ActivityOptionsCompat options;
+        if (ViewConfiguration.get(getApplicationContext()).hasPermanentMenuKey()) {
+            options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), holderPair, holderPair, navPair, statusPair);
+        } else {
+            //options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,  holderPair, holderPair2, statusPair);
+            options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), holderPair, holderPair);
+        }
+
+        ActivityCompat.startActivity(getContext(), intent, options.toBundle());*/
+
     }
 
     @Override

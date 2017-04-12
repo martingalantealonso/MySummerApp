@@ -2,10 +2,13 @@
 <resources>
     <dimen name="fragment_main_layout_height">210dp</dimen>
     <dimen name="appbar_elevation">4dp</dimen>
+    <dimen name="circularimageview_elevation">8dp</dimen>
     <dimen name="details_app_bar_overlap">24dp</dimen>
     <dimen name="default_message_chat_padding">6dp</dimen>
     <dimen name="default_message_chat_margin">0dp</dimen>
     <dimen name="size_avatar_toolbar">40dp</dimen>
     <dimen name="spacing_double">16dp</dimen>
+    <dimen name="default_small_margin">5dp</dimen>
+    <dimen name="default_medium_padding">16dp</dimen>
 
 </resources>

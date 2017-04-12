@@ -2,7 +2,6 @@ package com.example.mgalante.mysummerapp.views.main;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
 
 import com.example.mgalante.mysummerapp.R;
 
@@ -91,10 +90,7 @@ public class FragmentPresenter implements FragmentMainContract.Presenter {
 
         //mView.updateView(countdownText.toString());
         mView.updateView(sDays, sHours,sMinutes, sSeconds);
-        for (String[] result : arrayRemaining) {
-            Log.i("TEST", result.toString());
-        }
-    }
+           }
 
 
     //Devuele un java.util.Date desde un String en formato dd-MM-yyyy

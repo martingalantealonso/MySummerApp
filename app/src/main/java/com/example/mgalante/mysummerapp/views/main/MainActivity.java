@@ -1,6 +1,8 @@
 package com.example.mgalante.mysummerapp.views.main;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -14,20 +16,29 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.BaseActivity;
 import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.entities.users.User;
+import com.example.mgalante.mysummerapp.entities.users.all.GetUsersContract;
+import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends BaseActivity {
+public class MainActivity extends BaseActivity implements GetUsersContract.View{
+
+    private GetUsersPresenter mGetUsersPresenter;
 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -44,6 +55,8 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        mGetUsersPresenter = new GetUsersPresenter(this);
 
         //Util.getAllUsersFromFirebase();
         setupWindowAnimations();
@@ -62,9 +75,8 @@ public class MainActivity extends BaseActivity {
                 .replace(R.id.content_frame, fragment)
                 .commit();
 
-        //drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-        //navView.setItemIconTintList(null); //Allow cahnge the icons color
         navView.setNavigationItemSelectedListener(
+                //region OnNavigationItemSelectedListener
                 new NavigationView.OnNavigationItemSelectedListener() {
                     @Override
                     public boolean onNavigationItemSelected(MenuItem menuItem) {
@@ -106,6 +118,7 @@ public class MainActivity extends BaseActivity {
                         return true;
                     }
                 }
+                //endregion
         );
 
         View headerView = navView.getHeaderView(0);
@@ -120,6 +133,12 @@ public class MainActivity extends BaseActivity {
             Log.i(getPackageName(), "userPhoto loaded from url");
             Glide.with(this).load(user.getPhotoUrl()).into(mUserPhoto);
         }
+
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Surfing some waves...");
+        progressDialog.show();
+        getUsers();
+        progressDialog.dismiss();
 
     }
 
@@ -157,6 +176,40 @@ public class MainActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         FirebaseChatMainApp.setChatActivityOpen(false);
+    }
+
+    private void getUsers() {
+        mGetUsersPresenter.getAllUsers();
+    }
+
+    @Override
+    public void onGetAllUsersSuccess(List<User> users) {
+        Log.i("TEST", "onGetAllUsersSuccess");
+        for (User user : users) {
+            if (CacheStore.getInstance().getCacheFile(user.getUid()) == null) {
+                addUserImageToCache(user.getUid(), user.getPhotoUrl());
+            }
+        }
+    }
+
+    @Override
+    public void onGetAllUsersFailure(String message) {
+
+    }
+
+    private void addUserImageToCache(final String uid, String photoUrl) {
+        Glide.with(this).load(photoUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                CacheStore.getInstance().saveCacheFile(uid, resource);
+            }
+
+            @Override
+            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+
+            }
+        });
     }
 
 }

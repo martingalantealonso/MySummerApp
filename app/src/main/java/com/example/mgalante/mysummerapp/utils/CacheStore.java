@@ -86,7 +86,7 @@ public class CacheStore {
 
     public void saveCacheFile(String cacheUri, Bitmap image) {
         File fullCacheDir = new File(Environment.getExternalStorageDirectory().toString(), cacheDir);
-        String fileLocalName = cacheUri;
+        String fileLocalName = cacheUri+".PNG";
         File fileUri = new File(fullCacheDir.toString(), fileLocalName);
         FileOutputStream outStream = null;
         try {

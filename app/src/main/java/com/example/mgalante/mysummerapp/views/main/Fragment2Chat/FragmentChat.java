@@ -68,6 +68,7 @@ import static com.facebook.GraphRequest.TAG;
 //TODO image click listener
 //TODO add notification
 //TODO Image Full Screen Activity
+//TODO get user images from cache
 public class FragmentChat extends Fragment implements FragmentChatContract.View, ClickListenerChatFirebase {
 
     private FragmentChatPresenter presenter;

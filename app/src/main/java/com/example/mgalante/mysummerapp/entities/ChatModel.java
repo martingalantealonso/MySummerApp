@@ -1,6 +1,8 @@
 package com.example.mgalante.mysummerapp.entities;
 
 
+import com.example.mgalante.mysummerapp.entities.users.User;
+
 /**
  * Created by Alessandro Barreto on 17/06/2016.
  */

@@ -23,7 +23,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.BaseActivity;
 import com.example.mgalante.mysummerapp.R;
-import com.example.mgalante.mysummerapp.entities.User;
+import com.example.mgalante.mysummerapp.entities.users.User;
+import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.utils.Constants;
 import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
@@ -41,13 +42,18 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends BaseActivity  {
 
     public static User userModel;
+
+    private GetUsersPresenter mGetUsersPresenter;
 
     public static final String ANONYMOUS = "anonymous";
     private static final int RC_SIGN_IN = 1;
     private static final int RC_SIGNED = 2;
+    public static final String ARG_TYPE = "type";
+    public static final String TYPE_CHATS = "type_chats";
+    public static final String TYPE_ALL = "type_all";
     private String mUsername;
 
     private FirebaseAuth mFirebaseAuth;
@@ -72,6 +78,7 @@ public class SplashActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         setupWindowAnimations();
+
 
         //AuthUI.getInstance().signOut(this);
 
@@ -142,7 +149,6 @@ public class SplashActivity extends BaseActivity {
         });
     }
 
-
     private void setupWindowAnimations() {
         Fade fade = new Fade();
         fade.setDuration(1000);
@@ -204,7 +210,6 @@ public class SplashActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-
     public void addUserToDatabase(Context context, FirebaseUser firebaseUser) {
         User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(),
                 firebaseUser.getPhotoUrl().toString(),
@@ -227,7 +232,6 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void addUserImageToCache(final String uid, String photoUrl) {
-
         Glide.with(this).load(photoUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
 
             @Override
@@ -240,7 +244,9 @@ public class SplashActivity extends BaseActivity {
 
             }
         });
-
     }
+
+
+
 
 }

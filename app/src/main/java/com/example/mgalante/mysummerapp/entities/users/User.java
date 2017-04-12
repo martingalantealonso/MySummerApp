@@ -1,4 +1,4 @@
-package com.example.mgalante.mysummerapp.entities;
+package com.example.mgalante.mysummerapp.entities.users;
 
 /**
  * Created by mgalante on 5/04/17.
@@ -57,5 +57,15 @@ public class User {
 
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
+                ", photoUrl='" + photoUrl + '\'' +
+                ", firebaseToken='" + firebaseToken + '\'' +
+                '}';
     }
 }

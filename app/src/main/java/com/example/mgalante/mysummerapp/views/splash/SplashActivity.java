@@ -3,6 +3,8 @@ package com.example.mgalante.mysummerapp.views.splash;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -16,12 +18,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.BaseActivity;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.entities.User;
-import com.example.mgalante.mysummerapp.views.main.MainActivity;
+import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.utils.Constants;
 import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
+import com.example.mgalante.mysummerapp.views.main.MainActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -108,7 +114,9 @@ public class SplashActivity extends BaseActivity {
                                     .setValue(mUser);*/
 
                             addUserToDatabase(getApplicationContext(), user);
-
+                            if (CacheStore.getInstance().getCacheFile(user.getUid()) == null) {
+                                addUserImageToCache(user.getUid(), user.getPhotoUrl().toString());
+                            }
                             onSignedInIntialize(user.getDisplayName());
                         } else {
                             //signed out
@@ -133,6 +141,7 @@ public class SplashActivity extends BaseActivity {
             }
         });
     }
+
 
     private void setupWindowAnimations() {
         Fade fade = new Fade();
@@ -215,6 +224,23 @@ public class SplashActivity extends BaseActivity {
                         }
                     }
                 });
+    }
+
+    private void addUserImageToCache(final String uid, String photoUrl) {
+
+        Glide.with(this).load(photoUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+
+            @Override
+            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                CacheStore.getInstance().saveCacheFile(uid, resource);
+            }
+
+            @Override
+            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+
+            }
+        });
+
     }
 
 }

@@ -33,6 +33,7 @@
     <string name="firebase_user_id">firebase_user_id</string>
     <string name="firebase_user_display_name">display_name</string>
     <string name="select_picture_title">Complete action using</string>
+    <string name="user_photo_extension">userphoto.PNG</string>
 
     <plurals name="days">
         <item quantity="zero">%d Days</item>

@@ -4,31 +4,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary_dark"
     android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/calculator_main_holder"
         android:layout_width="match_parent"
-        android:layout_height="180dp"
-        android:background="@color/primary"
+        android:layout_height="160dp"
+        android:layout_marginTop="@dimen/default_small_margin"
         android:elevation="@dimen/appbar_elevation"
         android:orientation="vertical">
 
         <android.support.v7.widget.GridLayout
-            android:layout_width="match_parent"
+            android:layout_width="294dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center|top"
+            android:layout_marginEnd="@dimen/default_medium_padding"
+            android:layout_marginStart="@dimen/default_medium_padding"
+            android:layout_marginTop="@dimen/default_medium_padding"
             android:layout_marginBottom="@dimen/default_small_margin"
+            android:background="@drawable/gradient_shadow_round"
             app:columnCount="2">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:padding="@dimen/default_medium_padding"
                 android:id="@+id/calculator_user_photo"
+                android:elevation="@dimen/circularimageview_elevation"
+                android:padding="@dimen/default_medium_padding"
                 app:layout_columnSpan="2"
                 app:layout_columnWeight="1"
                 app:layout_rowWeight=".3"
-                tools:src="@drawable/vd_user"
-                android:elevation="@dimen/circularimageview_elevation"/>
+                tools:src="@drawable/vd_user" />
 
             <TextView
                 android:id="@+id/calculator_txtv_spent_info"
@@ -77,4 +81,27 @@
         </android.support.v7.widget.GridLayout>
 
     </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/user_list_detail"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        app:spanCount="2"
+        tools:listitem="@layout/fragment_user_resource"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="4dp"
+            android:layout_gravity="bottom"
+            android:background="@drawable/gradient_shadow_top" />
+
+</FrameLayout>
+
+
 </LinearLayout>

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhite"
+
     android:orientation="vertical">
 
 
@@ -29,6 +29,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorWhite"
         android:orientation="horizontal">
 
         <ImageButton
@@ -36,7 +37,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".1"
-            android:background="@color/colorWhite"
             android:src="@drawable/vd_photo_camera" />
 
         <EditText
@@ -53,7 +53,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".1"
-            android:background="@color/colorWhite"
             android:enabled="false"
             android:src="@drawable/vd_send" />
 
@@ -62,7 +61,6 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".1"
-            android:background="@color/colorWhite"
             android:src="@drawable/vd_image" />
 
     </LinearLayout>

@@ -39,6 +39,7 @@ import com.example.mgalante.mysummerapp.adapter.ChatFirebaseAdapter;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
 import com.example.mgalante.mysummerapp.entities.ChatModel;
 import com.example.mgalante.mysummerapp.entities.FileModel;
+import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.utils.Util;
 import com.example.mgalante.mysummerapp.views.main.FullScreenImageActivity;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -485,6 +486,11 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
 
     @Override
     public void clickImageMapChat(View view, int position, String latitude, String longitude) {
+
+    }
+
+    @Override
+    public void clickUserDetail(View view, int position, User user) {
 
     }
 

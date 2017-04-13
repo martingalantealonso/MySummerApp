@@ -44,6 +44,10 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
+    private  FragmentMain fragmentMain;
+    private FragmentChat fragmentChat;
+    private FragmentCalculator fragmentCalculator;
+
     @BindView((R.id.drawer_layout))
     DrawerLayout drawerLayout;
     @BindView(R.id.navview)
@@ -56,6 +60,10 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        fragmentMain = new FragmentMain();
+        fragmentChat = new FragmentChat();
+        fragmentCalculator = new FragmentCalculator();
 
         mGetUsersPresenter = new GetUsersPresenter(this);
 
@@ -87,16 +95,18 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
 
                         switch (menuItem.getItemId()) {
                             case R.id.menu_seccion_1:
-                                fragment = new FragmentMain();
+                                //fragment = new FragmentMain();
+                                fragment = fragmentMain;
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_seccion_2:
-                                fragment = new FragmentChat();
+                                //fragment = new FragmentChat();
+                                fragment = fragmentChat;
                                 fragmentTransaction = true;
                                 break;
 
                             case R.id.menu_seccion_3:
-                                fragment = new FragmentCalculator();
+                                fragment = fragmentCalculator;
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_opcion_2:
@@ -124,7 +134,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
 
         View headerView = navView.getHeaderView(0);
         TextView mUserTxtView = (TextView) headerView.findViewById(R.id.user_name);
-        if (user!= null) {
+        if (user != null) {
             mUserTxtView.setText(user.getDisplayName());
         }
         CircleImageView mUserPhoto = (CircleImageView) headerView.findViewById(R.id.imageViewUserPhoto);

@@ -2,6 +2,8 @@ package com.example.mgalante.mysummerapp.adapter;
 
 import android.view.View;
 
+import com.example.mgalante.mysummerapp.entities.users.User;
+
 /**
  * Created by Alessandro Barreto on 27/06/2016.
  */
@@ -19,4 +21,6 @@ public interface ClickListenerChatFirebase {
      */
     void clickImageMapChat(View view, int position, String latitude, String longitude);
 
+
+    void clickUserDetail(View view, int position, User user);
 }

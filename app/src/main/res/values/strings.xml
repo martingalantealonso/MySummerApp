@@ -35,6 +35,7 @@
     <string name="select_picture_title">Complete action using</string>
     <string name="user_photo_extension">userphoto.PNG</string>
     <string name="image_chat_transition">image_chat_transition</string>
+    <string name="USERS">users</string>
 
     <plurals name="days">
         <item quantity="zero">%d Days</item>

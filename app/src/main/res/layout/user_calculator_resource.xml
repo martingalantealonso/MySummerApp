@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+
+    <!--
+            android:id="@+id/main_information_holder"
+            android:id="@+id/user_avatar"
+            android:id="@+id/user_money"
+    -->
+
+    <LinearLayout
+        android:id="@+id/main_information_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:elevation="5dp"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/user_avatar"
+            android:layout_width="97dp"
+            android:layout_height="72dp"
+            tools:src="@drawable/vd_user" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_gravity="center"
+            tools:background="#95000000"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/user_money"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                tools:text="Money" />
+
+        </LinearLayout>
+
+</LinearLayout>
+
+
+    <!--   <android.support.v7.widget.GridLayout
+           android:id="@+id/main_information_holder"
+           android:layout_width="match_parent"
+           android:layout_height="180dp"
+           app:columnCount="1">
+
+           <de.hdodenhof.circleimageview.CircleImageView
+               android:id="@+id/user_avatar"
+               android:padding="@dimen/default_medium_padding"
+               app:layout_columnSpan="1"
+               app:layout_columnWeight="1"
+               app:layout_rowWeight=".3"
+               tools:src="@drawable/vd_user" />
+
+           <TextView
+               android:id="@+id/user_money"
+               android:layout_width="0dp"
+               android:text="Spent: "
+               android:textAlignment="center"
+               android:textColor="@color/colorWhite"
+               android:textSize="24sp"
+               app:layout_columnWeight="1"
+               tools:background="@drawable/gradient_shadow"
+               tools:text="Spent: " />
+       </android.support.v7.widget.GridLayout>--></LinearLayout>

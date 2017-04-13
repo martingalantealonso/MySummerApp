@@ -10,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -67,6 +70,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calculator, container, false);
         ButterKnife.bind(this, view);
+
+        setHasOptionsMenu(true);
 
         FirebaseAuth mFirebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser user = mFirebaseAuth.getCurrentUser();
@@ -134,6 +139,45 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mUsersDatabaseReference = mFirebaseDatabase.getReference().child(getResources().getString(R.string.USERS));
 
         mLinearLayoutManager = new LinearLayoutManager(getContext());
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_calculator, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.calculator_menu_seccion_1:
+                // previously invisible view
+
+
+                // get the center for the clipping circle
+                /*int cx = (myView.getLeft() + myView.getRight()) / 2;
+                int cy = (myView.getTop() + myView.getBottom()) / 2;*/
+/*
+                int cx = (mPaymentHolder.getRight());
+                int cy = (mPaymentHolder.getTop() );
+
+                // get the final radius for the clipping circle
+                int finalRadius = Math.max(mPaymentHolder.getWidth()+300, mPaymentHolder.getHeight()+300);
+
+                // create the animator for this view (the start radius is zero)
+                Animator anim = ViewAnimationUtils.createCircularReveal(mPaymentHolder, cx, cy, 0, finalRadius);
+                anim.setDuration(500);
+                // make the view visible and start the animation
+                *//*Random rnd = new Random();
+                int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+                mPaymentHolder.setBackgroundColor(color);*//*
+                mPaymentHolder.setVisibility(View.VISIBLE);
+                anim.start();*/
+
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     private void setUserPhoto(Bitmap resource) {

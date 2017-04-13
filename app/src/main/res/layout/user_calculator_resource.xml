@@ -31,25 +31,39 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="45dp"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
-            tools:background="#95000000"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/default_small_margin"
+            tools:background="#95000000">
 
             <TextView
-                android:id="@+id/user_money"
+                android:id="@+id/user_name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:gravity="center"
+                android:ellipsize="end"
+                android:textAlignment="center"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textColor="@android:color/white"
                 android:textSize="18sp"
                 tools:text="Money" />
 
+            <TextView
+                android:id="@+id/user_money"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAlignment="center"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@android:color/white"
+                tools:text="Hero Description"
+                android:textSize="25sp" />
+
         </LinearLayout>
 
-</LinearLayout>
+    </LinearLayout>
 
 
     <!--   <android.support.v7.widget.GridLayout
@@ -76,4 +90,5 @@
                app:layout_columnWeight="1"
                tools:background="@drawable/gradient_shadow"
                tools:text="Spent: " />
-       </android.support.v7.widget.GridLayout>--></LinearLayout>
+       </android.support.v7.widget.GridLayout>-->
+</LinearLayout>

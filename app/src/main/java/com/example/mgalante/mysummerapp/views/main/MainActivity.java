@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -44,9 +45,12 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
 
-    private  FragmentMain fragmentMain;
+    private FragmentMain fragmentMain;
     private FragmentChat fragmentChat;
     private FragmentCalculator fragmentCalculator;
+
+    Fragment fragment;
+
 
     @BindView((R.id.drawer_layout))
     DrawerLayout drawerLayout;
@@ -79,10 +83,12 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.vd_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Fragment fragment = FragmentMain.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.content_frame, fragment)
-                .commit();
+        if (savedInstanceState == null) {
+            fragment = FragmentMain.newInstance();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.content_frame, fragment)
+                    .commit();
+        }
 
         navView.setNavigationItemSelectedListener(
                 //region OnNavigationItemSelectedListener
@@ -189,6 +195,12 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
     protected void onPause() {
         super.onPause();
         FirebaseChatMainApp.setChatActivityOpen(false);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        
     }
 
     private void getUsers() {

@@ -1,5 +1,6 @@
 package com.example.mgalante.mysummerapp.views.main.Fragment3Calculator;
 
+import android.animation.Animator;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -14,7 +15,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -207,7 +211,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     public void onGetAllUsersSuccess(List<User> users) {
 
         mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
-        UserListArrayAdapter adapter =new UserListArrayAdapter(getContext(),this,users);
+        UserListArrayAdapter adapter = new UserListArrayAdapter(getContext(), this, users);
         mRecyclerView.setAdapter(adapter);
 
     }
@@ -216,4 +220,32 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     public void onGetAllUsersFailure(String message) {
 
     }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                reveal();
+                //ViewUtils.removeGlobalListeners(getView(), this);
+                getView().getViewTreeObserver().removeGlobalOnLayoutListener(this);
+
+            }
+        });
+    }
+
+    void reveal() {
+        View view = getView();
+
+        int finalRadius = Math.max(view.getWidth(), view.getHeight());
+
+        Animator animator =
+                ViewAnimationUtils.createCircularReveal(view, 0, 0, 0, finalRadius);
+        animator.setInterpolator(new AccelerateInterpolator());
+        animator.setDuration(500);
+        animator.start();
+    }
+
 }

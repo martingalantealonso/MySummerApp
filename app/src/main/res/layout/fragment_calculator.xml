@@ -6,102 +6,162 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/calculator_main_holder"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_marginTop="@dimen/default_small_margin"
-        android:elevation="@dimen/appbar_elevation"
-        android:orientation="vertical">
-
-        <android.support.v7.widget.GridLayout
-            android:layout_width="294dp"
-            android:layout_height="match_parent"
-            android:layout_gravity="center|top"
-            android:layout_marginEnd="@dimen/default_medium_padding"
-            android:layout_marginStart="@dimen/default_medium_padding"
-            android:layout_marginTop="@dimen/default_medium_padding"
-            android:layout_marginBottom="@dimen/default_small_margin"
-            android:background="@drawable/gradient_shadow_round"
-            app:columnCount="2">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/calculator_user_photo"
-                android:elevation="@dimen/circularimageview_elevation"
-                android:padding="@dimen/default_medium_padding"
-                app:layout_columnSpan="2"
-                app:layout_columnWeight="1"
-                app:layout_rowWeight=".3"
-                tools:src="@drawable/vd_user" />
-
-            <TextView
-                android:id="@+id/calculator_txtv_spent_info"
-                android:layout_width="0dp"
-                android:text="Spent: "
-                android:textAlignment="textEnd"
-                android:textColor="@color/colorWhite"
-                android:textSize="24sp"
-                app:layout_columnWeight="1"
-                tools:text="Spent: " />
-
-            <TextView
-                android:id="@+id/calculator_txtv_spent"
-                android:layout_width="0dp"
-                android:text="200€ "
-                android:textAlignment="textStart"
-                android:textColor="@color/colorWhite"
-                android:textSize="24sp"
-                app:layout_columnWeight="1"
-                tools:text="200€ " />
-            <!--  <de.hdodenhof.circleimageview.CircleImageView
-                  android:id="@+id/calculator_user_photo"
-                  android:layout_width="wrap_content"
-                  android:layout_height="match_parent"
-                  app:layout_columnSpan="2"
-                  app:layout_rowWeight="1"
-                  app:layout_columnWeight="1"
-                  tools:src="@drawable/vd_user" />
-
-              <TextView
-                  android:id="@+id/calculator_txtv_spent_info"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  app:layout_columnWeight="1"
-                  tools:text="Total spent: "
-                 />
-
-              <TextView
-                  android:id="@+id/calculator_txtv_spent"
-                  android:layout_width="0dp"
-                  android:layout_height="wrap_content"
-                  app:layout_columnSpan="1"
-                  tools:text="Total spent: "
-                  />
-  -->
-        </android.support.v7.widget.GridLayout>
-
-    </LinearLayout>
-
     <FrameLayout
+        android:id="@+id/header"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/user_list_detail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layoutManager="LinearLayoutManager"
-        app:spanCount="2"
-        tools:listitem="@layout/fragment_user_resource"/>
-
-        <View
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="4dp"
-            android:layout_gravity="bottom"
-            android:background="@drawable/gradient_shadow_top" />
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-</FrameLayout>
+            <LinearLayout
+                android:id="@+id/calculator_main_holder"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_marginTop="@dimen/default_small_margin"
+                android:elevation="@dimen/appbar_elevation"
+                android:orientation="vertical">
 
+                <android.support.v7.widget.GridLayout
+                    android:layout_width="294dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|top"
+                    android:layout_marginBottom="@dimen/default_small_margin"
+                    android:layout_marginEnd="@dimen/default_medium_padding"
+                    android:layout_marginStart="@dimen/default_medium_padding"
+                    android:layout_marginTop="@dimen/default_medium_padding"
+                    android:background="@drawable/gradient_shadow_round"
+                    app:columnCount="2">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/calculator_user_photo"
+                        android:elevation="@dimen/circularimageview_elevation"
+                        android:padding="@dimen/default_medium_padding"
+                        app:layout_columnSpan="2"
+                        app:layout_columnWeight="1"
+                        app:layout_rowWeight=".3"
+                        tools:src="@drawable/vd_user" />
+
+                    <TextView
+                        android:id="@+id/calculator_txtv_spent_info"
+                        android:layout_width="0dp"
+                        android:text="Spent: "
+                        android:textAlignment="textEnd"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="24sp"
+                        app:layout_columnWeight="1"
+                        tools:text="Spent: " />
+
+                    <TextView
+                        android:id="@+id/calculator_txtv_spent"
+                        android:layout_width="0dp"
+                        android:text="200€ "
+                        android:textAlignment="textStart"
+                        android:textColor="@color/colorWhite"
+                        android:textSize="24sp"
+                        app:layout_columnWeight="1"
+                        tools:text="200€ " />
+                    <!--  <de.hdodenhof.circleimageview.CircleImageView
+                          android:id="@+id/calculator_user_photo"
+                          android:layout_width="wrap_content"
+                          android:layout_height="match_parent"
+                          app:layout_columnSpan="2"
+                          app:layout_rowWeight="1"
+                          app:layout_columnWeight="1"
+                          tools:src="@drawable/vd_user" />
+
+                      <TextView
+                          android:id="@+id/calculator_txtv_spent_info"
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          app:layout_columnWeight="1"
+                          tools:text="Total spent: "
+                         />
+
+                      <TextView
+                          android:id="@+id/calculator_txtv_spent"
+                          android:layout_width="0dp"
+                          android:layout_height="wrap_content"
+                          app:layout_columnSpan="1"
+                          tools:text="Total spent: "
+                          />
+          -->
+                </android.support.v7.widget.GridLayout>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/user_list_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="LinearLayoutManager"
+                    app:spanCount="2"
+                    tools:listitem="@layout/fragment_user_resource" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/gradient_shadow_top" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llEditTextHolder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/primary"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/txtInfoFav"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="20dp"
+                android:text="BAAAAAAAAAAAAH"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/txtWear"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="Eviar a Android Wear"
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/txtOther"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="Otras Opciones..."
+                android:textAlignment="viewStart"
+                android:textAllCaps="false"
+                android:textColor="@color/colorWhite"
+                android:textSize="17sp" />
+
+            </LinearLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

@@ -1,7 +1,9 @@
 package com.example.mgalante.mysummerapp.views.main.Fragment3Calculator;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -50,6 +52,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View {
 
+    private boolean isEditTextVisible;
+    private Animatable mAnimatable;
+
+
     private GetUsersPresenter mGetUsersPresenter;
 
     private LinearLayoutManager mLinearLayoutManager;
@@ -66,6 +72,15 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     @BindView(R.id.user_list_detail)
     RecyclerView mRecyclerView;
 
+    @BindView(R.id.llEditTextHolder)
+    LinearLayout llTextHolder;
+    @BindView(R.id.txtInfoFav)
+    TextView mInfoFav;
+    @BindView(R.id.txtOther)
+    TextView txtOther;
+    @BindView(R.id.txtWear)
+    TextView txtWear;
+
     public FragmentCalculator() {
     }
 
@@ -74,6 +89,9 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_calculator, container, false);
         ButterKnife.bind(this, view);
+
+        llTextHolder.setVisibility(View.INVISIBLE);
+        isEditTextVisible = false;
 
         setHasOptionsMenu(true);
 
@@ -106,6 +124,25 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
 
         initializeUsers();
+
+        txtOther.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "PULSADO 1", Toast.LENGTH_LONG).show();
+            }
+        });
+        txtWear.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "PULSADO 2", Toast.LENGTH_LONG).show();
+            }
+        });
+        mInfoFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "PULSADO 3", Toast.LENGTH_LONG).show();
+            }
+        });
         return view;
     }
 
@@ -178,6 +215,39 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                 mPaymentHolder.setVisibility(View.VISIBLE);
                 anim.start();*/
 
+                int cx = llTextHolder.getRight();
+                int cy = llTextHolder.getTop();
+                //From center ->
+                //int cx = (llTextHolder.getLeft() + llTextHolder.getRight()) / 2;
+                //int cy = (llTextHolder.getTop() + llTextHolder.getBottom()) / 2;
+                if (!isEditTextVisible) {
+                    isEditTextVisible = true;
+                    int finalRadius = Math.max(llTextHolder.getWidth(), llTextHolder.getHeight() + llTextHolder.getWidth());
+                    Animator anim = ViewAnimationUtils.createCircularReveal(llTextHolder, cx, cy, 0, finalRadius);
+                    anim.setDuration(800);
+                    llTextHolder.setVisibility(View.VISIBLE);
+                    anim.start();
+                   /* mFloatingButton.setImageResource(R.drawable.icn_morp);
+                    mAnimatable = (Animatable) mFloatingButton.getDrawable();
+                    mAnimatable.start();*/
+                } else {
+                    int initialRadius = llTextHolder.getWidth();
+                    Animator anim = ViewAnimationUtils.createCircularReveal(llTextHolder, cx, cy, initialRadius, 0);
+                    anim.addListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            super.onAnimationEnd(animation);
+                            llTextHolder.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                    isEditTextVisible = false;
+                    anim.start();
+
+                   /* mFloatingButton.setImageResource(R.drawable.icn_morph_reverse);
+                    mAnimatable = (Animatable) (mFloatingButton).getDrawable();
+                    mAnimatable.start();*/
+                }
+
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -244,7 +314,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         Animator animator =
                 ViewAnimationUtils.createCircularReveal(view, 0, 0, 0, finalRadius);
         animator.setInterpolator(new AccelerateInterpolator());
-        animator.setDuration(500);
+        animator.setDuration(1000);
         animator.start();
     }
 

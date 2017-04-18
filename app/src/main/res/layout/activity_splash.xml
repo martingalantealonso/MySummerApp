@@ -14,7 +14,7 @@
         android:layout_alignParentTop="true"
         android:contentDescription="@string/splas_himg_backgroud"
         android:scaleType="centerCrop"
-        android:src="@drawable/pantin1" />
+        android:src="@drawable/drw_pantin1" />
 
     <View
         android:layout_width="match_parent"

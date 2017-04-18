@@ -4,7 +4,7 @@
     <item>
         <bitmap
             android:gravity="center|bottom|clip_vertical"
-            android:src="@drawable/pantin1" />
+            android:src="@drawable/drw_pantin1" />
     </item>
 
 </layer-list>

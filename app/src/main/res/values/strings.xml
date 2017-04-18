@@ -37,6 +37,14 @@
     <string name="user_photo_extension">userphoto.PNG</string>
     <string name="image_chat_transition">image_chat_transition</string>
     <string name="USERS">users</string>
+    <string name="add_payment">Add Payment</string>
+    <string name="amount">Amount</string>
+    <string name="description">Description</string>
+    <string name="receipt">Add Receipt</string>
+    <string name="from_gallery">From Gallery</string>
+    <string name="from_camera">From Camera</string>
+    <string name="file_name">File Name</string>
+    <string name="error_wrong_amount">You must provide a valid amount</string>
 
     <plurals name="days">
         <item quantity="zero">%d Days</item>

@@ -32,7 +32,9 @@
         </provider>
 
 
-        <activity android:name=".views.main.MainActivity">
+        <activity
+            android:name=".views.main.MainActivity"
+            android:windowSoftInputMode="adjustPan">
 
         </activity>
         <activity
@@ -45,8 +47,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".views.main.FullScreenImageActivity"
-            android:theme="@style/FullScreenTheme"/>
+        <activity
+            android:name=".views.main.FullScreenImageActivity"
+            android:theme="@style/FullScreenTheme" />
         <!--<service
             android:name=".views.main.services.MyFirebaseMessagingService">
             <intent-filter>

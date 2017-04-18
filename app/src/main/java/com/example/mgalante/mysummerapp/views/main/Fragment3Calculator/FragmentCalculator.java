@@ -7,6 +7,8 @@ import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +23,8 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.AccelerateInterpolator;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -74,12 +78,22 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     @BindView(R.id.llEditTextHolder)
     LinearLayout llTextHolder;
-    @BindView(R.id.txtInfoFav)
-    TextView mInfoFav;
-    @BindView(R.id.txtOther)
-    TextView txtOther;
-    @BindView(R.id.txtWear)
-    TextView txtWear;
+    @BindView(R.id.input_payment_amount)
+    TextInputLayout mtilPAmount;
+    @BindView(R.id.input_payment_description)
+    TextInputLayout mtilPDescription;
+    @BindView(R.id.edtxt_payment_amount)
+    EditText mPaymentAmount;
+    @BindView(R.id.edtxt_payment_description)
+    EditText mPaymentDescription;
+    @BindView(R.id.edtxt_file_name)
+    EditText mPaymentFileName;
+    @BindView(R.id.btn_camera)
+    Button mCameraButton;
+    @BindView(R.id.btn_gallery)
+    Button mGalleryButton;
+    @BindView(R.id.btn_accept_payment)
+    FloatingActionButton mFloatingActionButton;
 
     public FragmentCalculator() {
     }
@@ -125,24 +139,13 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         initializeUsers();
 
-        txtOther.setOnClickListener(new View.OnClickListener() {
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "PULSADO 1", Toast.LENGTH_LONG).show();
+                addPayment();
             }
         });
-        txtWear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "PULSADO 2", Toast.LENGTH_LONG).show();
-            }
-        });
-        mInfoFav.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "PULSADO 3", Toast.LENGTH_LONG).show();
-            }
-        });
+
         return view;
     }
 
@@ -192,9 +195,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.calculator_menu_seccion_1:
-                // previously invisible view
-
-
                 // get the center for the clipping circle
                 /*int cx = (myView.getLeft() + myView.getRight()) / 2;
                 int cy = (myView.getTop() + myView.getBottom()) / 2;*/
@@ -227,6 +227,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                     anim.setDuration(800);
                     llTextHolder.setVisibility(View.VISIBLE);
                     anim.start();
+
                    /* mFloatingButton.setImageResource(R.drawable.icn_morp);
                     mAnimatable = (Animatable) mFloatingButton.getDrawable();
                     mAnimatable.start();*/
@@ -259,7 +260,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         //Palette palette = Palette.from(resource).generate();
         //mMainHolder.setBackgroundColor(palette.getDarkMutedColor(Color.DKGRAY));
         //getView().setBackgroundColor(palette.getDarkMutedColor(Color.DKGRAY));
-
     }
 
     @Override
@@ -291,6 +291,21 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     }
 
+
+    private void addPayment() {
+
+        //1 check if payment amount is valid
+        if (mPaymentAmount.getText().length() <= 0) {
+            mtilPAmount.setError(getString(R.string.error_wrong_amount));
+            return;
+        } else {
+            mtilPAmount.setErrorEnabled(false);
+        }
+
+
+    }
+
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -317,5 +332,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         animator.setDuration(1000);
         animator.start();
     }
+
 
 }

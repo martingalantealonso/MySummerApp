@@ -14,7 +14,7 @@
         android:contentDescription="@string/splas_himg_backgroud"
         android:scaleType="centerCrop"
         android:visibility="gone"
-        tools:src="@drawable/pantin1"
+        tools:src="@drawable/drw_pantin1"
         tools:visibility="visible" />
 
     <View

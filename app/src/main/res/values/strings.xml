@@ -20,6 +20,9 @@
 
     <string name="refrence_chat_photos">chat_photos</string>
     <string name="refrence_gallery_photos">gallery_photos</string>
+    <string name="USERS">users</string>
+    <string name="reference_payments">payments</string>
+
 
     <string name="sp_store_chat_images">store_chat_images</string>
     <string name="progress_downloading">Downloading…</string>
@@ -36,7 +39,6 @@
     <string name="select_picture_title">Complete action using</string>
     <string name="user_photo_extension">userphoto.PNG</string>
     <string name="image_chat_transition">image_chat_transition</string>
-    <string name="USERS">users</string>
     <string name="add_payment">Add Payment</string>
     <string name="amount">Amount</string>
     <string name="description">Description</string>

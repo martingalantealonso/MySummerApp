@@ -35,6 +35,7 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
 import com.example.mgalante.mysummerapp.adapter.UserListArrayAdapter;
+import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersContract;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
@@ -44,6 +45,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -59,12 +61,13 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     private boolean isEditTextVisible;
     private Animatable mAnimatable;
 
-
+    public static User userModel;
     private GetUsersPresenter mGetUsersPresenter;
 
     private LinearLayoutManager mLinearLayoutManager;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private DatabaseReference mUsersDatabaseReference;
+    private DatabaseReference mPaymentsDatabaseReference;
     FirebaseDatabase mFirebaseDatabase;
 
     @BindView(R.id.calculator_main_holder)
@@ -179,8 +182,11 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         mGetUsersPresenter = new GetUsersPresenter(this);
 
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userModel = new User(user.getDisplayName(), user.getPhotoUrl().toString(), user.getUid());
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUsersDatabaseReference = mFirebaseDatabase.getReference().child(getResources().getString(R.string.USERS));
+        mPaymentsDatabaseReference = mFirebaseDatabase.getReference().child(getResources().getString(R.string.reference_payments));
 
         mLinearLayoutManager = new LinearLayoutManager(getContext());
     }
@@ -302,6 +308,11 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             mtilPAmount.setErrorEnabled(false);
         }
 
+        PaymentModel model = new PaymentModel(userModel, mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
+        mPaymentsDatabaseReference.push().setValue(model);
+
+        mPaymentAmount.setText("");
+        mPaymentDescription.setText("");
 
     }
 
@@ -313,7 +324,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
-                reveal();
+                //reveal();
                 //ViewUtils.removeGlobalListeners(getView(), this);
                 getView().getViewTreeObserver().removeGlobalOnLayoutListener(this);
 

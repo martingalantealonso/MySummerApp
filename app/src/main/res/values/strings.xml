@@ -47,6 +47,7 @@
     <string name="from_camera">From Camera</string>
     <string name="file_name">File Name</string>
     <string name="error_wrong_amount">You must provide a valid amount</string>
+    <string name="payments_sum">paymentsSum</string>
 
     <plurals name="days">
         <item quantity="zero">%d Days</item>

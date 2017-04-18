@@ -9,7 +9,7 @@ public class User {
     public String name;
     public String photoUrl;
     public String firebaseToken;
-
+    public double paymentsSum;
 
     public User() {}
 
@@ -25,6 +25,14 @@ public class User {
         this.uid = uid;
         this.name = displayName;
         this.photoUrl = s;
+    }
+
+    public User(String uid, String name, String photoUrl, String firebaseToken, double paymentsSum) {
+        this.uid = uid;
+        this.name = name;
+        this.photoUrl = photoUrl;
+        this.firebaseToken = firebaseToken;
+        this.paymentsSum = paymentsSum;
     }
 
     public String getUid() {
@@ -57,6 +65,14 @@ public class User {
 
     public void setFirebaseToken(String firebaseToken) {
         this.firebaseToken = firebaseToken;
+    }
+
+    public double getPaymentsSum() {
+        return paymentsSum;
+    }
+
+    public void setPaymentsSum(double paymentsSum) {
+        this.paymentsSum = paymentsSum;
     }
 
     @Override

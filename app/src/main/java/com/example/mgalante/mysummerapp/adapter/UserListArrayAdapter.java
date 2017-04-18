@@ -64,7 +64,8 @@ public class UserListArrayAdapter extends RecyclerView.Adapter<UserListArrayAdap
                 }
             });
         }
-        holder.tvUserMoney.setText(user.getName());
+        holder.tvUserName.setText(user.getName());
+        holder.tvUserMoney.setText(String.valueOf(user.getPaymentsSum() + " €"));
     }
 
     @Override
@@ -76,12 +77,13 @@ public class UserListArrayAdapter extends RecyclerView.Adapter<UserListArrayAdap
 
         public LinearLayout mUserHolder;
         public CircleImageView mUserPhoto;
-        public TextView tvUserMoney;
+        public TextView tvUserMoney, tvUserName;
 
         public MyUserViewHolder(View itemView) {
             super(itemView);
             mUserHolder = (LinearLayout) itemView.findViewById(R.id.main_information_holder);
             mUserPhoto = (CircleImageView) itemView.findViewById(R.id.user_avatar);
+            tvUserName = (TextView) itemView.findViewById(R.id.user_name);
             tvUserMoney = (TextView) itemView.findViewById(R.id.user_money);
         }
 
@@ -97,7 +99,7 @@ public class UserListArrayAdapter extends RecyclerView.Adapter<UserListArrayAdap
 
         @Override
         public void clickUserDetail(View view, int position, User user) {
-            Toast.makeText(mContext,user.toString(),Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, user.toString(), Toast.LENGTH_LONG).show();
         }
     }
 

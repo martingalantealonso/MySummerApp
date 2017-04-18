@@ -14,6 +14,9 @@ public class PaymentModel {
     private String timeStamp;
     private FileModel file;
 
+    public PaymentModel() {
+    }
+
     public PaymentModel(User userModel, String description, double amount, String timeStamp, FileModel file) {
         this.userModel = userModel;
         this.description = description;

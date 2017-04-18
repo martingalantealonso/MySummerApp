@@ -2,6 +2,8 @@ package com.example.mgalante.mysummerapp.views.main.Fragment3Calculator;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
@@ -39,6 +41,8 @@ import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersContract;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
+import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserContract;
+import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -56,13 +60,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by mgalante on 31/03/17.
  */
 
-public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View {
+public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View {
 
     private boolean isEditTextVisible;
     private Animatable mAnimatable;
 
+    private SharedPreferences prefs;
+
     public static User userModel;
     private GetUsersPresenter mGetUsersPresenter;
+    private GetCurrentUserPresenter mGetCurrentUserPresenter;
 
     private LinearLayoutManager mLinearLayoutManager;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
@@ -101,6 +108,25 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     public FragmentCalculator() {
     }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        prefs = getActivity().getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
+        mGetUsersPresenter = new GetUsersPresenter(this);
+        mGetCurrentUserPresenter = new GetCurrentUserPresenter(this);
+
+        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        userModel = new User(user.getDisplayName(), user.getPhotoUrl().toString(), user.getUid());
+        userModel.setPaymentsSum(Double.parseDouble(prefs.getString(getString(R.string.payments_sum), "0.0")));
+        mFirebaseDatabase = FirebaseDatabase.getInstance();
+        mUsersDatabaseReference = mFirebaseDatabase.getReference().child(getResources().getString(R.string.USERS));
+
+        mPaymentsDatabaseReference = mFirebaseDatabase.getReference().child(getResources().getString(R.string.reference_payments));
+
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -136,6 +162,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             });
         }
 
+        mSpentTextView.setText(String.valueOf(prefs.getString(getString(R.string.payments_sum), "00.0") + "€"));
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         //mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL); // 2 -> number of columns
         mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
@@ -154,6 +181,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     private void initializeUsers() {
 
+        mGetCurrentUserPresenter.getCurrentUserPayments();
         mGetUsersPresenter.getAllUsers();
 
 /*
@@ -176,20 +204,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mRecyclerView.setAdapter(userListAdapter);*/
     }
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        mGetUsersPresenter = new GetUsersPresenter(this);
-
-        final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        userModel = new User(user.getDisplayName(), user.getPhotoUrl().toString(), user.getUid());
-        mFirebaseDatabase = FirebaseDatabase.getInstance();
-        mUsersDatabaseReference = mFirebaseDatabase.getReference().child(getResources().getString(R.string.USERS));
-        mPaymentsDatabaseReference = mFirebaseDatabase.getReference().child(getResources().getString(R.string.reference_payments));
-
-        mLinearLayoutManager = new LinearLayoutManager(getContext());
-    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -297,7 +311,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     }
 
-
     private void addPayment() {
 
         //1 check if payment amount is valid
@@ -311,11 +324,21 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         PaymentModel model = new PaymentModel(userModel, mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
         mPaymentsDatabaseReference.push().setValue(model);
 
+
+        // Sum payment to user
+
+        if (String.valueOf(userModel.getPaymentsSum()).equals("0.0")) {
+            userModel.setPaymentsSum(Double.parseDouble(mPaymentAmount.getText().toString()));
+        } else {
+            userModel.setPaymentsSum(userModel.getPaymentsSum() + Double.parseDouble(mPaymentAmount.getText().toString()));
+        }
+        //Util.updateUserToDatabase(getActivity(), userModel);
+        mGetCurrentUserPresenter.getCurrentUserPayments();
+
         mPaymentAmount.setText("");
         mPaymentDescription.setText("");
 
     }
-
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -344,5 +367,18 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         animator.start();
     }
 
+    @Override
+    public void onGetCurrentUserSuccess(User user) {
 
+    }
+
+    @Override
+    public void onGetCurrentUserPaymentsSuccess(List<PaymentModel> payments) {
+
+        Double paymentSum = 0.0;
+        for (PaymentModel payment : payments) {
+            paymentSum = paymentSum + payment.getAmount();
+        }
+        mSpentTextView.setText(String.valueOf(String.format("%.2f", paymentSum) + "€"));
+    }
 }

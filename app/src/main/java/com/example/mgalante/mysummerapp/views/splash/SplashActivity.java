@@ -42,7 +42,7 @@ import java.util.Arrays;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SplashActivity extends BaseActivity  {
+public class SplashActivity extends BaseActivity {
 
     public static User userModel;
 
@@ -211,9 +211,12 @@ public class SplashActivity extends BaseActivity  {
     }
 
     public void addUserToDatabase(Context context, FirebaseUser firebaseUser) {
-        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(),
-                firebaseUser.getPhotoUrl().toString(),
+        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl().toString(),
                 new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN));
+
+/*        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl().toString(),
+                new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN), Double.parseDouble(String.valueOf(getSharedPreferences(getString(R.string.payments_sum), 0))));*/
+
         FirebaseDatabase.getInstance()
                 .getReference()
                 .child(Constants.ARG_USERS)
@@ -245,8 +248,6 @@ public class SplashActivity extends BaseActivity  {
             }
         });
     }
-
-
 
 
 }

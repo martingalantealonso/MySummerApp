@@ -1,6 +1,8 @@
 package com.example.mgalante.mysummerapp.views.main;
 
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,9 +24,12 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.BaseActivity;
 import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersContract;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
+import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserContract;
+import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
@@ -38,8 +43,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends BaseActivity implements GetUsersContract.View {
+public class MainActivity extends BaseActivity implements GetUsersContract.View, GetCurrentUserContract.View {
 
+    private GetCurrentUserPresenter mGetCurrentUserPresenter;
     private GetUsersPresenter mGetUsersPresenter;
 
     private FirebaseAuth mFirebaseAuth;
@@ -69,6 +75,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
         fragmentChat = new FragmentChat();
         fragmentCalculator = new FragmentCalculator();
 
+        mGetCurrentUserPresenter = new GetCurrentUserPresenter(this);
         mGetUsersPresenter = new GetUsersPresenter(this);
 
         //Util.getAllUsersFromFirebase();
@@ -156,6 +163,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Surfing some waves...");
         progressDialog.show();
+        getCurrentUser();
         getUsers();
         progressDialog.dismiss();
 
@@ -200,7 +208,33 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
-        
+
+    }
+
+    private void getCurrentUser() {
+        mGetCurrentUserPresenter.getCurrentUser();
+        mGetCurrentUserPresenter.getCurrentUserPayments();
+    }
+
+    @Override
+    public void onGetCurrentUserSuccess(User user) {
+        SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(getString(R.string.payments_sum), String.valueOf(user.getPaymentsSum()));
+        Log.i("onGetCurrUserSuccess2", user.toString());
+    }
+
+    @Override
+    public void onGetCurrentUserPaymentsSuccess(List<PaymentModel> payments) {
+
+        Double paymentSum = 0.0;
+        for (PaymentModel payment : payments) {
+            paymentSum = paymentSum + payment.getAmount();
+        }
+        SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(getString(R.string.payments_sum), String.valueOf(paymentSum));
+        Log.i("onGetCurrUserPaytsSucs", paymentSum.toString());
     }
 
     private void getUsers() {
@@ -236,5 +270,6 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View 
             }
         });
     }
+
 
 }

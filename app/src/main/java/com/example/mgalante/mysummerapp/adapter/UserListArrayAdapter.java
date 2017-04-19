@@ -49,22 +49,33 @@ public class UserListArrayAdapter extends RecyclerView.Adapter<UserListArrayAdap
 
         if (holder.mUserPhoto != null) {
 
-            Glide.with(holder.mUserPhoto.getContext()).load(user.getPhotoUrl()).asBitmap().into(new SimpleTarget<Bitmap>() {
+            if (!String.valueOf(user.getPhotoUrl()).equals("") || !String.valueOf(user.getPhotoUrl()).equals("null")) {
 
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    holder.mUserPhoto.setImageBitmap(resource);
+                Glide.with(holder.mUserPhoto.getContext()).load(user.getPhotoUrl()).asBitmap().into(new SimpleTarget<Bitmap>() {
+
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        holder.mUserPhoto.setImageBitmap(resource);
                    /* Palette palete = Palette.from(resource).generate();
                     holder.mUserHolder.setBackgroundColor(palete.getDarkMutedColor(Color.DKGRAY));*/
-                }
+                    }
 
-                @Override
-                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
 
-                }
-            });
+                    }
+                });
+            } else {
+                holder.mUserPhoto.setImageResource(R.drawable.vd_user);
+            }
         }
-        holder.tvUserName.setText(user.getName());
+
+        // !String.valueOf(user.getPhotoUrl()).equals("") &&  !String.valueOf(user.getPhotoUrl()).equals("null")  ? String.valueOf(user.getPhotoUrl()) : Util.DEFAULT_NULL_IMAGE)
+        if (String.valueOf(user.getName()).equals("null")) {
+            holder.tvUserName.setText(mContext.getString(R.string.not_found_user_name));
+        } else if (!String.valueOf(user.getName()).equals("")) {
+            holder.tvUserName.setText(user.getName());
+        }
         holder.tvUserMoney.setText(String.valueOf(user.getPaymentsSum() + " €"));
     }
 
@@ -106,6 +117,5 @@ public class UserListArrayAdapter extends RecyclerView.Adapter<UserListArrayAdap
     public interface OnItemClickListener {
         void onItemClick(View view, int position);
     }
-
 
 }

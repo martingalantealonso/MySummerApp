@@ -35,6 +35,7 @@ import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserPre
 import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.utils.Constants;
 import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
+import com.example.mgalante.mysummerapp.utils.Util;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
 import com.example.mgalante.mysummerapp.views.settings.SettingsActivity;
@@ -133,8 +134,8 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                                 intent.putExtra("uidUser", user.getUid());
                                 intent.putExtra("nameUser", user != null ? user.getDisplayName() : "My Profile");
-                                //intent.putExtra("urlPhotoUser", user.getPhotoUrl() == null ? String.valueOf(user.getPhotoUrl()) : Util.DEFAULT_NULL_IMAGE);
-                                intent.putExtra("urlPhotoUser", String.valueOf(user.getPhotoUrl()));
+                                intent.putExtra("urlPhotoUser", !String.valueOf(user.getPhotoUrl()).equals("") &&  !String.valueOf(user.getPhotoUrl()).equals("null")  ? String.valueOf(user.getPhotoUrl()) : Util.DEFAULT_NULL_IMAGE);
+                                //intent.putExtra("urlPhotoUser", String.valueOf(user.getPhotoUrl()));
                                 startActivity(intent);
                                 break;
                             case R.id.menu_opcion_2:

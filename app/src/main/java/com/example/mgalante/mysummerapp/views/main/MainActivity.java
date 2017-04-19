@@ -249,7 +249,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         //addUserImageToCache(this, user.getUid(), user.getPhotoUrl());
 
     }
-    
+
     @Override
     public void onGetCurrentUserPaymentsSuccess(List<PaymentModel> payments) {
 

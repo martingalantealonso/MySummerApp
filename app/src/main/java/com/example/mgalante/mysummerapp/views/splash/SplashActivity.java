@@ -284,25 +284,7 @@ public class SplashActivity extends BaseActivity {
                 });
     }
 
-    public void addUserToDatabase(Context context, final User user) {
 
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child(Constants.ARG_USERS)
-                .child(user.getUid())
-                .setValue(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // successfully added user
-
-                        } else {
-                            // failed to add user
-                        }
-                    }
-                });
-    }
 
     private void addUserImageToCache(final String uid, String photoUrl) {
         Glide.with(this).load(photoUrl).asBitmap().into(new SimpleTarget<Bitmap>() {

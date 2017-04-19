@@ -271,12 +271,12 @@ public class SplashActivity extends BaseActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             // successfully added user
-                            if (String.valueOf(firebaseUser.getPhotoUrl()).equals(null)) {
-                          /*      Intent intent = new Intent();
+                         /*     if (String.valueOf(firebaseUser.getPhotoUrl()).equals(null)) {
+                              Intent intent = new Intent();
                                 intent.setType("image*//*");
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
                                 startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
-                           */ }
+                          } */
                         } else {
                             // failed to add user
                         }

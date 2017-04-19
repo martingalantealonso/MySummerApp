@@ -2,6 +2,7 @@ package com.example.mgalante.mysummerapp.views.main;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
@@ -31,8 +32,10 @@ import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserContract;
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
+import com.example.mgalante.mysummerapp.utils.Util;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
+import com.example.mgalante.mysummerapp.views.settings.SettingsActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -84,7 +87,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+        final FirebaseUser user = mFirebaseAuth.getCurrentUser();
 
         setSupportActionBar(appbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.vd_menu);
@@ -122,7 +125,10 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_opcion_1:
-
+                                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                                intent.putExtra("nameUser", user != null || user.getDisplayName() != null ? user.getDisplayName() : "My Profile");
+                                intent.putExtra("urlPhotoUser", user != null ? String.valueOf(user.getPhotoUrl()) : Util.DEFAULT_NULL_IMAGE);
+                                startActivity(intent);
                                 break;
                             case R.id.menu_opcion_2:
                                 Log.i("NavigationView", "Pulsada opción 2");

@@ -74,6 +74,7 @@
             </LinearLayout>
 
             <FrameLayout
+                android:background="@color/colorWhite"
                 android:layout_width="368dp"
                 android:layout_height="match_parent">
 

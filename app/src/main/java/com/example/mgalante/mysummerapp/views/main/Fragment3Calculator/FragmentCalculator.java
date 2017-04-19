@@ -57,6 +57,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static com.example.mgalante.mysummerapp.utils.Util.collapse;
+import static com.example.mgalante.mysummerapp.utils.Util.expand;
+
 /**
  * Created by mgalante on 31/03/17.
  */
@@ -80,12 +83,16 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     @BindView(R.id.calculator_main_holder)
     LinearLayout mMainHolder;
+    @BindView(R.id.payments_detail_view)
+    LinearLayout mPaymentsDetailHolder;
     @BindView(R.id.calculator_txtv_spent)
     TextView mSpentTextView;
     @BindView(R.id.calculator_user_photo)
     CircleImageView mUserPhoto;
     @BindView(R.id.user_list_detail)
     RecyclerView mRecyclerView;
+    @BindView(R.id.user_payments_list_detail)
+    RecyclerView mRecyclerViewPayments;
 
     @BindView(R.id.llEditTextHolder)
     LinearLayout llTextHolder;
@@ -177,6 +184,17 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             }
         });
 
+        mUserPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+               if(mPaymentsDetailHolder.getVisibility()==View.GONE) {
+                   expand(mPaymentsDetailHolder);
+               }else{
+                   collapse(mPaymentsDetailHolder);
+               }
+            }
+        });
         return view;
     }
 

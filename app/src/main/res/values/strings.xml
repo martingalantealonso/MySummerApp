@@ -23,6 +23,11 @@
     <string name="USERS">users</string>
     <string name="reference_payments">payments</string>
 
+    <string name="preference_user_name">name</string>
+    <string name="preference_user_photoUrl">photoUrl</string>
+    <string name="preference_user_uid">uid</string>
+    <string name="preference_user_paymentsSum">paymentsSum</string>
+
 
     <string name="sp_store_chat_images">store_chat_images</string>
     <string name="progress_downloading">Downloading…</string>

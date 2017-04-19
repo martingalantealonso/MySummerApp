@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.NonNull;
@@ -21,8 +20,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.BaseActivity;
 import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
@@ -51,6 +48,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.mgalante.mysummerapp.utils.UsersPhotos.addUserImageToCache;
 
 public class MainActivity extends BaseActivity implements GetUsersContract.View, GetCurrentUserContract.View {
 
@@ -236,14 +235,21 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
     public void onGetCurrentUserSuccess(User user) {
         if (user == null) {
             addFireUserToDatabase(getApplicationContext(), mFirebaseAuth.getCurrentUser());
-        } else {
-            SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putString(getString(R.string.payments_sum), String.valueOf(user.getPaymentsSum()));
-            Log.i("onGetCurrUserSuccess2", user.toString());
         }
-    }
 
+        SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(getString(R.string.preference_user_name), String.valueOf(user.getName()));
+        editor.putString(getString(R.string.preference_user_photoUrl), String.valueOf(user.getPhotoUrl()));
+        editor.putString(getString(R.string.preference_user_uid), String.valueOf(user.getUid()));
+        editor.putString(getString(R.string.preference_user_paymentsSum), String.valueOf(user.getPaymentsSum()));
+        editor.apply();
+        Log.i("onGetCurrUserSuccess2", user.toString());
+        //setUserPhotoProfile(prefs.getString(getString(R.string.preference_user_photoUrl), String.valueOf(user.getPhotoUrl())));
+        //addUserImageToCache(this, user.getUid(), user.getPhotoUrl());
+
+    }
+    
     @Override
     public void onGetCurrentUserPaymentsSuccess(List<PaymentModel> payments) {
 
@@ -266,7 +272,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         Log.i("TEST", "onGetAllUsersSuccess");
         for (User user : users) {
             if (CacheStore.getInstance().getCacheFile(user.getUid()) == null) {
-                addUserImageToCache(user.getUid(), user.getPhotoUrl());
+                addUserImageToCache(this, user.getUid(), user.getPhotoUrl());
             }
         }
     }
@@ -276,20 +282,6 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
 
     }
 
-    private void addUserImageToCache(final String uid, String photoUrl) {
-        Glide.with(this).load(photoUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
-
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                CacheStore.getInstance().saveCacheFile(uid, resource);
-            }
-
-            @Override
-            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-
-            }
-        });
-    }
 
     public void addFireUserToDatabase(Context context, final FirebaseUser firebaseUser) {
         User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), String.valueOf(firebaseUser.getPhotoUrl()),

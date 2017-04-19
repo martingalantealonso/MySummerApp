@@ -27,6 +27,7 @@ import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.utils.Constants;
 import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
+import com.example.mgalante.mysummerapp.utils.UsersPhotos;
 import com.example.mgalante.mysummerapp.utils.Util;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -202,6 +203,7 @@ public class SettingsActivity extends AppCompatActivity implements AppBarLayout.
                             User user = new User(getIntent().getExtras().getString("uidUser"), getIntent().getExtras().getString("nameUser"), String.valueOf(downloadUrl),
                                     new SharedPrefUtil(getApplicationContext()).getString(Constants.ARG_FIREBASE_TOKEN));
                             addUserToDatabase(getApplicationContext(), user);
+                           // UsersPhotos.addUserImageToCache(getApplicationContext(), user.getUid(), user.getPhotoUrl());
                         }
                     });
                 } else {

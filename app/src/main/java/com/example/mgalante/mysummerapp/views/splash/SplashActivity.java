@@ -133,7 +133,7 @@ public class SplashActivity extends BaseActivity {
                                     .child("user")
                                     .setValue(mUser);*/
 
-                            addFireUserToDatabase(getApplicationContext(), user);
+                            //addFireUserToDatabase(getApplicationContext(), user);
                             if (CacheStore.getInstance().getCacheFile(user.getUid()) == null) {
                                 addUserImageToCache(user.getUid(), String.valueOf(user.getPhotoUrl()));
                             }
@@ -154,7 +154,9 @@ public class SplashActivity extends BaseActivity {
                 startActivityForResult(
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
-                                .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                /*.setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build())) */
+                                .setProviders(Arrays.asList(
                                         new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
                                 .build(),
                         RC_SIGN_IN);
@@ -283,8 +285,6 @@ public class SplashActivity extends BaseActivity {
                     }
                 });
     }
-
-
 
     private void addUserImageToCache(final String uid, String photoUrl) {
         Glide.with(this).load(photoUrl).asBitmap().into(new SimpleTarget<Bitmap>() {

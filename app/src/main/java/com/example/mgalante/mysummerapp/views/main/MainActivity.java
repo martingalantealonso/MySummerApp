@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -32,12 +33,17 @@ import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserContract;
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
+import com.example.mgalante.mysummerapp.utils.Constants;
+import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
 import com.example.mgalante.mysummerapp.views.settings.SettingsActivity;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -128,7 +134,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                 intent.putExtra("uidUser", user.getUid());
                                 intent.putExtra("nameUser", user != null ? user.getDisplayName() : "My Profile");
                                 //intent.putExtra("urlPhotoUser", user.getPhotoUrl() == null ? String.valueOf(user.getPhotoUrl()) : Util.DEFAULT_NULL_IMAGE);
-                                intent.putExtra("urlPhotoUser",String.valueOf(user.getPhotoUrl()));
+                                intent.putExtra("urlPhotoUser", String.valueOf(user.getPhotoUrl()));
                                 startActivity(intent);
                                 break;
                             case R.id.menu_opcion_2:
@@ -227,10 +233,14 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
 
     @Override
     public void onGetCurrentUserSuccess(User user) {
-        SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(getString(R.string.payments_sum), String.valueOf(user.getPaymentsSum()));
-        Log.i("onGetCurrUserSuccess2", user.toString());
+        if (user == null) {
+            addFireUserToDatabase(getApplicationContext(), mFirebaseAuth.getCurrentUser());
+        } else {
+            SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(getString(R.string.payments_sum), String.valueOf(user.getPaymentsSum()));
+            Log.i("onGetCurrUserSuccess2", user.toString());
+        }
     }
 
     @Override
@@ -280,5 +290,33 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         });
     }
 
+    public void addFireUserToDatabase(Context context, final FirebaseUser firebaseUser) {
+        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), String.valueOf(firebaseUser.getPhotoUrl()),
+                new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN));
 
+/*        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl().toString(),
+                new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN), Double.parseDouble(String.valueOf(getSharedPreferences(getString(R.string.payments_sum), 0))));*/
+
+        FirebaseDatabase.getInstance()
+                .getReference()
+                .child(Constants.ARG_USERS)
+                .child(firebaseUser.getUid())
+                .setValue(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // successfully added user
+                         /*     if (String.valueOf(firebaseUser.getPhotoUrl()).equals(null)) {
+                              Intent intent = new Intent();
+                                intent.setType("image*//*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
+                          } */
+                        } else {
+                            // failed to add user
+                        }
+                    }
+                });
+    }
 }

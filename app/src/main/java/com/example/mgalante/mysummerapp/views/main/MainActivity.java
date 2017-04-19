@@ -117,10 +117,12 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                 fragment = fragmentChat;
                                 fragmentTransaction = true;
                                 break;
-
                             case R.id.menu_seccion_3:
                                 fragment = fragmentCalculator;
                                 fragmentTransaction = true;
+                                break;
+                            case R.id.menu_opcion_1:
+
                                 break;
                             case R.id.menu_opcion_2:
                                 Log.i("NavigationView", "Pulsada opción 2");

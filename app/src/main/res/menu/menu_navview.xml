@@ -24,6 +24,10 @@
         android:title="@string/otras_opciones">
         <menu>
             <item
+                android:id="@+id/menu_opcion_1"
+                android:icon="@drawable/vd_user"
+                android:title="@string/opcion_profile"/>
+            <item
                 android:id="@+id/menu_opcion_2"
                 android:icon="@drawable/vd_sign_out"
                 android:title="@string/opcion_sing_out"/>

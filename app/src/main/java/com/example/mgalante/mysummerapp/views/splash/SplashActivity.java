@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.crashlytics.android.Crashlytics;
 import com.example.mgalante.mysummerapp.BaseActivity;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.entities.users.User;
@@ -36,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.Arrays;
 
@@ -44,6 +46,7 @@ import butterknife.ButterKnife;
 
 public class SplashActivity extends BaseActivity {
 
+    private final String TAG = "TEST SPLASH";
     public static User userModel;
 
     private GetUsersPresenter mGetUsersPresenter;
@@ -51,6 +54,9 @@ public class SplashActivity extends BaseActivity {
     public static final String ANONYMOUS = "anonymous";
     private static final int RC_SIGN_IN = 1;
     private static final int RC_SIGNED = 2;
+    private static final int IMAGE_GALLERY_REQUEST = 3;
+
+
     public static final String ARG_TYPE = "type";
     public static final String TYPE_CHATS = "type_chats";
     public static final String TYPE_ALL = "type_all";
@@ -59,6 +65,8 @@ public class SplashActivity extends BaseActivity {
     private FirebaseAuth mFirebaseAuth;
     private FirebaseAuth.AuthStateListener mAuthStateListener;
     public FirebaseRemoteConfig mFirebaseRemoteConfig;
+    private FirebaseStorage storage;
+
 
     @BindView(R.id.sign_in_button_splash)
     Button mSignInButton;
@@ -92,6 +100,8 @@ public class SplashActivity extends BaseActivity {
 
         // Initialize Firebase components
         mFirebaseAuth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
+
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
         mAuthStateListener = new FirebaseAuth.AuthStateListener() {
@@ -112,17 +122,20 @@ public class SplashActivity extends BaseActivity {
                             editor.putString(getString(R.string.firebase_user_id), user.getUid());
                             editor.apply();
 
-                            userModel = new User(user.getDisplayName(), user.getPhotoUrl().toString(), user.getUid());
-
+                            try {
+                                userModel = new User(user.getDisplayName(), String.valueOf(user.getPhotoUrl()), user.getUid());
+                            } catch (Exception ex) {
+                                Crashlytics.logException(ex);
+                            }
                           /*  User mUser = new User(user.getUid(), user.getDisplayName(), user.getPhotoUrl().toString(), user.getToken(true).toString());
                             FirebaseDatabase.getInstance()
                                     .getReference()
                                     .child("user")
                                     .setValue(mUser);*/
 
-                            addUserToDatabase(getApplicationContext(), user);
+                            addFireUserToDatabase(getApplicationContext(), user);
                             if (CacheStore.getInstance().getCacheFile(user.getUid()) == null) {
-                                addUserImageToCache(user.getUid(), user.getPhotoUrl().toString());
+                                addUserImageToCache(user.getUid(), String.valueOf(user.getPhotoUrl()));
                             }
                             onSignedInIntialize(user.getDisplayName());
                         } else {
@@ -187,6 +200,37 @@ public class SplashActivity extends BaseActivity {
         if (requestCode == RC_SIGNED) {
             finish();
         }
+/*
+        StorageReference storageRef = storage.getReferenceFromUrl(Util.URL_STORAGE_REFERENCE).child(Util.FOLDER_STORAGE_IMG_USER);
+
+        if (requestCode == IMAGE_GALLERY_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Uri selectedImageUri = data.getData();
+                if (selectedImageUri != null) {
+                    final String name = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString();
+                    StorageReference imageGalleryRef = storageRef.child(name + "_gallery");
+                    UploadTask uploadTask = imageGalleryRef.putFile(selectedImageUri);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "onFailure sendFileFirebase " + e.getMessage());
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Log.i(TAG, "onSuccess sendFileFirebase");
+                            Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                            FirebaseUser firebaseUser = mFirebaseAuth.getCurrentUser();
+                            User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), String.valueOf(downloadUrl),
+                                    new SharedPrefUtil(getApplicationContext()).getString(Constants.ARG_FIREBASE_TOKEN));
+                            addUserToDatabase(getApplicationContext(), user);
+                        }
+                    });
+                } else {
+                    //URI IS NULL
+                }
+            }
+        }*/
     }
 
     @Override
@@ -210,8 +254,8 @@ public class SplashActivity extends BaseActivity {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 
-    public void addUserToDatabase(Context context, FirebaseUser firebaseUser) {
-        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl().toString(),
+    public void addFireUserToDatabase(Context context, final FirebaseUser firebaseUser) {
+        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), String.valueOf(firebaseUser.getPhotoUrl()),
                 new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN));
 
 /*        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl().toString(),
@@ -227,6 +271,32 @@ public class SplashActivity extends BaseActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             // successfully added user
+                            if (String.valueOf(firebaseUser.getPhotoUrl()).equals(null)) {
+                          /*      Intent intent = new Intent();
+                                intent.setType("image*//*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
+                           */ }
+                        } else {
+                            // failed to add user
+                        }
+                    }
+                });
+    }
+
+    public void addUserToDatabase(Context context, final User user) {
+
+        FirebaseDatabase.getInstance()
+                .getReference()
+                .child(Constants.ARG_USERS)
+                .child(user.getUid())
+                .setValue(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // successfully added user
+
                         } else {
                             // failed to add user
                         }

@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -117,7 +118,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mGetCurrentUserPresenter = new GetCurrentUserPresenter(this);
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        userModel = new User(user.getDisplayName(), user.getPhotoUrl().toString(), user.getUid());
+        userModel = new User(user.getDisplayName(), String.valueOf(user.getPhotoUrl()), user.getUid());
         userModel.setPaymentsSum(Double.parseDouble(prefs.getString(getString(R.string.payments_sum), "0.0")));
         mFirebaseDatabase = FirebaseDatabase.getInstance();
         mUsersDatabaseReference = mFirebaseDatabase.getReference().child(getResources().getString(R.string.USERS));
@@ -252,17 +253,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                     mAnimatable = (Animatable) mFloatingButton.getDrawable();
                     mAnimatable.start();*/
                 } else {
-                    int initialRadius = llTextHolder.getWidth();
-                    Animator anim = ViewAnimationUtils.createCircularReveal(llTextHolder, cx, cy, initialRadius, 0);
-                    anim.addListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            super.onAnimationEnd(animation);
-                            llTextHolder.setVisibility(View.INVISIBLE);
-                        }
-                    });
-                    isEditTextVisible = false;
-                    anim.start();
+
+                    hidePaymentView(cx, cy);
 
                    /* mFloatingButton.setImageResource(R.drawable.icn_morph_reverse);
                     mAnimatable = (Animatable) (mFloatingButton).getDrawable();
@@ -273,6 +265,20 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         }
         return super.onOptionsItemSelected(item);
 
+    }
+
+    private void hidePaymentView(int cx, int cy) {
+        int initialRadius = llTextHolder.getWidth();
+        Animator anim = ViewAnimationUtils.createCircularReveal(llTextHolder, cx, cy, initialRadius, 0);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                llTextHolder.setVisibility(View.INVISIBLE);
+            }
+        });
+        isEditTextVisible = false;
+        anim.start();
     }
 
     private void setUserPhoto(Bitmap resource) {
@@ -337,6 +343,18 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         mPaymentAmount.setText("");
         mPaymentDescription.setText("");
+
+        Snackbar.make(getView(), getString(R.string.payment_success), Snackbar.LENGTH_LONG)
+                .setActionTextColor(getResources().getColor(R.color.snack_accent))
+                .setAction(getString(R.string.cancel), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.i("Snackbar", "Pulsada acción snackbar!");
+                    }
+                })
+                .show();
+
+        hidePaymentView(llTextHolder.getRight(), llTextHolder.getTop());
 
     }
 

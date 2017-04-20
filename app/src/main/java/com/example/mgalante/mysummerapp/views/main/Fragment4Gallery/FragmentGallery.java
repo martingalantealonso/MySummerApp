@@ -7,6 +7,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -50,11 +52,32 @@ public class FragmentGallery extends Fragment implements ClickListenerGallery {
 
         View view = inflater.inflate(R.layout.fragment_gallery, container, false);
         ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
         startLoadingImages();
 
         return view;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_gallery, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mImagesDatabaseReference = FirebaseDatabase.getInstance().getReference().child(getResources().getString(R.string.reference_gallery_database));
+
+    }
+
+    @Override
+    public void clickImageGallery(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
+        Toast.makeText(getContext(), "BAAAH", Toast.LENGTH_LONG).show();
+    }
+
 
     private void startLoadingImages() {
 
@@ -66,16 +89,4 @@ public class FragmentGallery extends Fragment implements ClickListenerGallery {
         mGalleryRecyclerView.setAdapter(galleryRecyclerViewAdapter);
     }
 
-
-    @Override
-    public void clickImageGallery(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
-        Toast.makeText(getContext(), "BAAAH", Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mImagesDatabaseReference = FirebaseDatabase.getInstance().getReference().child(getResources().getString(R.string.reference_gallery_database));
-
-    }
 }

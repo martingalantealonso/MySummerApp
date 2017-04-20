@@ -70,18 +70,37 @@
                             tools:text="200€ " />
 
                     </android.support.v7.widget.GridLayout>
+
                 </LinearLayout>
+
             </LinearLayout>
 
             <FrameLayout
-                android:background="@color/colorWhite"
-                android:layout_width="368dp"
-                android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="3">
+
+                <LinearLayout
+                    android:id="@+id/payments_detail_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/user_payments_list_detail"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:layoutManager="LinearLayoutManager"
+                        tools:listitem="@layout/fragment_user_resource" />
+
+                </LinearLayout>
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/user_list_detail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/colorWhite"
                     app:layoutManager="LinearLayoutManager"
                     app:spanCount="2"
                     tools:listitem="@layout/fragment_user_resource" />
@@ -105,7 +124,8 @@
             android:layout_height="match_parent"
             android:background="@color/primary"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:visibility="gone">
 
             <FrameLayout
                 android:layout_width="match_parent"

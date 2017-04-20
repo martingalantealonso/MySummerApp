@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <android.support.v7.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_small_margin"
+        app:columnCount="2">
+
+        <TextView
+            android:id="@+id/payment_detail_title"
+            android:layout_width="0dp"
+            android:textColor="@color/colorWhite"
+            app:layout_columnWeight="3"
+            tools:text="Title" />
+
+        <ImageView
+            android:id="@+id/payment_detail_image"
+            android:layout_width="0dp"
+            android:src="@drawable/vd_description"
+            app:layout_columnWeight="1"
+            app:layout_gravity="top" />
+
+        <TextView
+            android:id="@+id/payment_detail_description"
+            android:layout_width="0dp"
+            android:textColor="@color/colorWhite"
+            app:layout_columnWeight="3"
+            tools:text="@string/small_text" />
+
+        <TextView
+            android:id="@+id/payment_detail_amount"
+            android:textColor="@color/colorWhite"
+            app:layout_columnWeight="1"
+            app:layout_gravity="bottom|end"
+            tools:text="9.95 €" />
+
+    </android.support.v7.widget.GridLayout>
+
+</LinearLayout>

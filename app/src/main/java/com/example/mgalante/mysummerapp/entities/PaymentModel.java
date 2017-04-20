@@ -9,6 +9,7 @@ import com.example.mgalante.mysummerapp.entities.users.User;
 public class PaymentModel {
 
     private User userModel;
+    private String title;
     private String description;
     private double amount;
     private String timeStamp;
@@ -17,8 +18,9 @@ public class PaymentModel {
     public PaymentModel() {
     }
 
-    public PaymentModel(User userModel, String description, double amount, String timeStamp, FileModel file) {
+    public PaymentModel(User userModel, String title, String description, double amount, String timeStamp, FileModel file) {
         this.userModel = userModel;
+        this.title = title;
         this.description = description;
         this.amount = amount;
         this.timeStamp = timeStamp;
@@ -31,6 +33,14 @@ public class PaymentModel {
 
     public void setUserModel(User userModel) {
         this.userModel = userModel;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {

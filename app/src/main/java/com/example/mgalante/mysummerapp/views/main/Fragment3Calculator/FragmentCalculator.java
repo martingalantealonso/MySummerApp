@@ -37,6 +37,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
+import com.example.mgalante.mysummerapp.adapter.PaymentsListArrayAdapter;
 import com.example.mgalante.mysummerapp.adapter.UserListArrayAdapter;
 import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
@@ -77,8 +78,10 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     private LinearLayoutManager mLinearLayoutManager;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
+    private StaggeredGridLayoutManager mStaggeredLayoutManagerPayments;
     private DatabaseReference mUsersDatabaseReference;
     private DatabaseReference mPaymentsDatabaseReference;
+    private UserListArrayAdapter adapter;
     FirebaseDatabase mFirebaseDatabase;
 
     @BindView(R.id.calculator_main_holder)
@@ -94,14 +97,20 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     @BindView(R.id.user_payments_list_detail)
     RecyclerView mRecyclerViewPayments;
 
+    @BindView(R.id.backgroundViewShadow)
+    View mBackgroundViewShadow;
     @BindView(R.id.llEditTextHolder)
     LinearLayout llTextHolder;
     @BindView(R.id.input_payment_amount)
     TextInputLayout mtilPAmount;
+    @BindView(R.id.input_payment_title)
+    TextInputLayout mtilPTitle;
     @BindView(R.id.input_payment_description)
     TextInputLayout mtilPDescription;
     @BindView(R.id.edtxt_payment_amount)
     EditText mPaymentAmount;
+    @BindView(R.id.edtxt_payment_title)
+    EditText mPaymentTitle;
     @BindView(R.id.edtxt_payment_description)
     EditText mPaymentDescription;
     @BindView(R.id.edtxt_file_name)
@@ -173,6 +182,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mSpentTextView.setText(String.valueOf(prefs.getString(getString(R.string.payments_sum), "00.0") + "€"));
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         //mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL); // 2 -> number of columns
+        mStaggeredLayoutManagerPayments = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+
         mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
 
         initializeUsers();
@@ -188,11 +199,13 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             @Override
             public void onClick(View v) {
 
-               if(mPaymentsDetailHolder.getVisibility()==View.GONE) {
-                   expand(mPaymentsDetailHolder);
-               }else{
-                   collapse(mPaymentsDetailHolder);
-               }
+                if (mPaymentsDetailHolder.getVisibility() == View.GONE) {
+                    mBackgroundViewShadow.animate().alpha(1.0f);
+                    expand(mPaymentsDetailHolder);
+                } else {
+                    mBackgroundViewShadow.animate().alpha(0.0f);
+                    collapse(mPaymentsDetailHolder);
+                }
             }
         });
         return view;
@@ -222,7 +235,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
         mRecyclerView.setAdapter(userListAdapter);*/
     }
-
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -321,20 +333,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         Toast.makeText(getContext(), user.toString(), Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onGetAllUsersSuccess(List<User> users) {
-
-        mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
-        UserListArrayAdapter adapter = new UserListArrayAdapter(getContext(), this, users);
-        mRecyclerView.setAdapter(adapter);
-
-    }
-
-    @Override
-    public void onGetAllUsersFailure(String message) {
-
-    }
-
     private void addPayment() {
 
         //1 check if payment amount is valid
@@ -345,7 +343,15 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             mtilPAmount.setErrorEnabled(false);
         }
 
-        PaymentModel model = new PaymentModel(userModel, mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
+        // 2 check if payment title is valid
+        if (mPaymentTitle.getText().length() <= 0) {
+            mPaymentTitle.setError(getString(R.string.error_wrong_title));
+            return;
+        } else {
+            mtilPTitle.setErrorEnabled(false);
+        }
+
+        PaymentModel model = new PaymentModel(userModel, mPaymentTitle.getText().toString(), mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
         mPaymentsDatabaseReference.push().setValue(model);
 
 
@@ -360,6 +366,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mGetCurrentUserPresenter.getCurrentUserPayments();
 
         mPaymentAmount.setText("");
+        mPaymentTitle.setText("");
         mPaymentDescription.setText("");
 
         Snackbar.make(getView(), getString(R.string.payment_success), Snackbar.LENGTH_LONG)
@@ -373,6 +380,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                 .show();
 
         hidePaymentView(llTextHolder.getRight(), llTextHolder.getTop());
+
+        adapter.notifyDataSetChanged();
 
     }
 
@@ -416,5 +425,22 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             paymentSum = paymentSum + payment.getAmount();
         }
         mSpentTextView.setText(String.valueOf(String.format("%.2f", paymentSum) + "€"));
+        mRecyclerViewPayments.setLayoutManager(mStaggeredLayoutManagerPayments);
+        PaymentsListArrayAdapter adapter = new PaymentsListArrayAdapter(getContext(), payments);
+        mRecyclerViewPayments.setAdapter(adapter);
+    }
+
+    @Override
+    public void onGetAllUsersSuccess(List<User> users) {
+
+        mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
+        adapter = new UserListArrayAdapter(getContext(), this, users);
+        mRecyclerView.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onGetAllUsersFailure(String message) {
+
     }
 }

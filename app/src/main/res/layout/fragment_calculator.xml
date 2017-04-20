@@ -137,7 +137,7 @@
             android:background="@color/primary"
             android:gravity="top"
             android:orientation="vertical"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
             <FrameLayout
                 android:layout_width="match_parent"

@@ -42,7 +42,7 @@ public class Util {
 
     public static void updateUserToDatabase(Context context, User firebaseUser) {
         User user = new User(firebaseUser.getUid(), firebaseUser.getName(),
-                firebaseUser.getPhotoUrl().toString(),
+                firebaseUser.getPhotoUrl(),
                 new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN), firebaseUser.getPaymentsSum());
         FirebaseDatabase.getInstance()
                 .getReference()

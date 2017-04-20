@@ -84,6 +84,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     private UserListArrayAdapter adapter;
     FirebaseDatabase mFirebaseDatabase;
 
+    //region BindViews
     @BindView(R.id.calculator_main_holder)
     LinearLayout mMainHolder;
     @BindView(R.id.payments_detail_view)
@@ -121,6 +122,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     Button mGalleryButton;
     @BindView(R.id.btn_accept_payment)
     FloatingActionButton mFloatingActionButton;
+    //endregion
 
     public FragmentCalculator() {
     }
@@ -182,7 +184,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mSpentTextView.setText(String.valueOf(prefs.getString(getString(R.string.payments_sum), "00.0") + "€"));
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
         //mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL); // 2 -> number of columns
-        mStaggeredLayoutManagerPayments = new StaggeredGridLayoutManager(1,StaggeredGridLayoutManager.VERTICAL);
+        mStaggeredLayoutManagerPayments = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
 
@@ -371,12 +373,12 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         Snackbar.make(getView(), getString(R.string.payment_success), Snackbar.LENGTH_LONG)
                 .setActionTextColor(getResources().getColor(R.color.snack_accent))
-                .setAction(getString(R.string.cancel), new View.OnClickListener() {
+               /* .setAction(getString(R.string.cancel), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Log.i("Snackbar", "Pulsada acción snackbar!");
                     }
-                })
+                })*/
                 .show();
 
         hidePaymentView(llTextHolder.getRight(), llTextHolder.getTop());

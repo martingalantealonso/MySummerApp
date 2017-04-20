@@ -35,6 +35,7 @@ import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
 import com.example.mgalante.mysummerapp.utils.Util;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
+import com.example.mgalante.mysummerapp.views.main.Fragment4Gallery.FragmentGallery;
 import com.example.mgalante.mysummerapp.views.settings.SettingsActivity;
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -62,6 +63,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
     private FragmentMain fragmentMain;
     private FragmentChat fragmentChat;
     private FragmentCalculator fragmentCalculator;
+    private FragmentGallery fragmentGallery;
 
     Fragment fragment;
 
@@ -82,6 +84,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         fragmentMain = new FragmentMain();
         fragmentChat = new FragmentChat();
         fragmentCalculator = new FragmentCalculator();
+        fragmentGallery=new FragmentGallery();
 
         mGetCurrentUserPresenter = new GetCurrentUserPresenter(this);
         mGetUsersPresenter = new GetUsersPresenter(this);
@@ -128,6 +131,10 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                             case R.id.menu_seccion_3:
                                 fragment = fragmentCalculator;
                                 fragmentTransaction = true;
+                                break;
+                            case R.id.menu_seccion_4:
+                                fragment=fragmentGallery;
+                                fragmentTransaction=true;
                                 break;
                             case R.id.menu_opcion_1:
                                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);

@@ -2,11 +2,12 @@ package com.example.mgalante.mysummerapp.views.main;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
@@ -19,8 +20,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.BaseActivity;
 import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
@@ -31,17 +30,26 @@ import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserContract;
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
+import com.example.mgalante.mysummerapp.utils.Constants;
+import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
+import com.example.mgalante.mysummerapp.utils.Util;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
+import com.example.mgalante.mysummerapp.views.settings.SettingsActivity;
 import com.firebase.ui.auth.AuthUI;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
+
+import static com.example.mgalante.mysummerapp.utils.UsersPhotos.addUserImageToCache;
 
 public class MainActivity extends BaseActivity implements GetUsersContract.View, GetCurrentUserContract.View {
 
@@ -84,7 +92,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+        final FirebaseUser user = mFirebaseAuth.getCurrentUser();
 
         setSupportActionBar(appbar);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.vd_menu);
@@ -122,7 +130,12 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_opcion_1:
-
+                                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                                intent.putExtra("uidUser", user.getUid());
+                                intent.putExtra("nameUser", user != null ? user.getDisplayName() : "My Profile");
+                                intent.putExtra("urlPhotoUser", !String.valueOf(user.getPhotoUrl()).equals("") &&  !String.valueOf(user.getPhotoUrl()).equals("null")  ? String.valueOf(user.getPhotoUrl()) : Util.DEFAULT_NULL_IMAGE);
+                                //intent.putExtra("urlPhotoUser", String.valueOf(user.getPhotoUrl()));
+                                startActivity(intent);
                                 break;
                             case R.id.menu_opcion_2:
                                 Log.i("NavigationView", "Pulsada opción 2");
@@ -220,10 +233,21 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
 
     @Override
     public void onGetCurrentUserSuccess(User user) {
+        if (user == null) {
+            addFireUserToDatabase(getApplicationContext(), mFirebaseAuth.getCurrentUser());
+        }
+
         SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(getString(R.string.payments_sum), String.valueOf(user.getPaymentsSum()));
+        editor.putString(getString(R.string.preference_user_name), String.valueOf(user.getName()));
+        editor.putString(getString(R.string.preference_user_photoUrl), String.valueOf(user.getPhotoUrl()));
+        editor.putString(getString(R.string.preference_user_uid), String.valueOf(user.getUid()));
+        editor.putString(getString(R.string.preference_user_paymentsSum), String.valueOf(user.getPaymentsSum()));
+        editor.apply();
         Log.i("onGetCurrUserSuccess2", user.toString());
+        //setUserPhotoProfile(prefs.getString(getString(R.string.preference_user_photoUrl), String.valueOf(user.getPhotoUrl())));
+        //addUserImageToCache(this, user.getUid(), user.getPhotoUrl());
+
     }
 
     @Override
@@ -248,7 +272,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         Log.i("TEST", "onGetAllUsersSuccess");
         for (User user : users) {
             if (CacheStore.getInstance().getCacheFile(user.getUid()) == null) {
-                addUserImageToCache(user.getUid(), user.getPhotoUrl());
+                addUserImageToCache(this, user.getUid(), user.getPhotoUrl());
             }
         }
     }
@@ -258,20 +282,33 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
 
     }
 
-    private void addUserImageToCache(final String uid, String photoUrl) {
-        Glide.with(this).load(photoUrl).asBitmap().into(new SimpleTarget<Bitmap>() {
+    public void addFireUserToDatabase(Context context, final FirebaseUser firebaseUser) {
+        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), String.valueOf(firebaseUser.getPhotoUrl()),
+                new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN));
 
-            @Override
-            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                CacheStore.getInstance().saveCacheFile(uid, resource);
-            }
+/*        User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), firebaseUser.getPhotoUrl().toString(),
+                new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN), Double.parseDouble(String.valueOf(getSharedPreferences(getString(R.string.payments_sum), 0))));*/
 
-            @Override
-            public void onLoadFailed(Exception e, Drawable errorDrawable) {
-
-            }
-        });
+        FirebaseDatabase.getInstance()
+                .getReference()
+                .child(Constants.ARG_USERS)
+                .child(firebaseUser.getUid())
+                .setValue(user)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            // successfully added user
+                         /*     if (String.valueOf(firebaseUser.getPhotoUrl()).equals(null)) {
+                              Intent intent = new Intent();
+                                intent.setType("image*//*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
+                          } */
+                        } else {
+                            // failed to add user
+                        }
+                    }
+                });
     }
-
-
 }

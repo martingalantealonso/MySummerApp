@@ -133,7 +133,7 @@ public class SplashActivity extends BaseActivity {
                                     .child("user")
                                     .setValue(mUser);*/
 
-                            addFireUserToDatabase(getApplicationContext(), user);
+                            //addFireUserToDatabase(getApplicationContext(), user);
                             if (CacheStore.getInstance().getCacheFile(user.getUid()) == null) {
                                 addUserImageToCache(user.getUid(), String.valueOf(user.getPhotoUrl()));
                             }
@@ -154,7 +154,9 @@ public class SplashActivity extends BaseActivity {
                 startActivityForResult(
                         AuthUI.getInstance()
                                 .createSignInIntentBuilder()
-                                .setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                /*.setProviders(Arrays.asList(new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                                        new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build())) */
+                                .setProviders(Arrays.asList(
                                         new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build()))
                                 .build(),
                         RC_SIGN_IN);
@@ -271,32 +273,12 @@ public class SplashActivity extends BaseActivity {
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             // successfully added user
-                            if (String.valueOf(firebaseUser.getPhotoUrl()).equals(null)) {
-                          /*      Intent intent = new Intent();
+                         /*     if (String.valueOf(firebaseUser.getPhotoUrl()).equals(null)) {
+                              Intent intent = new Intent();
                                 intent.setType("image*//*");
                                 intent.setAction(Intent.ACTION_GET_CONTENT);
                                 startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
-                           */ }
-                        } else {
-                            // failed to add user
-                        }
-                    }
-                });
-    }
-
-    public void addUserToDatabase(Context context, final User user) {
-
-        FirebaseDatabase.getInstance()
-                .getReference()
-                .child(Constants.ARG_USERS)
-                .child(user.getUid())
-                .setValue(user)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            // successfully added user
-
+                          } */
                         } else {
                             // failed to add user
                         }

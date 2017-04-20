@@ -94,6 +94,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
         transitive = true;
     }
+
+    compile 'com.gjiazhe:scrollparallaximageview:1.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -8,14 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.entities.ImageModel;
+import com.example.mgalante.mysummerapp.utils.MyVerticalMovingStyle;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.gjiazhe.scrollparallaximageview.ScrollParallaxImageView;
 import com.google.firebase.database.DatabaseReference;
 
 /**
@@ -53,12 +54,13 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
     public class MyGalleryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        ImageView ivGalleryPhoto;
+        ScrollParallaxImageView ivGalleryPhoto;
 
         MyGalleryViewHolder(View itemView) {
             super(itemView);
 
-            ivGalleryPhoto = (ImageView) itemView.findViewById(R.id.ivItemGridImage);
+            ivGalleryPhoto = (ScrollParallaxImageView) itemView.findViewById(R.id.ivItemGridImage);
+            ivGalleryPhoto.setParallaxStyles(new MyVerticalMovingStyle());
         }
 
         @Override

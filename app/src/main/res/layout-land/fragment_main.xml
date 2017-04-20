@@ -8,66 +8,78 @@
     tools:background="@drawable/drw_pantin1"
     tools:context=".views.main.FragmentMain">
 
-    <android.support.v7.widget.GridLayout
-        android:layout_width="248dp"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:columnCount="2"
-        android:layout_gravity="center|left"
-        android:background="@drawable/gradient_shadow">
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/days_number"
+        <android.support.v7.widget.GridLayout
+            android:layout_width="248dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="center|left"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/gradient_shadow"
+            app:columnCount="2">
+
+            <TextView
+                android:id="@+id/days_number"
+                android:layout_width="match_parent"
+                android:fontFamily="sans-serif-condensed"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="50sp"
+                app:layout_columnSpan="2"
+                app:layout_gravity="center"
+                app:layout_rowWeight="1"
+                tools:text="22 Days" />
+
+            <TextView
+                android:id="@+id/hours_number"
+                android:layout_width="match_parent"
+                android:fontFamily="sans-serif-condensed"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="30sp"
+                app:layout_columnSpan="2"
+                app:layout_gravity="center"
+                app:layout_rowWeight="1"
+                tools:text="22 hours" />
+
+            <TextView
+                android:id="@+id/minutes_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                app:layout_columnWeight="1"
+                app:layout_rowWeight="1"
+                tools:text="22 minutes" />
+
+            <TextView
+                android:id="@+id/seconds_number"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-condensed"
+                android:textAlignment="center"
+                android:textColor="@android:color/white"
+                android:textSize="24sp"
+                app:layout_columnWeight="1"
+                app:layout_rowWeight="1"
+                tools:text="22 seconds" />
+
+        </android.support.v7.widget.GridLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gallery_recycler_view"
             android:layout_width="match_parent"
-            android:fontFamily="sans-serif-condensed"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="50sp"
-            app:layout_columnSpan="2"
-            app:layout_gravity="center"
-            app:layout_rowWeight="1"
-            tools:text="22 Days" />
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/default_medium_padding"
+            android:scrollbars="vertical" />
 
-        <TextView
-            android:id="@+id/hours_number"
-            android:layout_width="match_parent"
-            android:fontFamily="sans-serif-condensed"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="30sp"
-            app:layout_columnSpan="2"
-            app:layout_gravity="center"
-            app:layout_rowWeight="1"
-            tools:text="22 hours" />
-
-        <TextView
-            android:id="@+id/minutes_number"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            app:layout_columnWeight="1"
-            app:layout_rowWeight="1"
-            tools:text="22 minutes" />
-
-        <TextView
-            android:id="@+id/seconds_number"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-condensed"
-            android:textAlignment="center"
-            android:textColor="@android:color/white"
-            android:textSize="24sp"
-            app:layout_columnWeight="1"
-            app:layout_rowWeight="1"
-            tools:text="22 seconds" />
-
-    </android.support.v7.widget.GridLayout>
-
-
+    </LinearLayout>
 </FrameLayout>

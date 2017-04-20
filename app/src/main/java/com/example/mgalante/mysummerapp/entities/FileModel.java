@@ -51,4 +51,14 @@ public class FileModel {
     public void setSize_file(String size_file) {
         this.size_file = size_file;
     }
+
+    @Override
+    public String toString() {
+        return "FileModel{" +
+                "type='" + type + '\'' +
+                ", url_file='" + url_file + '\'' +
+                ", name_file='" + name_file + '\'' +
+                ", size_file='" + size_file + '\'' +
+                '}';
+    }
 }

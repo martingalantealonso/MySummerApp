@@ -4,12 +4,21 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.adapter.ClickListenerGallery;
+import com.example.mgalante.mysummerapp.adapter.GalleryRecyclerViewAdapter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Date;
 
@@ -20,11 +29,16 @@ import butterknife.ButterKnife;
  * Created by mgalante on 30/03/17.
  */
 
-public class FragmentMain extends Fragment implements FragmentMainContract.View {
+public class FragmentMain extends Fragment implements FragmentMainContract.View, ClickListenerGallery {
 
 
     private FragmentPresenter presenter;
+    private DatabaseReference mImagesDatabaseReference;
+    private LinearLayoutManager mLinearLayoutManager;
 
+
+    @BindView(R.id.gallery_recycler_view)
+    RecyclerView mGalleryRecyclerView;
     @BindView(R.id.days_number)
     TextView mRemainingDays;
     @BindView(R.id.hours_number)
@@ -56,14 +70,52 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View 
         }
         presenter.attach(getContext(), this);
         mRemainingDays.setText(timeRemaining(new Date()));
+
+        startLoadingImages();
         return view;
+    }
+
+    private void startLoadingImages() {
+
+        StaggeredGridLayoutManager staggeredGridLayoutManagerVertical =
+                new StaggeredGridLayoutManager(
+                        2, //The number of Columns in the grid
+                        LinearLayoutManager.VERTICAL);
+       /* staggeredGridLayoutManagerHorizontal =
+                new StaggeredGridLayoutManager(
+                        3, //The number of rows in the grid
+                        LinearLayoutManager.HORIZONTAL);*/
+
+        final GalleryRecyclerViewAdapter galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(getContext(), mImagesDatabaseReference, FirebaseAuth.getInstance().getCurrentUser().getUid(), this);
+       /* galleryRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int imageCount = galleryRecyclerViewAdapter.getItemCount();
+                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (imageCount - 1) &&
+                                lastVisiblePosition == (positionStart - 1))) {
+                    mGalleryRecyclerView.scrollToPosition(positionStart);
+                }
+            }
+        });*/
+       // mGalleryRecyclerView.setLayoutManager(mLinearLayoutManager);
+       mGalleryRecyclerView.setLayoutManager(staggeredGridLayoutManagerVertical);
+        mGalleryRecyclerView.setAdapter(galleryRecyclerViewAdapter);
+        Log.i("TEST GALLERY", galleryRecyclerViewAdapter.getItemCount() + "");
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mImagesDatabaseReference = FirebaseDatabase.getInstance().getReference().child(getResources().getString(R.string.reference_gallery_database));
+        //mImagesDatabaseReference = FirebaseDatabase.getInstance().getReference().child(getResources().getString(R.string.MESSAGE));
+        mLinearLayoutManager = new LinearLayoutManager(getContext());
     }
 
+
+    //region Countdown
     public String timeRemaining(Date then) {
         Date now = new Date();
         long diff = then.getTime() - now.getTime();
@@ -135,6 +187,8 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View 
         stopCountdown();
     }
 
+    //endregion
+
  /*   @Override
     public void updateView(String result) {
         mTextView.setText(result);
@@ -157,4 +211,10 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View 
         mRemainingMinutes.setText(remaininMinutes);
         mRemainingSeconds.setText(remainingSeconds);
     }
+
+    @Override
+    public void clickImageGallery(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
+
+    }
+
 }

@@ -111,22 +111,14 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/user_list_detail"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_small_margin"
-                android:background="@color/colorWhite"
-                app:cardCornerRadius="@dimen/default_small_margin">
+                android:layout_height="match_parent"
+                app:layoutManager="LinearLayoutManager"
+                app:spanCount="2"
+                tools:listitem="@layout/fragment_user_resource" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/user_list_detail"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layoutManager="LinearLayoutManager"
-                    app:spanCount="2"
-                    tools:listitem="@layout/fragment_user_resource" />
-
-            </android.support.v7.widget.CardView>
 
         </LinearLayout>
 
@@ -138,7 +130,7 @@
             android:background="@color/primary"
             android:gravity="top"
             android:orientation="vertical"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -251,18 +243,38 @@
                         android:textColor="@android:color/white"
                         app:layout_columnWeight="1" />
 
-                    <EditText
-                        android:id="@+id/edtxt_file_name"
-                        android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:inputType="none"
-                        android:text="@string/file_name"
-                        android:textAlignment="center"
-                        android:textColor="@android:color/darker_gray"
-                        android:textSize="16sp"
+                    <LinearLayout
+                        android:id="@+id/calculator_image_name_holder"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
                         app:layout_columnSpan="2"
                         app:layout_columnWeight="1"
-                        app:layout_gravity="bottom" />
+                        tools:visibility="visible">
+
+                        <EditText
+                            android:id="@+id/edtxt_file_name"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            android:enabled="false"
+                            android:inputType="none"
+                            android:text="@string/file_name"
+                            android:textAlignment="center"
+                            android:textColor="@android:color/darker_gray"
+                            android:textSize="16sp"
+                            app:layout_gravity="bottom" />
+
+                        <ImageButton
+                            android:id="@+id/btn_delete_file"
+                            style="@style/Widget.AppCompat.Button.Borderless"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/vd_clear"
+                            android:textColor="@android:color/white"
+                            app:layout_columnWeight="1" />
+                    </LinearLayout>
+
 
                     <android.support.v4.widget.Space
                         android:layout_width="0dp"

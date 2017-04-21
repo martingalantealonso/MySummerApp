@@ -84,7 +84,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         fragmentMain = new FragmentMain();
         fragmentChat = new FragmentChat();
         fragmentCalculator = new FragmentCalculator();
-        fragmentGallery=new FragmentGallery();
+        fragmentGallery = new FragmentGallery();
 
         mGetCurrentUserPresenter = new GetCurrentUserPresenter(this);
         mGetUsersPresenter = new GetUsersPresenter(this);
@@ -133,14 +133,14 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_seccion_4:
-                                fragment=fragmentGallery;
-                                fragmentTransaction=true;
+                                fragment = fragmentGallery;
+                                fragmentTransaction = true;
                                 break;
                             case R.id.menu_opcion_1:
                                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
                                 intent.putExtra("uidUser", user.getUid());
                                 intent.putExtra("nameUser", user != null ? user.getDisplayName() : "My Profile");
-                                intent.putExtra("urlPhotoUser", !String.valueOf(user.getPhotoUrl()).equals("") &&  !String.valueOf(user.getPhotoUrl()).equals("null")  ? String.valueOf(user.getPhotoUrl()) : Util.DEFAULT_NULL_IMAGE);
+                                intent.putExtra("urlPhotoUser", !String.valueOf(user.getPhotoUrl()).equals("") && !String.valueOf(user.getPhotoUrl()).equals("null") ? String.valueOf(user.getPhotoUrl()) : Util.DEFAULT_NULL_IMAGE);
                                 //intent.putExtra("urlPhotoUser", String.valueOf(user.getPhotoUrl()));
                                 startActivity(intent);
                                 break;
@@ -242,19 +242,18 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
     public void onGetCurrentUserSuccess(User user) {
         if (user == null) {
             addFireUserToDatabase(getApplicationContext(), mFirebaseAuth.getCurrentUser());
+        } else {
+            SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(getString(R.string.preference_user_name), String.valueOf(user.getName()));
+            editor.putString(getString(R.string.preference_user_photoUrl), String.valueOf(user.getPhotoUrl()));
+            editor.putString(getString(R.string.preference_user_uid), String.valueOf(user.getUid()));
+            editor.putString(getString(R.string.preference_user_paymentsSum), String.valueOf(user.getPaymentsSum()));
+            editor.apply();
+            Log.i("onGetCurrUserSuccess2", user.toString());
+            //setUserPhotoProfile(prefs.getString(getString(R.string.preference_user_photoUrl), String.valueOf(user.getPhotoUrl())));
+            //addUserImageToCache(this, user.getUid(), user.getPhotoUrl());
         }
-
-        SharedPreferences prefs = getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.putString(getString(R.string.preference_user_name), String.valueOf(user.getName()));
-        editor.putString(getString(R.string.preference_user_photoUrl), String.valueOf(user.getPhotoUrl()));
-        editor.putString(getString(R.string.preference_user_uid), String.valueOf(user.getUid()));
-        editor.putString(getString(R.string.preference_user_paymentsSum), String.valueOf(user.getPaymentsSum()));
-        editor.apply();
-        Log.i("onGetCurrUserSuccess2", user.toString());
-        //setUserPhotoProfile(prefs.getString(getString(R.string.preference_user_photoUrl), String.valueOf(user.getPhotoUrl())));
-        //addUserImageToCache(this, user.getUid(), user.getPhotoUrl());
-
     }
 
     @Override

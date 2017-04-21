@@ -253,6 +253,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.calculator_menu_seccion_1:
+
+                //region don't know for what was this anymore
                 // get the center for the clipping circle
                 /*int cx = (myView.getLeft() + myView.getRight()) / 2;
                 int cy = (myView.getTop() + myView.getBottom()) / 2;*/
@@ -272,6 +274,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                 mPaymentHolder.setBackgroundColor(color);*//*
                 mPaymentHolder.setVisibility(View.VISIBLE);
                 anim.start();*/
+                //endregion
 
                 int cx = llTextHolder.getRight();
                 int cy = llTextHolder.getTop();
@@ -319,12 +322,10 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     @Override
     public void clickImageChat(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
-
     }
 
     @Override
     public void clickImageMapChat(View view, int position, String latitude, String longitude) {
-
     }
 
     @Override
@@ -447,7 +448,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         }
 
         // Sum payment to user
-
         if (String.valueOf(userModel.getPaymentsSum()).equals("0.0")) {
             userModel.setPaymentsSum(Double.parseDouble(mPaymentAmount.getText().toString()));
         } else {

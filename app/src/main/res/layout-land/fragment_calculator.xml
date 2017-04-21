@@ -244,18 +244,37 @@
                             android:textColor="@android:color/white"
                             app:layout_columnWeight="1" />
 
-                        <EditText
-                            android:id="@+id/edtxt_file_name"
-                            android:layout_height="wrap_content"
-                            android:enabled="false"
-                            android:inputType="none"
-                            android:text="@string/file_name"
-                            android:textAlignment="center"
-                            android:textColor="@android:color/darker_gray"
-                            android:textSize="16sp"
+                        <LinearLayout
+                            android:id="@+id/calculator_image_name_holder"
+                            android:orientation="horizontal"
                             app:layout_columnSpan="2"
                             app:layout_columnWeight="1"
-                            app:layout_gravity="bottom" />
+                            android:visibility="gone">
+
+                            <ImageButton
+                                android:id="@+id/btn_delete_file"
+                                style="@style/Widget.AppCompat.Button.Borderless"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@drawable/vd_clear"
+                                android:textColor="@android:color/white"
+                                app:layout_columnWeight="1" />
+
+                            <EditText
+                                android:id="@+id/edtxt_file_name"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="5"
+                                android:enabled="false"
+                                android:inputType="none"
+                                android:text="@string/file_name"
+                                android:textAlignment="center"
+                                android:textColor="@android:color/darker_gray"
+                                android:textSize="16sp"
+                                app:layout_gravity="bottom" />
+
+                        </LinearLayout>
 
 
                     </android.support.v7.widget.GridLayout>

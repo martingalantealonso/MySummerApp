@@ -45,7 +45,8 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
-import com.example.mgalante.mysummerapp.adapter.PaymentsListArrayAdapter;
+import com.example.mgalante.mysummerapp.adapter.ClickListenerPayment;
+import com.example.mgalante.mysummerapp.adapter.PaymentsFirebaseAdapter;
 import com.example.mgalante.mysummerapp.adapter.UserListArrayAdapter;
 import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
@@ -80,7 +81,7 @@ import static com.example.mgalante.mysummerapp.utils.Util.sendFileFirebase;
  * Created by mgalante on 31/03/17.
  */
 
-public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View {
+public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment {
 
     private static final String TAG = "PantinCalculator";
     private static final int IMAGE_GALLERY_REQUEST = 1;
@@ -373,6 +374,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             paymentSum = paymentSum + payment.getAmount();
         }
         mSpentTextView.setText(String.valueOf(String.format("%.2f", paymentSum) + "€"));
+        /*
         mRecyclerViewPayments.setLayoutManager(mStaggeredLayoutManagerPayments);
         PaymentsListArrayAdapter adapter = new PaymentsListArrayAdapter(getContext(), payments);
         mRecyclerViewPayments.setAdapter(adapter);
@@ -380,7 +382,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                 DividerItemDecoration.VERTICAL);
         Drawable horizontalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
-        mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
+        mRecyclerViewPayments.addItemDecoration(horizontalDecoration);*/
     }
 
     @Override
@@ -398,7 +400,29 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     private void initializeUsers() {
 
-        mGetCurrentUserPresenter.getCurrentUserPayments();
+        //mGetCurrentUserPresenter.getCurrentUserPayments();
+        final PaymentsFirebaseAdapter paymentsFirebaseAdapter = new PaymentsFirebaseAdapter(getContext(), mPaymentsDatabaseReference, userModel.getUid(), this);
+        paymentsFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver(){
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int friendlyMessageCount = paymentsFirebaseAdapter.getItemCount();
+                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (friendlyMessageCount - 1) &&
+                                lastVisiblePosition == (positionStart - 1))) {
+                    mRecyclerViewPayments.scrollToPosition(positionStart);
+                    mGetCurrentUserPresenter.getCurrentUserPayments();
+                }
+            }
+        });
+        mRecyclerViewPayments.setLayoutManager(mStaggeredLayoutManagerPayments);
+        mRecyclerViewPayments.setAdapter(paymentsFirebaseAdapter);
+        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(mRecyclerViewPayments.getContext(),
+                DividerItemDecoration.VERTICAL);
+        Drawable horizontalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.horizontal_divider);
+        horizontalDecoration.setDrawable(horizontalDivider);
+        mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
         mGetUsersPresenter.getAllUsers();
 
 /*
@@ -443,6 +467,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         if (filePathImageCamera != null && filePathImageCamera.exists()) {
             sendFileFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
+            filePathImageCamera = null;
         } else {
             mPaymentsDatabaseReference.push().setValue(model);
         }
@@ -454,7 +479,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             userModel.setPaymentsSum(userModel.getPaymentsSum() + Double.parseDouble(mPaymentAmount.getText().toString()));
         }
         Util.updateUserToDatabase(getActivity(), userModel);
-        mGetCurrentUserPresenter.getCurrentUserPayments();
+        //mGetCurrentUserPresenter.getCurrentUserPayments();
 
         mPaymentAmount.setText("");
         mPaymentTitle.setText("");
@@ -509,4 +534,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         startActivityForResult(it, IMAGE_CAMERA_REQUEST);
     }
 
+    @Override
+    public void clickListenerPayment(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
+        Toast.makeText(getContext(), "HEY", Toast.LENGTH_LONG).show();
+    }
 }

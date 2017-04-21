@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/grid_main_holder"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -9,6 +10,7 @@
     tools:background="@drawable/drw_pantin1">
 
     <android.support.v7.widget.GridLayout
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_small_margin"
@@ -25,6 +27,7 @@
         <ImageView
             android:id="@+id/payment_detail_image"
             android:src="@drawable/vd_description"
+            android:visibility="gone"
             app:layout_columnWeight="1"
             app:layout_gravity="top|right" />
 

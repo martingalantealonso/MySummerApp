@@ -45,6 +45,9 @@ public class PaymentsListArrayAdapter extends RecyclerView.Adapter<PaymentsListA
         holder.mPaymentDescription.setText(payment.getDescription());
         if (payment.getFile() == null) {
             holder.mPaymentImage.setVisibility(View.GONE);
+        }else{
+            holder.mPaymentImage.setVisibility(View.VISIBLE);
+            //TODO add on click listener for the image detail
         }
     }
 

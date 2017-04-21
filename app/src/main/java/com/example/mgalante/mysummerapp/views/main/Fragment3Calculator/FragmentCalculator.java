@@ -17,7 +17,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -88,7 +90,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     private SharedPreferences prefs;
     private File filePathImageCamera;
-
 
     public static User userModel;
     private GetUsersPresenter mGetUsersPresenter;
@@ -374,6 +375,11 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mRecyclerViewPayments.setLayoutManager(mStaggeredLayoutManagerPayments);
         PaymentsListArrayAdapter adapter = new PaymentsListArrayAdapter(getContext(), payments);
         mRecyclerViewPayments.setAdapter(adapter);
+        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(mRecyclerViewPayments.getContext(),
+                DividerItemDecoration.VERTICAL);
+        Drawable horizontalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.horizontal_divider);
+        horizontalDecoration.setDrawable(horizontalDivider);
+        mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
     }
 
     @Override

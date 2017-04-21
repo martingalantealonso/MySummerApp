@@ -98,6 +98,7 @@
                 android:id="@+id/payments_detail_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_margin="@dimen/default_small_margin"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -106,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layoutManager="LinearLayoutManager"
-                    tools:listitem="@layout/fragment_user_resource" />
+                    tools:listitem="@layout/item_payment" />
 
             </LinearLayout>
 
@@ -137,7 +138,7 @@
             android:background="@color/primary"
             android:gravity="top"
             android:orientation="vertical"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <FrameLayout
                 android:layout_width="match_parent"

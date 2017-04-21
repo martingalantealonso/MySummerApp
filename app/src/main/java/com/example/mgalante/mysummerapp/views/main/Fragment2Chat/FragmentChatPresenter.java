@@ -19,4 +19,5 @@ public class FragmentChatPresenter implements FragmentChatContract.Presenter {
         this.mContext = context;
         this.mView = view;
     }
+
 }

@@ -3,19 +3,25 @@ package com.example.mgalante.mysummerapp.views.main.Fragment3Calculator;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -46,20 +52,27 @@ import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserContract;
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
+import com.example.mgalante.mysummerapp.utils.Util;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.app.Activity.RESULT_OK;
 import static com.example.mgalante.mysummerapp.utils.Util.collapse;
 import static com.example.mgalante.mysummerapp.utils.Util.expand;
+import static com.example.mgalante.mysummerapp.utils.Util.sendFileFirebase;
 
 /**
  * Created by mgalante on 31/03/17.
@@ -67,10 +80,15 @@ import static com.example.mgalante.mysummerapp.utils.Util.expand;
 
 public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View {
 
+    private static final String TAG = "PantinCalculator";
+    private static final int IMAGE_GALLERY_REQUEST = 1;
+    private static final int IMAGE_CAMERA_REQUEST = 2;
     private boolean isEditTextVisible;
     private Animatable mAnimatable;
 
     private SharedPreferences prefs;
+    private File filePathImageCamera;
+
 
     public static User userModel;
     private GetUsersPresenter mGetUsersPresenter;
@@ -82,7 +100,10 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     private DatabaseReference mUsersDatabaseReference;
     private DatabaseReference mPaymentsDatabaseReference;
     private UserListArrayAdapter adapter;
-    FirebaseDatabase mFirebaseDatabase;
+
+    private FirebaseDatabase mFirebaseDatabase;
+    private StorageReference storageRef;
+    private StorageReference imageCameraRef;
 
     //region BindViews
     @BindView(R.id.calculator_main_holder)
@@ -190,6 +211,14 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         initializeUsers();
 
+        // ImagePickerButton shows an image picker to upload a image for a message
+        mCameraButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                launchCamera();
+            }
+        });
+
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -211,31 +240,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             }
         });
         return view;
-    }
-
-    private void initializeUsers() {
-
-        mGetCurrentUserPresenter.getCurrentUserPayments();
-        mGetUsersPresenter.getAllUsers();
-
-/*
-        final UserListAdapter userListAdapter = new UserListAdapter(getContext(), mUsersDatabaseReference, this);
-        userListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int friendlyMessageCount = userListAdapter.getItemCount();
-                *//*int lastVisiblePosition = mStaggeredLayoutManager.findLastCompletelyVisibleItemPosition();
-                if (lastVisiblePosition == -1 ||
-                        (positionStart >= (friendlyMessageCount - 1) &&
-                                lastVisiblePosition == (positionStart - 1))) {
-                    mRecyclerView.scrollToPosition(positionStart);
-                }*//*
-            }
-        });
-
-        mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
-        mRecyclerView.setAdapter(userListAdapter);*/
     }
 
     @Override
@@ -299,25 +303,17 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     }
 
-    private void hidePaymentView(int cx, int cy) {
-        int initialRadius = llTextHolder.getWidth();
-        Animator anim = ViewAnimationUtils.createCircularReveal(llTextHolder, cx, cy, initialRadius, 0);
-        anim.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                llTextHolder.setVisibility(View.INVISIBLE);
-            }
-        });
-        isEditTextVisible = false;
-        anim.start();
-    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(Util.URL_STORAGE_REFERENCE).child(Util.FOLDER_STORAGE_IMG_PAYMENTS);
 
-    private void setUserPhoto(Bitmap resource) {
-        mUserPhoto.setImageBitmap(resource);
-        //Palette palette = Palette.from(resource).generate();
-        //mMainHolder.setBackgroundColor(palette.getDarkMutedColor(Color.DKGRAY));
-        //getView().setBackgroundColor(palette.getDarkMutedColor(Color.DKGRAY));
+        if (requestCode == IMAGE_CAMERA_REQUEST && resultCode == RESULT_OK) {
+            if (filePathImageCamera != null && filePathImageCamera.exists()) {
+                imageCameraRef = storageRef.child(filePathImageCamera.getName() + "_camera");
+                // sendFileFirebase(imageCameraRef, filePathImageCamera);
+            }
+        }
     }
 
     @Override
@@ -333,58 +329,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     @Override
     public void clickUserDetail(View view, int position, User user) {
         Toast.makeText(getContext(), user.toString(), Toast.LENGTH_SHORT).show();
-    }
-
-    private void addPayment() {
-
-        //1 check if payment amount is valid
-        if (mPaymentAmount.getText().length() <= 0) {
-            mtilPAmount.setError(getString(R.string.error_wrong_amount));
-            return;
-        } else {
-            mtilPAmount.setErrorEnabled(false);
-        }
-
-        // 2 check if payment title is valid
-        if (mPaymentTitle.getText().length() <= 0) {
-            mPaymentTitle.setError(getString(R.string.error_wrong_title));
-            return;
-        } else {
-            mtilPTitle.setErrorEnabled(false);
-        }
-
-        PaymentModel model = new PaymentModel(userModel, mPaymentTitle.getText().toString(), mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
-        mPaymentsDatabaseReference.push().setValue(model);
-
-
-        // Sum payment to user
-
-        if (String.valueOf(userModel.getPaymentsSum()).equals("0.0")) {
-            userModel.setPaymentsSum(Double.parseDouble(mPaymentAmount.getText().toString()));
-        } else {
-            userModel.setPaymentsSum(userModel.getPaymentsSum() + Double.parseDouble(mPaymentAmount.getText().toString()));
-        }
-        //Util.updateUserToDatabase(getActivity(), userModel);
-        mGetCurrentUserPresenter.getCurrentUserPayments();
-
-        mPaymentAmount.setText("");
-        mPaymentTitle.setText("");
-        mPaymentDescription.setText("");
-
-        Snackbar.make(getView(), getString(R.string.payment_success), Snackbar.LENGTH_LONG)
-                .setActionTextColor(getResources().getColor(R.color.snack_accent))
-               /* .setAction(getString(R.string.cancel), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Log.i("Snackbar", "Pulsada acción snackbar!");
-                    }
-                })*/
-                .show();
-
-        hidePaymentView(llTextHolder.getRight(), llTextHolder.getTop());
-
-        adapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -443,6 +387,120 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     @Override
     public void onGetAllUsersFailure(String message) {
+    }
+
+    private void initializeUsers() {
+
+        mGetCurrentUserPresenter.getCurrentUserPayments();
+        mGetUsersPresenter.getAllUsers();
+
+/*
+        final UserListAdapter userListAdapter = new UserListAdapter(getContext(), mUsersDatabaseReference, this);
+        userListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                int friendlyMessageCount = userListAdapter.getItemCount();
+                *//*int lastVisiblePosition = mStaggeredLayoutManager.findLastCompletelyVisibleItemPosition();
+                if (lastVisiblePosition == -1 ||
+                        (positionStart >= (friendlyMessageCount - 1) &&
+                                lastVisiblePosition == (positionStart - 1))) {
+                    mRecyclerView.scrollToPosition(positionStart);
+                }*//*
+            }
+        });
+
+        mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
+        mRecyclerView.setAdapter(userListAdapter);*/
+    }
+
+    private void addPayment() {
+
+        //1 check if payment amount is valid
+        if (mPaymentAmount.getText().length() <= 0) {
+            mtilPAmount.setError(getString(R.string.error_wrong_amount));
+            return;
+        } else {
+            mtilPAmount.setErrorEnabled(false);
+        }
+
+        // 2 check if payment title is valid
+        if (mPaymentTitle.getText().length() <= 0) {
+            mPaymentTitle.setError(getString(R.string.error_wrong_title));
+            return;
+        } else {
+            mtilPTitle.setErrorEnabled(false);
+        }
+
+        PaymentModel model = new PaymentModel(userModel, mPaymentTitle.getText().toString(), mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
+
+        if (filePathImageCamera != null && filePathImageCamera.exists()) {
+            sendFileFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
+        } else {
+            mPaymentsDatabaseReference.push().setValue(model);
+        }
+
+        // Sum payment to user
+
+        if (String.valueOf(userModel.getPaymentsSum()).equals("0.0")) {
+            userModel.setPaymentsSum(Double.parseDouble(mPaymentAmount.getText().toString()));
+        } else {
+            userModel.setPaymentsSum(userModel.getPaymentsSum() + Double.parseDouble(mPaymentAmount.getText().toString()));
+        }
+        Util.updateUserToDatabase(getActivity(), userModel);
+        mGetCurrentUserPresenter.getCurrentUserPayments();
+
+        mPaymentAmount.setText("");
+        mPaymentTitle.setText("");
+        mPaymentDescription.setText("");
+
+        Snackbar.make(getView(), getString(R.string.payment_success), Snackbar.LENGTH_LONG)
+                .setActionTextColor(getResources().getColor(R.color.snack_accent))
+               /* .setAction(getString(R.string.cancel), new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.i("Snackbar", "Pulsada acción snackbar!");
+                    }
+                })*/
+                .show();
+
+        hidePaymentView(llTextHolder.getRight(), llTextHolder.getTop());
+
+        adapter.notifyDataSetChanged();
 
     }
+
+    private void hidePaymentView(int cx, int cy) {
+        int initialRadius = llTextHolder.getWidth();
+        Animator anim = ViewAnimationUtils.createCircularReveal(llTextHolder, cx, cy, initialRadius, 0);
+        anim.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                llTextHolder.setVisibility(View.INVISIBLE);
+            }
+        });
+        isEditTextVisible = false;
+        anim.start();
+    }
+
+    private void setUserPhoto(Bitmap resource) {
+        mUserPhoto.setImageBitmap(resource);
+        //Palette palette = Palette.from(resource).generate();
+        //mMainHolder.setBackgroundColor(palette.getDarkMutedColor(Color.DKGRAY));
+        //getView().setBackgroundColor(palette.getDarkMutedColor(Color.DKGRAY));
+    }
+
+    private void launchCamera() {
+        Log.d(TAG, "launchCamera");
+        String photoName = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString();
+        filePathImageCamera = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), photoName + "camera.jpg");
+        Intent it = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        Uri photoURI = FileProvider.getUriForFile(getContext(),
+                "com.example.android.fileprovider",
+                filePathImageCamera);
+        it.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+        startActivityForResult(it, IMAGE_CAMERA_REQUEST);
+    }
+
 }

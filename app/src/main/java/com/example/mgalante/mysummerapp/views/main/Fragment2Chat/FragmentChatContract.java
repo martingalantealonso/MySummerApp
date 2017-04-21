@@ -11,8 +11,9 @@ import com.example.mgalante.mysummerapp.BaseView;
 
 public interface FragmentChatContract {
     interface View extends BaseView<Presenter> {
+
     }
 
     interface Presenter extends BasePresenter<Context, View> {
-    }
+  }
 }

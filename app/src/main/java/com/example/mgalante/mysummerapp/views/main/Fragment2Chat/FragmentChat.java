@@ -8,13 +8,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
-import android.support.v4.util.Pair;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -27,23 +24,17 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewConfiguration;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ChatFirebaseAdapter;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
 import com.example.mgalante.mysummerapp.entities.ChatModel;
-import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.utils.Util;
 import com.example.mgalante.mysummerapp.views.main.FullScreenImageActivity;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -54,7 +45,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.Calendar;
@@ -64,8 +54,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
+import static com.example.mgalante.mysummerapp.utils.Util.sendFileFirebase;
 import static com.example.mgalante.mysummerapp.views.splash.SplashActivity.userModel;
-import static com.facebook.FacebookSdk.getApplicationContext;
 import static com.facebook.GraphRequest.TAG;
 
 /**
@@ -147,17 +137,6 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
         presenter.attach(getContext(), this);
         mSendButton.setEnabled(false);
 
-        // ImagePickerButton shows an image picker to upload a image for a message
-        mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent();
-                intent.setType("image/*");
-                intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
-            }
-        });
-
         // Enable Send button when there's text to send
         mMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -192,6 +171,17 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
                 mMessageEditText.setText("");
                 mSendButton.setEnabled(false);
                 mSendButton.setImageResource((R.drawable.vd_send));
+            }
+        });
+
+        // ImagePickerButton shows an image picker to upload a image for a message
+        mPhotoPickerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
             }
         });
 
@@ -339,7 +329,8 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
             if (resultCode == RESULT_OK) {
                 Uri selectedImageUri = data.getData();
                 if (selectedImageUri != null) {
-                    sendFileFirebase(storageRef, selectedImageUri);
+                    //sendFileFirebase(storageRef, selectedImageUri);
+                    sendFileFirebase(storageRef, selectedImageUri, mMessagesDatabaseReference, userModel, new ChatModel(), null);
                 } else {
                     //URI IS NULL
                 }
@@ -349,7 +340,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
             if (resultCode == RESULT_OK) {
                 if (filePathImageCamera != null && filePathImageCamera.exists()) {
                     StorageReference imageCameraRef = storageRef.child(filePathImageCamera.getName() + "_camera");
-                    sendFileFirebase(imageCameraRef, filePathImageCamera);
+                    sendFileFirebase(getContext(), imageCameraRef, filePathImageCamera, mMessagesDatabaseReference, userModel, new ChatModel(), null);
                 } else {
                     //IS NULL
                 }
@@ -367,12 +358,11 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
                 filePathImageCamera);
         it.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
         startActivityForResult(it, IMAGE_CAMERA_REQUEST);
-
     }
 
-    /**
+  /*  *//**
      * Envia o arvquivo para o firebase
-     */
+     *//*
     private void sendFileFirebase(StorageReference storageReference, final Uri file) {
         if (storageReference != null) {
             final String name = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString();
@@ -396,12 +386,11 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
         } else {
             //IS NULL
         }
-
     }
 
-    /**
+    *//**
      * Send file to the firebase
-     */
+     *//*
     private void sendFileFirebase(StorageReference storageReference, final File file) {
         if (storageReference != null) {
             Uri photoURI = FileProvider.getUriForFile(getContext(),
@@ -427,7 +416,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
             //IS NULL
         }
 
-    }
+    }*/
 
     /**
      * Checks if the app has permission to write to device storage

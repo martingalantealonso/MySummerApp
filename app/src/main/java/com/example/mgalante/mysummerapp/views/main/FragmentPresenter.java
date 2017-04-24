@@ -2,9 +2,16 @@ package com.example.mgalante.mysummerapp.views.main;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.support.annotation.Nullable;
 
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.entities.ChatModel;
+import com.example.mgalante.mysummerapp.entities.PaymentModel;
+import com.example.mgalante.mysummerapp.entities.users.User;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -27,6 +34,11 @@ public class FragmentPresenter implements FragmentMainContract.Presenter {
     public void attach(Context context, FragmentMainContract.View view) {
         this.mContext = context;
         this.mView = view;
+    }
+
+    @Override
+    public void sendFileToFirebase(Context mContext, StorageReference storageReference, File file, DatabaseReference databaseReference, User userModel, @Nullable ChatModel chatModel, @Nullable PaymentModel paymentModel) {
+
     }
 
     @Override

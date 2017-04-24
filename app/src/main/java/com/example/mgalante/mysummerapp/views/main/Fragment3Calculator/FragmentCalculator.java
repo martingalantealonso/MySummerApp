@@ -12,7 +12,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -49,7 +48,9 @@ import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerPayment;
 import com.example.mgalante.mysummerapp.adapter.PaymentsListArrayAdapter;
 import com.example.mgalante.mysummerapp.adapter.UserListArrayAdapter;
-import com.example.mgalante.mysummerapp.entities.FileModel;
+import com.example.mgalante.mysummerapp.common.BasePresenter;
+import com.example.mgalante.mysummerapp.common.BasePresenterImpl;
+import com.example.mgalante.mysummerapp.common.BaseView;
 import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersContract;
@@ -58,7 +59,6 @@ import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserCon
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.utils.Util;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -66,7 +66,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.Calendar;
@@ -80,13 +79,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import static android.app.Activity.RESULT_OK;
 import static com.example.mgalante.mysummerapp.utils.Util.collapse;
 import static com.example.mgalante.mysummerapp.utils.Util.expand;
-import static com.example.mgalante.mysummerapp.utils.Util.sendFileFirebase;
 
 /**
  * Created by mgalante on 31/03/17.
  */
 
-public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment {
+public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView {
 
     private static final String TAG = "PantinCalculator";
     private static final int IMAGE_GALLERY_REQUEST = 1;
@@ -100,6 +98,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     public static User userModel;
     private GetUsersPresenter mGetUsersPresenter;
     private GetCurrentUserPresenter mGetCurrentUserPresenter;
+
+    private BasePresenter basePresenter;
 
     private LinearLayoutManager mLinearLayoutManager;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
@@ -162,6 +162,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         prefs = getActivity().getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
         mGetUsersPresenter = new GetUsersPresenter(this);
         mGetCurrentUserPresenter = new GetCurrentUserPresenter(this);
+
+        basePresenter=new BasePresenterImpl(this);
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         userModel = new User(user.getDisplayName(), String.valueOf(user.getPhotoUrl()), user.getUid());
@@ -475,8 +477,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         final PaymentModel model = new PaymentModel(userModel, mPaymentTitle.getText().toString(), mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
 
         if (filePathImageCamera != null && filePathImageCamera.exists()) {
-            //sendFileFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
-            if (imageCameraRef != null) {
+            basePresenter.sendFileToFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
+           /* if (imageCameraRef != null) {
                 Uri photoURI = FileProvider.getUriForFile(getContext(), "com.example.android.fileprovider", filePathImageCamera);
                 UploadTask uploadTask = imageCameraRef.putFile(photoURI);
                 uploadTask.addOnFailureListener(new OnFailureListener() {
@@ -490,7 +492,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                         Log.i(TAG, "onSuccess sendFileFirebase");
                         Uri downloadUrl = taskSnapshot.getDownloadUrl();
                         FileModel fileModel = new FileModel("img", downloadUrl.toString(), filePathImageCamera.getName(), filePathImageCamera.length() + "");
-                            model.setFile(fileModel);
+                        model.setFile(fileModel);
                         mPaymentsDatabaseReference.push().setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
@@ -500,7 +502,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                         });
                     }
                 });
-            }
+            }*/
 
         } else {
             mPaymentsDatabaseReference.push().setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -576,5 +578,16 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     @Override
     public void clickListenerPayment(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
         Toast.makeText(getContext(), "HEY", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void setPresenter(Object presenter) {
+
+    }
+
+    @Override
+    public void setPayments() {
+        mGetCurrentUserPresenter.getCurrentUserPayments();
+        filePathImageCamera = null;
     }
 }

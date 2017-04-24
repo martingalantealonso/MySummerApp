@@ -2,8 +2,8 @@ package com.example.mgalante.mysummerapp.views.main;
 
 import android.content.Context;
 
-import com.example.mgalante.mysummerapp.BasePresenter;
-import com.example.mgalante.mysummerapp.BaseView;
+import com.example.mgalante.mysummerapp.common.BasePresenter;
+import com.example.mgalante.mysummerapp.common.BaseView;
 
 /**
  * Created by mgalante on 30/03/17.

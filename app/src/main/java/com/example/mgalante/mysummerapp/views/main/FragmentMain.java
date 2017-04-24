@@ -200,6 +200,11 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View,
     }
 
     @Override
+    public void setPayments() {
+
+    }
+
+    @Override
     public void updateView(String futureDay, String remainingHours, String remaininMinutes, String remainingSeconds) {
         mRemainingDays.setText(futureDay);
         mRemainingHours.setText(remainingHours);

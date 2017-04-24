@@ -314,6 +314,11 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
     }
 
     @Override
+    public void setPayments() {
+
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 

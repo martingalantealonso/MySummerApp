@@ -22,7 +22,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.crashlytics.android.Crashlytics;
-import com.example.mgalante.mysummerapp.BaseActivity;
+import com.example.mgalante.mysummerapp.common.BaseActivity;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;

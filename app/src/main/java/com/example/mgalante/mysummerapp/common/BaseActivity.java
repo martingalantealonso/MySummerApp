@@ -1,4 +1,4 @@
-package com.example.mgalante.mysummerapp;
+package com.example.mgalante.mysummerapp.common;
 
 
 import android.support.v7.app.AppCompatActivity;

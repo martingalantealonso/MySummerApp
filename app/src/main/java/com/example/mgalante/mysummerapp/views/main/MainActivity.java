@@ -20,7 +20,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.mgalante.mysummerapp.BaseActivity;
+import com.example.mgalante.mysummerapp.common.BaseActivity;
 import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.entities.PaymentModel;

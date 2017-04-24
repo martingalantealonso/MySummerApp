@@ -32,8 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
-import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -341,6 +339,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         Toast.makeText(getContext(), user.toString(), Toast.LENGTH_SHORT).show();
     }
 
+    //region stupid things
+    /*
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -366,7 +366,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         animator.setInterpolator(new AccelerateInterpolator());
         animator.setDuration(1000);
         animator.start();
-    }
+    }*/
+    //endregion
 
     @Override
     public void onGetCurrentUserSuccess(User user) {
@@ -560,7 +561,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     }
 
     @Override
-    public void updatePayments() {
+    public void onValuePushedSuccess() {
         Log.i(TAG,"HAAAAA!!");
         mGetCurrentUserPresenter.getCurrentUserPayments();
         filePathImageCamera = null;

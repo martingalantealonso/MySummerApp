@@ -79,6 +79,6 @@ public class BasePresenterImpl implements BasePresenter, FragmentCalculatorContr
 
     @Override
     public void onPushValueSuccess() {
-        mBaseView.updatePayments();
+        mBaseView.onValuePushedSuccess();
     }
 }

@@ -312,7 +312,7 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
     }
 
     @Override
-    public void updatePayments() {
+    public void onValuePushedSuccess() {
 
     }
 

@@ -624,4 +624,5 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mGetCurrentUserPresenter.getCurrentUserPayments();
         filePathImageCamera = null;
     }
+
 }

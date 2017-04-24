@@ -17,6 +17,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/gradient_shadow"
             />
+
         <!-- User info & users grid -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -106,7 +107,6 @@
                     android:id="@+id/user_list_detail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorWhite"
                     app:layoutManager="LinearLayoutManager"
                     app:spanCount="2"
                     tools:listitem="@layout/fragment_user_resource" />
@@ -122,7 +122,6 @@
         </LinearLayout>
 
         <!-- Add payment -->
-
         <LinearLayout
             android:id="@+id/llEditTextHolder"
             android:layout_width="match_parent"
@@ -130,7 +129,7 @@
             android:background="@color/primary"
             android:gravity="center"
             android:orientation="vertical"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <FrameLayout
                 android:layout_width="match_parent"

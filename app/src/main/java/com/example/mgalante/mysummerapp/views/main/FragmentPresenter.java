@@ -2,6 +2,7 @@ package com.example.mgalante.mysummerapp.views.main;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.example.mgalante.mysummerapp.R;
@@ -37,7 +38,12 @@ public class FragmentPresenter implements FragmentMainContract.Presenter {
     }
 
     @Override
-    public void sendFileToFirebase(Context mContext, StorageReference storageReference, File file, DatabaseReference databaseReference, User userModel, @Nullable ChatModel chatModel, @Nullable PaymentModel paymentModel) {
+    public void sendFilefromCameraToFirebase(Context mContext, StorageReference storageReference, File file, DatabaseReference databaseReference, User userModel, @Nullable ChatModel chatModel, @Nullable PaymentModel paymentModel) {
+
+    }
+
+    @Override
+    public void sendFileFromGalleryTofirebase(StorageReference storageReference, Uri file, DatabaseReference databaseReference, User userModel, @Nullable ChatModel chatModel, @Nullable PaymentModel paymentModel) {
 
     }
 

@@ -34,6 +34,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -115,6 +116,10 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     LinearLayout mMainHolder;
     @BindView(R.id.payments_detail_view)
     LinearLayout mPaymentsDetailHolder;
+    @BindView(R.id.calculator_image_name_holder)
+    LinearLayout mImageNameHolder;
+    @BindView(R.id.llEditTextHolder)
+    LinearLayout llTextHolder;
     @BindView(R.id.calculator_txtv_spent)
     TextView mSpentTextView;
     @BindView(R.id.calculator_user_photo)
@@ -126,8 +131,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     @BindView(R.id.backgroundViewShadow)
     View mBackgroundViewShadow;
-    @BindView(R.id.llEditTextHolder)
-    LinearLayout llTextHolder;
+
     @BindView(R.id.input_payment_amount)
     TextInputLayout mtilPAmount;
     @BindView(R.id.input_payment_title)
@@ -146,6 +150,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     Button mCameraButton;
     @BindView(R.id.btn_gallery)
     Button mGalleryButton;
+    @BindView(R.id.btn_delete_file)
+    ImageButton mCancelButton;
     @BindView(R.id.btn_accept_payment)
     FloatingActionButton mFloatingActionButton;
     //endregion
@@ -161,7 +167,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mGetUsersPresenter = new GetUsersPresenter(this);
         mGetCurrentUserPresenter = new GetCurrentUserPresenter(this);
 
-        basePresenter=new BasePresenterImpl(this);
+        basePresenter = new BasePresenterImpl(this);
 
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         userModel = new User(user.getDisplayName(), String.valueOf(user.getPhotoUrl()), user.getUid());
@@ -226,6 +232,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             }
         });
 
+
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -243,6 +250,18 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                 } else {
                     mBackgroundViewShadow.animate().alpha(0.0f);
                     collapse(mPaymentsDetailHolder);
+                }
+            }
+        });
+
+        mCancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPaymentFileName.setText("");
+                mImageNameHolder.setVisibility(View.GONE);
+                if (filePathImageCamera != null) {
+                    mGalleryButton.setVisibility(View.VISIBLE);
+                    filePathImageCamera = null;
                 }
             }
         });
@@ -320,8 +339,12 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         if (requestCode == IMAGE_CAMERA_REQUEST && resultCode == RESULT_OK) {
             if (filePathImageCamera != null && filePathImageCamera.exists()) {
-                imageCameraRef = storageRef.child(filePathImageCamera.getName() + "_camera");
+                imageCameraRef = storageRef.child(filePathImageCamera.getName());
+                mImageNameHolder.setVisibility(View.VISIBLE);
+                mPaymentFileName.setText(String.format("%s_camera", filePathImageCamera.getName()));
                 // sendFileFirebase(imageCameraRef, filePathImageCamera);
+                mGalleryButton.setVisibility(View.GONE);
+
             }
         }
     }
@@ -478,8 +501,9 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         final PaymentModel model = new PaymentModel(userModel, mPaymentTitle.getText().toString(), mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
 
         if (filePathImageCamera != null && filePathImageCamera.exists()) {
-            basePresenter.sendFileToFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
-        } else {
+            basePresenter.sendFilefromCameraToFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
+        }//TODO add else for gallery
+        else {
             mPaymentsDatabaseReference.push().setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
@@ -562,7 +586,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     @Override
     public void onValuePushedSuccess() {
-        Log.i(TAG,"HAAAAA!!");
+        Log.i(TAG, "HAAAAA!!");
         mGetCurrentUserPresenter.getCurrentUserPayments();
         filePathImageCamera = null;
     }

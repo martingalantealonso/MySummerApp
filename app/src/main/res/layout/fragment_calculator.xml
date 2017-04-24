@@ -241,10 +241,12 @@
                         android:layout_width="0dp"
                         android:text="@string/from_gallery"
                         android:textColor="@android:color/white"
-                        app:layout_columnWeight="1" />
+                        app:layout_columnWeight="1"
+                        />
 
                     <LinearLayout
                         android:id="@+id/calculator_image_name_holder"
+                        android:layout_width="0dp"
                         android:orientation="horizontal"
                         android:visibility="gone"
                         app:layout_columnSpan="2"
@@ -258,6 +260,7 @@
                             android:layout_weight="5"
                             android:enabled="false"
                             android:inputType="none"
+                            android:maxLines="1"
                             android:text="@string/file_name"
                             android:textAlignment="center"
                             android:textColor="@android:color/darker_gray"

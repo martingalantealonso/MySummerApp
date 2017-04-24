@@ -1,6 +1,7 @@
 package com.example.mgalante.mysummerapp.views.main.Fragment2Chat;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.example.mgalante.mysummerapp.entities.ChatModel;
@@ -30,7 +31,12 @@ public class FragmentChatPresenter implements FragmentChatContract.Presenter {
     }
 
     @Override
-    public void sendFileToFirebase(Context mContext, StorageReference storageReference, File file, DatabaseReference databaseReference, User userModel, @Nullable ChatModel chatModel, @Nullable PaymentModel paymentModel) {
+    public void sendFilefromCameraToFirebase(Context mContext, StorageReference storageReference, File file, DatabaseReference databaseReference, User userModel, @Nullable ChatModel chatModel, @Nullable PaymentModel paymentModel) {
+
+    }
+
+    @Override
+    public void sendFileFromGalleryTofirebase(StorageReference storageReference, Uri file, DatabaseReference databaseReference, User userModel, @Nullable ChatModel chatModel, @Nullable PaymentModel paymentModel) {
 
     }
 

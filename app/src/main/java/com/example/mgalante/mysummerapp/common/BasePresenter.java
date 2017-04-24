@@ -2,6 +2,7 @@ package com.example.mgalante.mysummerapp.common;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.example.mgalante.mysummerapp.entities.ChatModel;
@@ -16,6 +17,8 @@ public interface BasePresenter<T,V> {
 
     void attach(T context, V view);
 
-    void sendFileToFirebase(Context mContext, StorageReference storageReference, final File file, final DatabaseReference databaseReference, final User userModel, @Nullable final ChatModel chatModel, @Nullable final PaymentModel paymentModel);
+    void sendFilefromCameraToFirebase(Context mContext, StorageReference storageReference, final File file, final DatabaseReference databaseReference, final User userModel, @Nullable final ChatModel chatModel, @Nullable final PaymentModel paymentModel);
+
+    void sendFileFromGalleryTofirebase(StorageReference storageReference, Uri file, final DatabaseReference databaseReference, final User userModel, @Nullable final ChatModel chatModel, @Nullable final PaymentModel paymentModel);
 
 }

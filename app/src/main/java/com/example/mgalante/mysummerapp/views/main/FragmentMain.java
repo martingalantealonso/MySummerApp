@@ -81,10 +81,6 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View,
                 new StaggeredGridLayoutManager(
                         2, //The number of Columns in the grid
                         LinearLayoutManager.VERTICAL);
-       /* staggeredGridLayoutManagerHorizontal =
-                new StaggeredGridLayoutManager(
-                        3, //The number of rows in the grid
-                        LinearLayoutManager.HORIZONTAL);*/
 
         final GalleryRecyclerViewAdapter galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(getContext(), mImagesDatabaseReference, FirebaseAuth.getInstance().getCurrentUser().getUid(), this);
        /* galleryRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -100,8 +96,7 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View,
                 }
             }
         });*/
-       // mGalleryRecyclerView.setLayoutManager(mLinearLayoutManager);
-       mGalleryRecyclerView.setLayoutManager(staggeredGridLayoutManagerVertical);
+        mGalleryRecyclerView.setLayoutManager(staggeredGridLayoutManagerVertical);
         mGalleryRecyclerView.setAdapter(galleryRecyclerViewAdapter);
         Log.i("TEST GALLERY", galleryRecyclerViewAdapter.getItemCount() + "");
     }
@@ -113,7 +108,6 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View,
         //mImagesDatabaseReference = FirebaseDatabase.getInstance().getReference().child(getResources().getString(R.string.MESSAGE));
         mLinearLayoutManager = new LinearLayoutManager(getContext());
     }
-
 
     //region Countdown
     public String timeRemaining(Date then) {
@@ -189,19 +183,8 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View,
 
     //endregion
 
- /*   @Override
-    public void updateView(String result) {
-        mTextView.setText(result);
-    }*/
-
     @Override
     public void setPresenter(FragmentMainContract.Presenter presenter) {
-
-    }
-
-    @Override
-    public void setPayments() {
-
     }
 
     @Override

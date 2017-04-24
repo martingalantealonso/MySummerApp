@@ -15,5 +15,6 @@ public interface FragmentChatContract {
     }
 
     interface Presenter extends BasePresenter<Context, View> {
-  }
+    }
+
 }

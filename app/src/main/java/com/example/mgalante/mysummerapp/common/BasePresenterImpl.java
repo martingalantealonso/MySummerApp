@@ -12,6 +12,7 @@ import com.example.mgalante.mysummerapp.entities.ChatModel;
 import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
+import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculatorContract;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -26,7 +27,7 @@ import java.util.Calendar;
  * Created by mgalante on 24/04/17.
  */
 
-public class BasePresenterImpl implements BasePresenter {
+public class BasePresenterImpl implements BasePresenter, FragmentCalculatorContract.OnFileSentToFirebaseListener {
 
     private BaseView mBaseView;
     private static final String TAG = "BasePresenterImpl";
@@ -64,12 +65,20 @@ public class BasePresenterImpl implements BasePresenter {
                         databaseReference.push().setValue(chatModelValue);
                     } else if (paymentModel != null) {
                         paymentModel.setFile(fileModel);
-                        databaseReference.push().setValue(paymentModel);
+                        databaseReference.push().setValue(paymentModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                onPushValueSuccess();
+                            }
+                        });
                     }
                 }
             });
         }
     }
 
-
+    @Override
+    public void onPushValueSuccess() {
+        mBaseView.updatePayments();
+    }
 }

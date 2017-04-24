@@ -84,7 +84,7 @@ import static com.example.mgalante.mysummerapp.utils.Util.expand;
  * Created by mgalante on 31/03/17.
  */
 
-public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView {
+public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView, FragmentCalculatorContract.OnFileSentToFirebaseListener {
 
     private static final String TAG = "PantinCalculator";
     private static final int IMAGE_GALLERY_REQUEST = 1;
@@ -478,32 +478,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         if (filePathImageCamera != null && filePathImageCamera.exists()) {
             basePresenter.sendFileToFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
-           /* if (imageCameraRef != null) {
-                Uri photoURI = FileProvider.getUriForFile(getContext(), "com.example.android.fileprovider", filePathImageCamera);
-                UploadTask uploadTask = imageCameraRef.putFile(photoURI);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure sendFileFirebase " + e.getMessage());
-                    }
-                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Log.i(TAG, "onSuccess sendFileFirebase");
-                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        FileModel fileModel = new FileModel("img", downloadUrl.toString(), filePathImageCamera.getName(), filePathImageCamera.length() + "");
-                        model.setFile(fileModel);
-                        mPaymentsDatabaseReference.push().setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
-                            @Override
-                            public void onSuccess(Void aVoid) {
-                                mGetCurrentUserPresenter.getCurrentUserPayments();
-                                filePathImageCamera = null;
-                            }
-                        });
-                    }
-                });
-            }*/
-
         } else {
             mPaymentsDatabaseReference.push().setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
@@ -585,8 +559,9 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     }
 
+
     @Override
-    public void setPayments() {
+    public void onPushValueSuccess() {
         mGetCurrentUserPresenter.getCurrentUserPayments();
         filePathImageCamera = null;
     }

@@ -93,6 +93,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     private SharedPreferences prefs;
     private File filePathImageCamera;
+    private Uri selectedImageUri;
 
     public static User userModel;
     private GetUsersPresenter mGetUsersPresenter;
@@ -110,6 +111,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     private FirebaseDatabase mFirebaseDatabase;
     private StorageReference storageRef;
     private StorageReference imageCameraRef;
+    private StorageReference imageGalleryRef;
 
     //region BindViews
     @BindView(R.id.calculator_main_holder)
@@ -232,6 +234,15 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             }
         });
 
+        mGalleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
+            }
+        });
 
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -262,6 +273,10 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                 if (filePathImageCamera != null) {
                     mGalleryButton.setVisibility(View.VISIBLE);
                     filePathImageCamera = null;
+                }
+                if (selectedImageUri != null) {
+                    mCameraButton.setVisibility(View.VISIBLE);
+                    selectedImageUri = null;
                 }
             }
         });
@@ -341,12 +356,30 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             if (filePathImageCamera != null && filePathImageCamera.exists()) {
                 imageCameraRef = storageRef.child(filePathImageCamera.getName());
                 mImageNameHolder.setVisibility(View.VISIBLE);
-                mPaymentFileName.setText(String.format("%s_camera", filePathImageCamera.getName()));
+                //mPaymentFileName.setText(String.format("%s_camera", filePathImageCamera.getName()));
+                mPaymentFileName.setText(filePathImageCamera.getName());
                 // sendFileFirebase(imageCameraRef, filePathImageCamera);
                 mGalleryButton.setVisibility(View.GONE);
 
             }
         }
+
+        if (requestCode == IMAGE_GALLERY_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                selectedImageUri = data.getData();
+                if (selectedImageUri != null) {
+                    imageGalleryRef = storageRef.child(selectedImageUri.getLastPathSegment());
+                    mImageNameHolder.setVisibility(View.VISIBLE);
+                    //mPaymentFileName.setText(String.format("%s_gallery",selectedImageUri.getLastPathSegment()));
+                    mPaymentFileName.setText(selectedImageUri.getLastPathSegment());
+                    // sendFileFirebase(imageCameraRef, filePathImageCamera);
+                    mCameraButton.setVisibility(View.GONE);
+
+                    //sendFileFirebase(storageRef, selectedImageUri, mMessagesDatabaseReference, userModel, new ChatModel(), null);
+                }
+            }
+        }
+
     }
 
     @Override
@@ -502,8 +535,9 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         if (filePathImageCamera != null && filePathImageCamera.exists()) {
             basePresenter.sendFilefromCameraToFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
-        }//TODO add else for gallery
-        else {
+        } else if (selectedImageUri != null) {
+            basePresenter.sendFileFromGalleryTofirebase(imageGalleryRef, selectedImageUri, mPaymentsDatabaseReference, userModel, null, model);
+        } else {
             mPaymentsDatabaseReference.push().setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {

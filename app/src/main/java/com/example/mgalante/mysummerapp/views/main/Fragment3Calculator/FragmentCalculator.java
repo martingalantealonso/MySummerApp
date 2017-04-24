@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -46,8 +47,9 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerChatFirebase;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerPayment;
-import com.example.mgalante.mysummerapp.adapter.PaymentsFirebaseAdapter;
+import com.example.mgalante.mysummerapp.adapter.PaymentsListArrayAdapter;
 import com.example.mgalante.mysummerapp.adapter.UserListArrayAdapter;
+import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersContract;
@@ -56,12 +58,15 @@ import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserCon
 import com.example.mgalante.mysummerapp.entities.users.current.GetCurrentUserPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.utils.Util;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.util.Calendar;
@@ -374,7 +379,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             paymentSum = paymentSum + payment.getAmount();
         }
         mSpentTextView.setText(String.valueOf(String.format("%.2f", paymentSum) + "€"));
-        /*
+
         mRecyclerViewPayments.setLayoutManager(mStaggeredLayoutManagerPayments);
         PaymentsListArrayAdapter adapter = new PaymentsListArrayAdapter(getContext(), payments);
         mRecyclerViewPayments.setAdapter(adapter);
@@ -382,7 +387,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                 DividerItemDecoration.VERTICAL);
         Drawable horizontalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
-        mRecyclerViewPayments.addItemDecoration(horizontalDecoration);*/
+        mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
     }
 
     @Override
@@ -400,8 +405,12 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     private void initializeUsers() {
 
-        //mGetCurrentUserPresenter.getCurrentUserPayments();
-        final PaymentsFirebaseAdapter paymentsFirebaseAdapter = new PaymentsFirebaseAdapter(getContext(), mPaymentsDatabaseReference, userModel.getUid(), this);
+        //With recyclerview adapter
+        mGetCurrentUserPresenter.getCurrentUserPayments();
+        mGetUsersPresenter.getAllUsers();
+
+        // with firebaserecyclerview adapter
+        /*final PaymentsFirebaseAdapter paymentsFirebaseAdapter = new PaymentsFirebaseAdapter(getContext(), mPaymentsDatabaseReference, userModel.getUid(), this);
         paymentsFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver(){
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
@@ -423,7 +432,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         Drawable horizontalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
         mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
-        mGetUsersPresenter.getAllUsers();
+        mGetUsersPresenter.getAllUsers();*/
 
 /*
         final UserListAdapter userListAdapter = new UserListAdapter(getContext(), mUsersDatabaseReference, this);
@@ -463,13 +472,43 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             mtilPTitle.setErrorEnabled(false);
         }
 
-        PaymentModel model = new PaymentModel(userModel, mPaymentTitle.getText().toString(), mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
+        final PaymentModel model = new PaymentModel(userModel, mPaymentTitle.getText().toString(), mPaymentDescription.getText().toString(), Double.parseDouble(mPaymentAmount.getText().toString()), Calendar.getInstance().getTime().getTime() + "", null);
 
         if (filePathImageCamera != null && filePathImageCamera.exists()) {
-            sendFileFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
-            filePathImageCamera = null;
+            //sendFileFirebase(getContext(), imageCameraRef, filePathImageCamera, mPaymentsDatabaseReference, userModel, null, model);
+            if (imageCameraRef != null) {
+                Uri photoURI = FileProvider.getUriForFile(getContext(), "com.example.android.fileprovider", filePathImageCamera);
+                UploadTask uploadTask = imageCameraRef.putFile(photoURI);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure sendFileFirebase " + e.getMessage());
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Log.i(TAG, "onSuccess sendFileFirebase");
+                        Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        FileModel fileModel = new FileModel("img", downloadUrl.toString(), filePathImageCamera.getName(), filePathImageCamera.length() + "");
+                            model.setFile(fileModel);
+                        mPaymentsDatabaseReference.push().setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                mGetCurrentUserPresenter.getCurrentUserPayments();
+                                filePathImageCamera = null;
+                            }
+                        });
+                    }
+                });
+            }
+
         } else {
-            mPaymentsDatabaseReference.push().setValue(model);
+            mPaymentsDatabaseReference.push().setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void aVoid) {
+                    mGetCurrentUserPresenter.getCurrentUserPayments();
+                }
+            });
         }
 
         // Sum payment to user

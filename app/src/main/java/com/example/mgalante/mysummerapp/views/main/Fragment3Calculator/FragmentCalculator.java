@@ -84,7 +84,7 @@ import static com.example.mgalante.mysummerapp.utils.Util.expand;
  * Created by mgalante on 31/03/17.
  */
 
-public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView, FragmentCalculatorContract.OnFileSentToFirebaseListener {
+public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView {
 
     private static final String TAG = "PantinCalculator";
     private static final int IMAGE_GALLERY_REQUEST = 1;
@@ -559,9 +559,9 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     }
 
-
     @Override
-    public void onPushValueSuccess() {
+    public void updatePayments() {
+        Log.i(TAG,"HAAAAA!!");
         mGetCurrentUserPresenter.getCurrentUserPayments();
         filePathImageCamera = null;
     }

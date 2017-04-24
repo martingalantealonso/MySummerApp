@@ -3,13 +3,11 @@ package com.example.mgalante.mysummerapp.views.main.Fragment2Chat;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.LinearLayoutManager;
@@ -314,6 +312,11 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
     }
 
     @Override
+    public void updatePayments() {
+
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -354,98 +357,8 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
         startActivityForResult(it, IMAGE_CAMERA_REQUEST);
     }
 
-  /*  *//**
-     * Envia o arvquivo para o firebase
-     *//*
-    private void sendFileFirebase(StorageReference storageReference, final Uri file) {
-        if (storageReference != null) {
-            final String name = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString();
-            StorageReference imageGalleryRef = storageReference.child(name + "_gallery");
-            UploadTask uploadTask = imageGalleryRef.putFile(file);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, "onFailure sendFileFirebase " + e.getMessage());
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i(TAG, "onSuccess sendFileFirebase");
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    FileModel fileModel = new FileModel("img", downloadUrl.toString(), name, "");
-                    ChatModel chatModel = new ChatModel(userModel, "", Calendar.getInstance().getTime().getTime() + "", fileModel);
-                    mMessagesDatabaseReference.push().setValue(chatModel);
-                }
-            });
-        } else {
-            //IS NULL
-        }
-    }
-
-    *//**
-     * Send file to the firebase
-     *//*
-    private void sendFileFirebase(StorageReference storageReference, final File file) {
-        if (storageReference != null) {
-            Uri photoURI = FileProvider.getUriForFile(getContext(),
-                    "com.example.android.fileprovider",
-                    file);
-            UploadTask uploadTask = storageReference.putFile(photoURI);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, "onFailure sendFileFirebase " + e.getMessage());
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i(TAG, "onSuccess sendFileFirebase");
-                    Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    FileModel fileModel = new FileModel("img", downloadUrl.toString(), file.getName(), file.length() + "");
-                    ChatModel chatModel = new ChatModel(userModel, "", Calendar.getInstance().getTime().getTime() + "", fileModel);
-                    mMessagesDatabaseReference.push().setValue(chatModel);
-                }
-            });
-        } else {
-            //IS NULL
-        }
-
-    }*/
-
-    /**
-     * Checks if the app has permission to write to device storage
-     * <p>
-     * If the app does not has permission then the user will be prompted to grant permissions
-     */
-    public void verifyStoragePermissions() {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(getContext(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(
-                    getActivity(),
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        } else {
-            // we already have permission, lets go ahead and call camera intent
-            launchCamera();
-        }
-    }
-
     @Override
     public void clickImageChat(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
-
-      /*  ImageView image = (ImageView) view.findViewById(R.id.photoImageView);
-        Pair<View, String> holderPair = Pair.create((View) image, getString(R.string.image_chat_transition));
-        Pair<View, String> navPair = null;
-        Pair<View, String> statusPair = null;
-        View navigationBar = view.findViewById(android.R.id.navigationBarBackground);
-        View statusBar = view.findViewById(android.R.id.statusBarBackground);
-        navPair = Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
-        statusPair = Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);*/
-
 
         Intent intent = new Intent(getContext(), FullScreenImageActivity.class);
         intent.putExtra("nameUser", nameUser);
@@ -453,17 +366,6 @@ public class FragmentChat extends Fragment implements FragmentChatContract.View,
         intent.putExtra("urlPhotoClick", urlPhotoClick);
 
         startActivity(intent);
-
-
-      /*  ActivityOptionsCompat options;
-        if (ViewConfiguration.get(getApplicationContext()).hasPermanentMenuKey()) {
-            options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), holderPair, holderPair, navPair, statusPair);
-        } else {
-            //options = ActivityOptionsCompat.makeSceneTransitionAnimation(this,  holderPair, holderPair2, statusPair);
-            options = ActivityOptionsCompat.makeSceneTransitionAnimation(getActivity(), holderPair, holderPair);
-        }
-
-        ActivityCompat.startActivity(getContext(), intent, options.toBundle());*/
 
     }
 

@@ -139,7 +139,7 @@
 
                 <android.support.v7.widget.GridLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     app:columnCount="2">
 
                     <TextView
@@ -241,8 +241,7 @@
                         android:layout_width="0dp"
                         android:text="@string/from_gallery"
                         android:textColor="@android:color/white"
-                        app:layout_columnWeight="1"
-                        />
+                        app:layout_columnWeight="1" />
 
                     <LinearLayout
                         android:id="@+id/calculator_image_name_holder"
@@ -278,12 +277,12 @@
                             app:layout_columnWeight="1" />
                     </LinearLayout>
 
-
                     <android.support.v4.widget.Space
                         android:layout_width="0dp"
                         app:layout_columnSpan="2"
                         app:layout_columnWeight="1"
                         app:layout_rowWeight="1" />
+
 
                 </android.support.v7.widget.GridLayout>
 

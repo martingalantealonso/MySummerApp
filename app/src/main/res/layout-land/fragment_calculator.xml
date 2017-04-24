@@ -129,7 +129,7 @@
             android:background="@color/primary"
             android:gravity="center"
             android:orientation="vertical"
-            tools:visibility="gone">
+            tools:visibility="visible">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -277,6 +277,7 @@
 
 
                     </android.support.v7.widget.GridLayout>
+
                 </ScrollView>
 
                 <android.support.design.widget.FloatingActionButton

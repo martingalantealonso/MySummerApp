@@ -8,11 +8,18 @@
     tools:context="com.example.mgalante.mysummerapp.views.settings.SettingsActivity"
     tools:showIn="@layout/activity_settings">
 
+ <!--   <TextView
+        android:elevation="4dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/text_margin"
+        android:text="@string/large_text" />-->
+
     <TextView
         android:elevation="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />
+        android:text="@string/coming_soon" />
 
 </android.support.v4.widget.NestedScrollView>

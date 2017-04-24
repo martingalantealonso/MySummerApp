@@ -4,7 +4,7 @@
     <string name="usuario">Usuario</string>
     <string name="seccion_1">Home</string>
     <string name="seccion_2">Chat</string>
-    <string name="seccion_3">Calculator</string>
+    <string name="seccion_3">Payments</string>
     <string name="seccion_4">Gallery</string>
     <string name="chat_seccion_1">Save Images</string>
     <string name="menu_calculator_seccion_1">Add Payment</string>
@@ -189,5 +189,8 @@
     <string name="title">Title</string>
     <string name="error_wrong_title">You must provide a Title</string>
 
+    <string name="coming_soon">Settings coming soon! :)\n\n
+
+    For now, you can try to change your user profile photo</string>
 
 </resources>

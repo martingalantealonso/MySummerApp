@@ -92,10 +92,10 @@ public class SettingsActivity extends AppCompatActivity implements AppBarLayout.
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-             /*   Intent intent = new Intent();
-                intent.setType("image*//**//*");
+                Intent intent = new Intent();
+                intent.setType("image");
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);*/
+                startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
             }
         });
     }

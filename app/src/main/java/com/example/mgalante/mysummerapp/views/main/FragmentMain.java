@@ -77,26 +77,13 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View,
     private void startLoadingImages() {
 
         StaggeredGridLayoutManager staggeredGridLayoutManagerVertical =
-                new StaggeredGridLayoutManager(
-                        2, //The number of Columns in the grid
+                new StaggeredGridLayoutManager(3, //The number of Columns in the grid
                         LinearLayoutManager.VERTICAL);
 
         final GalleryRecyclerViewAdapter galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(getContext(), mImagesDatabaseReference, FirebaseAuth.getInstance().getCurrentUser().getUid(), this);
-       /* galleryRecyclerViewAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
-            @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                int imageCount = galleryRecyclerViewAdapter.getItemCount();
-                int lastVisiblePosition = mLinearLayoutManager.findLastCompletelyVisibleItemPosition();
-                if (lastVisiblePosition == -1 ||
-                        (positionStart >= (imageCount - 1) &&
-                                lastVisiblePosition == (positionStart - 1))) {
-                    mGalleryRecyclerView.scrollToPosition(positionStart);
-                }
-            }
-        });*/
-        mGalleryRecyclerView.setLayoutManager(staggeredGridLayoutManagerVertical);
-        mGalleryRecyclerView.setAdapter(galleryRecyclerViewAdapter);
+        // NOT DISPLAY THE IMAGES IN THE MAIN FRAGMENT
+       /* mGalleryRecyclerView.setLayoutManager(staggeredGridLayoutManagerVertical);
+        mGalleryRecyclerView.setAdapter(galleryRecyclerViewAdapter);*/
         Log.i("TEST GALLERY", galleryRecyclerViewAdapter.getItemCount() + "");
     }
 

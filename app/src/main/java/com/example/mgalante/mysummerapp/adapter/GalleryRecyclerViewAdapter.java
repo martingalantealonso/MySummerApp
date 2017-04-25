@@ -74,7 +74,7 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
             if (ivGalleryPhoto == null) return;
             Log.i("TEST setGALLERY", url);
 
-            Glide.with(context).load(url).asBitmap().into(new SimpleTarget<Bitmap>() {
+            Glide.with(context).load(url).asBitmap().thumbnail(0.1f).into(new SimpleTarget<Bitmap>() {
 
                 @Override
                 public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {

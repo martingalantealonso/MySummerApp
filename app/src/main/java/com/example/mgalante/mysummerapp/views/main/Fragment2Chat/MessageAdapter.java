@@ -127,12 +127,14 @@ public class MessageAdapter extends ArrayAdapter<FriendlyMessage> {
                                 Uri imageUri = Uri.fromFile(file);
                                 Glide.with(photoImageView.getContext())
                                         .load(imageUri)
+                                        .thumbnail(0.1f)
                                         .into(photoImageView);
                             } else {
                                 Log.i("IsImage", "file.NOTexists()");
 
                                 Glide.with(photoImageView.getContext())
                                         .load(message.getPhotoUrl())
+                                        .thumbnail(0.1f)
                                         .into(photoImageView);
 
                                 //4º IF not exist, check for storage option

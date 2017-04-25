@@ -175,7 +175,10 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
             mUserTxtView.setText(user.getDisplayName());
         }
         CircleImageView mUserPhoto = (CircleImageView) headerView.findViewById(R.id.imageViewUserPhoto);
-        Bitmap userCachePhoto = CacheStore.getInstance().getCacheFile(user.getUid());
+        Bitmap userCachePhoto = null;
+        if (user != null) {
+            userCachePhoto = CacheStore.getInstance().getCacheFile(user.getUid());
+        }
         if (userCachePhoto != null) {
             Log.i(getPackageName(), "userPhoto loaded from cache");
             mUserPhoto.setImageBitmap(userCachePhoto);

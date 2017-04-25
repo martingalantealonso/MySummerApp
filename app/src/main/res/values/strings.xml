@@ -192,5 +192,7 @@
     <string name="coming_soon">Settings coming soon! :)\n\n
 
     For now, you can try to change your user profile photo</string>
+    <string name="title_activity_file_manager">FileManagerActivity</string>
+    <string name="section_format">Hello World from section: %1$d</string>
 
 </resources>

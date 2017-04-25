@@ -20,9 +20,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.example.mgalante.mysummerapp.common.BaseActivity;
 import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.common.BaseActivity;
 import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersContract;
@@ -66,6 +66,8 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
     private FragmentGallery fragmentGallery;
 
     Fragment fragment;
+
+
 
 
     @BindView((R.id.drawer_layout))
@@ -188,7 +190,6 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         getCurrentUser();
         getUsers();
         progressDialog.dismiss();
-
     }
 
     private void setupWindowAnimations() {

@@ -18,6 +18,9 @@ apply plugin: 'com.neenbedankt.android-apt'
 
 
 android {
+    dexOptions {
+        jumboMode = true
+    }
     signingConfigs {
     }
     compileSdkVersion 25
@@ -27,7 +30,7 @@ android {
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
-        versionName "1.1"
+        versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         resValue "String", "MESSAGE", "messages"
 //        resValue "String", "USERS", "users"
@@ -96,6 +99,10 @@ dependencies {
     }
 
     compile 'com.gjiazhe:scrollparallaximageview:1.0'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }
+
+
 
 apply plugin: 'com.google.gms.google-services'

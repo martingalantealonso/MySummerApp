@@ -8,7 +8,7 @@ public class ImageModel {
     private String id;
     private User userModel;
     private String timeStamp;
-    private FileModel file;
+    private FileModel fileModel;
 
     public ImageModel() {
     }
@@ -17,12 +17,12 @@ public class ImageModel {
         this.id = id;
         this.userModel = userModel;
         this.timeStamp = timeStamp;
-        this.file = file;
+        this.fileModel = file;
     }
 
     public ImageModel(User userModel, FileModel file) {
         this.userModel = userModel;
-        this.file = file;
+        this.fileModel = file;
     }
 
     public String getId() {
@@ -49,12 +49,12 @@ public class ImageModel {
         this.timeStamp = timeStamp;
     }
 
-    public FileModel getFile() {
-        return file;
+    public FileModel getFileModel() {
+        return fileModel;
     }
 
-    public void setFile(FileModel file) {
-        this.file = file;
+    public void setFileModel(FileModel fileModel) {
+        this.fileModel = fileModel;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class ImageModel {
                 "id='" + id + '\'' +
                 ", userModel=" + userModel +
                 ", timeStamp='" + timeStamp + '\'' +
-                ", file=" + file +
+                ", file=" + fileModel +
                 '}';
     }
 }

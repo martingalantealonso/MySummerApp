@@ -39,6 +39,7 @@ public class Util {
 
     public static final String URL_STORAGE_REFERENCE = "gs://pantinapp-c16a0.appspot.com";
     public static final String FOLDER_STORAGE_IMG = "chat_photos";
+    public static final String FOLDER_STORAGE_IMG_GALLERY = "gallery_photos";
     public static final String FOLDER_STORAGE_IMG_PAYMENTS = "payments_photos";
     public static final String FOLDER_STORAGE_IMG_USER = "user_photos";
     public static final String DEFAULT_NULL_IMAGE = "https://firebasestorage.googleapis.com/v0/b/pantinapp-c16a0.appspot.com/o/magrathea2.png?alt=media&token=08a67b44-e623-4836-81c0-d21c06499045";

@@ -1,8 +1,6 @@
 package com.example.mgalante.mysummerapp;
 
 import android.app.Application;
-import com.crashlytics.android.Crashlytics;
-import io.fabric.sdk.android.Fabric;
 
 
 public class FirebaseChatMainApp extends Application {
@@ -19,6 +17,6 @@ public class FirebaseChatMainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+       // Fabric.with(this, new Crashlytics());
     }
 }

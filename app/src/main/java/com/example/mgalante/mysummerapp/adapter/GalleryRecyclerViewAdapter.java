@@ -45,9 +45,9 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
     @Override
     protected void populateViewHolder(MyGalleryViewHolder viewHolder, ImageModel model, int position) {
-        if (model.getFile() != null) {
+        if (model.getFileModel() != null) {
             Log.i("TEST GALLERY", model.toString());
-            viewHolder.setIvGalleryPhoto(model.getFile().getUrl_file());
+            viewHolder.setIvGalleryPhoto(model.getFileModel().getUrl_file());
         }
     }
 
@@ -67,7 +67,7 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
         public void onClick(View v) {
             int position = getAdapterPosition();
             ImageModel file = getItem(position);
-            mClickListenerGallery.clickImageGallery(v, position, file.getUserModel().getName(), file.getUserModel().getPhotoUrl(), file.getFile().getUrl_file());
+            mClickListenerGallery.clickImageGallery(v, position, file.getUserModel().getName(), file.getUserModel().getPhotoUrl(), file.getFileModel().getUrl_file());
         }
 
         public void setIvGalleryPhoto(String url) {

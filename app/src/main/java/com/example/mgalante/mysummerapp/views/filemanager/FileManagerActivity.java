@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -29,13 +28,26 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.entities.ImageModel;
+import com.example.mgalante.mysummerapp.entities.users.User;
+import com.example.mgalante.mysummerapp.utils.Util;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
-public class FileManagerActivity extends AppCompatActivity {
+public class FileManagerActivity extends AppCompatActivity implements FileManagerContract.View {
 
+    private FileManagerPresenter presenter;
     private int resources;
     private static ArrayList<Uri> imageUris;
+
+    private DatabaseReference mGalleryPhotosReference;
+
+    private User userModel;
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -56,7 +68,19 @@ public class FileManagerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_file_manager);
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            displayFinishDialog("Please, sing in the application");
+        } else {
+            userModel=new User();
+            userModel.setName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+            userModel.setPhotoUrl(String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()));
+            userModel.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        }
 
+        if (presenter == null) {
+            presenter = new FileManagerPresenter();
+        }
+        presenter.attach(getApplicationContext(), this);
         resources = 0;
         imageUris = new ArrayList<>();
 
@@ -70,11 +94,15 @@ public class FileManagerActivity extends AppCompatActivity {
 
         if (Intent.ACTION_SEND.equals(action) && type != null) {
             if (type.startsWith("image/")) {
-                handleSendImage(intent); // Handle single image being sent
+                // handleSendImage(intent); // Handle single image being sent
+                imageUris = presenter.handleSendImage(intent);
+                resources = imageUris.size();
             }
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
             if (type.startsWith("image/")) {
-                handleSendMultipleImages(intent); // Handle multiple images being sent
+                //handleSendMultipleImages(intent); // Handle multiple images being sent
+                imageUris = presenter.handleSendMultipleImages(intent);
+                resources = imageUris.size();
             }
         }/* else {
             // Handle other intents, such as being started from the home screen
@@ -89,13 +117,21 @@ public class FileManagerActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
+        final StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(Util.URL_STORAGE_REFERENCE).child(Util.FOLDER_STORAGE_IMG_GALLERY);
+        mGalleryPhotosReference = FirebaseDatabase.getInstance().getReference().child(Util.FOLDER_STORAGE_IMG_GALLERY);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                if (imageUris != null) {
+                    for (Uri imageUir : imageUris) {
+                        ImageModel imageModel = new ImageModel();
+                        imageModel.setUserModel(userModel);
+                        // presenter.sendFileFromGalleryTofirebase(storageRef, imageUir, mGalleryPhotosReference,);
+                        presenter.sendGalleryPhotoToFirebase(storageRef, imageUir, mGalleryPhotosReference, imageModel);
+                    }
+                }
             }
         });
 
@@ -121,6 +157,30 @@ public class FileManagerActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void setPresenter(FileManagerContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void onValuePushedSuccess() {
+
+    }
+
+    @Override
+    public void displayFinishDialog(String message) {
+        new AlertDialog.Builder(FileManagerActivity.this)
+                .setTitle("Upss... :(")
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setIcon(getDrawable(R.drawable.vd_sentiment_very_dissatisfied))
+                .show();
     }
 
     /**
@@ -223,38 +283,6 @@ public class FileManagerActivity extends AppCompatActivity {
             }
             return null;
         }*/
-    }
-
-    void handleSendImage(Intent intent) {
-        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        //intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-        if (imageUri != null) {
-            // Update UI to reflect image being shared
-            imageUris.add(imageUri);
-            resources = imageUris.size();
-        }
-    }
-
-    void handleSendMultipleImages(Intent intent) {
-        imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-        if (imageUris != null) {
-            // Update UI to reflect multiple images being shared
-            resources = imageUris.size();
-            //TODO get remote config
-            if (imageUris.size() > 10) {
-                new AlertDialog.Builder(FileManagerActivity.this)
-                        .setTitle("Upss... :(")
-                        .setMessage("Please, select no more than 10 images")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        })
-                        .setIcon(getDrawable(R.drawable.vd_sentiment_very_dissatisfied))
-                        .show();
-
-            }
-        }
     }
 
     @Override

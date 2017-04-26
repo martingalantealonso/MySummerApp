@@ -16,7 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
-import com.example.mgalante.mysummerapp.views.TouchImageView;
+import com.example.mgalante.mysummerapp.viewscustom.TouchImageView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import ru.egslava.blurredview.BlurredImageView;

@@ -28,7 +28,7 @@
                 android:src="@drawable/drw_pantin1"
                 app:layout_collapseMode="parallax" />
 
-            <com.example.mgalante.mysummerapp.views.ParticlesView
+            <com.example.mgalante.mysummerapp.viewscustom.ParticlesView
                 android:id="@+id/my_particles_demo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

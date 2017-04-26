@@ -1,4 +1,4 @@
-package com.example.mgalante.mysummerapp.views;
+package com.example.mgalante.mysummerapp.viewscustom;
 
 /*
  * TouchImageView.java
@@ -35,7 +35,6 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.OverScroller;
 import android.widget.Scroller;
 

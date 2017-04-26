@@ -100,7 +100,6 @@ dependencies {
 
     compile 'com.gjiazhe:scrollparallaximageview:1.0'
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
 }
 
 

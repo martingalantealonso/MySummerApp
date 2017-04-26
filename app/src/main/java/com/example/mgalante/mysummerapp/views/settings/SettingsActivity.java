@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateFormat;
@@ -27,8 +26,8 @@ import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.utils.Constants;
 import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
-import com.example.mgalante.mysummerapp.utils.UsersPhotos;
 import com.example.mgalante.mysummerapp.utils.Util;
+import com.example.mgalante.mysummerapp.views.ParticlesView;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -63,6 +62,8 @@ public class SettingsActivity extends AppCompatActivity implements AppBarLayout.
     TextView txtvUserName;
     @BindView(R.id.settings_user_subtitle)
     TextView txtUserSubtitle;
+    @BindView(R.id.my_particles_demo)
+    ParticlesView mParticleDemo;
 
     private int mMaxScrollSize;
 

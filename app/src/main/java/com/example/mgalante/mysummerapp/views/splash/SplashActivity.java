@@ -22,8 +22,8 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.crashlytics.android.Crashlytics;
-import com.example.mgalante.mysummerapp.common.BaseActivity;
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.common.BaseActivity;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.entities.users.all.GetUsersPresenter;
 import com.example.mgalante.mysummerapp.utils.CacheStore;
@@ -79,14 +79,14 @@ public class SplashActivity extends BaseActivity {
     @BindView(R.id.mainTitle)
     TextView mMainTitle;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash);
+        setContentView(R.layout.activity_splash_black);
         ButterKnife.bind(this);
 
         setupWindowAnimations();
-
 
         //AuthUI.getInstance().signOut(this);
 

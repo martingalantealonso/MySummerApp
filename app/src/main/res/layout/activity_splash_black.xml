@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/black"
     tools:context=".views.splash.SplashActivity">
 
     <!-- Background-->
@@ -17,13 +18,27 @@
         android:layout_alignParentTop="true"
         android:contentDescription="@string/splas_himg_backgroud"
         android:scaleType="centerCrop"
-        android:src="@drawable/drw_pantin1" />
+        android:src="@drawable/drw_pantin1"
+        android:visibility="gone" />
 
-
-    <View
+    <com.example.mgalante.mysummerapp.views.ParticlesView
+        android:id="@+id/my_particles_demo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient_splash_background_transparent_dark" />
+        app:dotColor="@color/colorAccent"
+        app:frameDelayMillis="10"
+        app:lineColor="@color/colorWhite"
+        app:lineDistance="86dp"
+        app:lineThickness="1dp"
+        app:maxDotRadius="3dp"
+        app:minDotRadius="1dp"
+        app:numDots="100"
+        app:stepMultiplier="1" />
+
+    <!--<View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_splash_background_transparent_dark" />-->
 
     <!-- Body -->
 

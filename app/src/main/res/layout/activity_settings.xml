@@ -28,6 +28,22 @@
                 android:src="@drawable/drw_pantin1"
                 app:layout_collapseMode="parallax" />
 
+            <com.example.mgalante.mysummerapp.views.ParticlesView
+                android:id="@+id/my_particles_demo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/gradient_splash_background_transparent_dark"
+                app:minDotRadius="1dp"
+                app:maxDotRadius="3dp"
+                app:lineThickness="1dp"
+                app:lineDistance="86dp"
+                app:numDots="45"
+                app:dotColor="@color/colorWhite"
+                app:lineColor="@color/primary"
+                app:frameDelayMillis="10"
+                app:stepMultiplier="1"
+                />
+
 
         </android.support.design.widget.CollapsingToolbarLayout>
 

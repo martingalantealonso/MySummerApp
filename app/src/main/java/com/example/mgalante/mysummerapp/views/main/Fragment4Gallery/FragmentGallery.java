@@ -1,5 +1,6 @@
 package com.example.mgalante.mysummerapp.views.main.Fragment4Gallery;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,11 +12,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerGallery;
 import com.example.mgalante.mysummerapp.adapter.GalleryRecyclerViewAdapter;
+import com.example.mgalante.mysummerapp.views.main.FullScreenImageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -75,7 +76,13 @@ public class FragmentGallery extends Fragment implements ClickListenerGallery {
 
     @Override
     public void clickImageGallery(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
-        Toast.makeText(getContext(), "BAAAH", Toast.LENGTH_LONG).show();
+        // Toast.makeText(getContext(), "BAAAH\n" + urlPhotoClick + "\n" + urlPhotoUser, Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(getContext(), FullScreenImageActivity.class);
+        intent.putExtra("nameUser", nameUser);
+        intent.putExtra("urlPhotoUser", urlPhotoUser);
+        intent.putExtra("urlPhotoClick", urlPhotoClick);
+
+        startActivity(intent);
     }
 
 

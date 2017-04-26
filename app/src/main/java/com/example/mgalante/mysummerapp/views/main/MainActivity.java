@@ -68,8 +68,6 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
     Fragment fragment;
 
 
-
-
     @BindView((R.id.drawer_layout))
     DrawerLayout drawerLayout;
     @BindView(R.id.navview)
@@ -178,15 +176,14 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         Bitmap userCachePhoto = null;
         if (user != null) {
             userCachePhoto = CacheStore.getInstance().getCacheFile(user.getUid());
+            if (userCachePhoto != null) {
+                Log.i(getPackageName(), "userPhoto loaded from cache");
+                mUserPhoto.setImageBitmap(userCachePhoto);
+            } else {
+                Log.i(getPackageName(), "userPhoto loaded from url");
+                Glide.with(this).load(user.getPhotoUrl()).into(mUserPhoto);
+            }
         }
-        if (userCachePhoto != null) {
-            Log.i(getPackageName(), "userPhoto loaded from cache");
-            mUserPhoto.setImageBitmap(userCachePhoto);
-        } else {
-            Log.i(getPackageName(), "userPhoto loaded from url");
-            Glide.with(this).load(user.getPhotoUrl()).into(mUserPhoto);
-        }
-
         ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Surfing some waves...");
         progressDialog.show();

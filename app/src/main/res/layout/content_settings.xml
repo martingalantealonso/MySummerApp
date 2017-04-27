@@ -8,18 +8,58 @@
     tools:context="com.example.mgalante.mysummerapp.views.settings.SettingsActivity"
     tools:showIn="@layout/activity_settings">
 
- <!--   <TextView
-        android:elevation="4dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="@string/large_text" />-->
+    <!--   <TextView
+           android:elevation="4dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_margin="@dimen/text_margin"
+           android:text="@string/large_text" />-->
 
-    <TextView
-        android:elevation="4dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <!--   <TextView
+           android:elevation="4dp"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_margin="@dimen/text_margin"
+           android:text="@string/coming_soon" />-->
+
+    <android.support.v7.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="@dimen/text_margin"
-        android:text="@string/coming_soon" />
+        app:columnCount="2">
+
+        <TextView
+            android:text="@string/settings_storage"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
+
+        <Switch
+            android:id="@+id/switch_chat_images"
+            android:layout_marginStart="@dimen/default_medium_padding"
+            android:layout_marginTop="@dimen/default_small_margin"
+            android:checked="true"
+            android:text="@string/settings_save_chat_images"
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+            android:theme="@style/SCBSwitch"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
+
+        <Switch
+            android:id="@+id/switch_gallery_images"
+            android:layout_marginStart="@dimen/default_medium_padding"
+            android:layout_marginTop="@dimen/default_small_margin"
+            android:checked="true"
+            android:text="@string/settings_save_gallery_images"
+            android:textAppearance="@style/TextAppearance.AppCompat.Menu"
+            android:theme="@style/SCBSwitch"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1" />
+
+
+    </android.support.v7.widget.GridLayout>
 
 </android.support.v4.widget.NestedScrollView>

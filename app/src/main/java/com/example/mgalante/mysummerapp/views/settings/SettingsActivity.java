@@ -3,10 +3,12 @@ package com.example.mgalante.mysummerapp.views.settings;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +18,8 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +39,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.orhanobut.logger.Logger;
 
 import java.util.Date;
 
@@ -53,6 +58,8 @@ public class SettingsActivity extends AppCompatActivity implements AppBarLayout.
 
     private ProgressDialog progressDialog;
 
+    SharedPreferences preferences;
+
     @BindView(R.id.materialup_profile_image)
     CircleImageView mProfileImage;
     @BindView(R.id.app_bar)
@@ -61,6 +68,10 @@ public class SettingsActivity extends AppCompatActivity implements AppBarLayout.
     TextView txtvUserName;
     @BindView(R.id.settings_user_subtitle)
     TextView txtUserSubtitle;
+    @BindView(R.id.switch_chat_images)
+    Switch switchChatImages;
+    @BindView(R.id.switch_gallery_images)
+    Switch switchGalleryImages;
 
     private int mMaxScrollSize;
 
@@ -72,6 +83,8 @@ public class SettingsActivity extends AppCompatActivity implements AppBarLayout.
 
         progressDialog = new ProgressDialog(this);
         storage = FirebaseStorage.getInstance();
+
+        preferences = getApplicationContext().getSharedPreferences("appPreferences", Context.MODE_PRIVATE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -96,6 +109,22 @@ public class SettingsActivity extends AppCompatActivity implements AppBarLayout.
                 startActivityForResult(Intent.createChooser(intent, getString(R.string.select_picture_title)), IMAGE_GALLERY_REQUEST);
             }
         });
+
+        switchGalleryImages.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences.Editor editor = preferences.edit();
+                if (switchGalleryImages.isChecked()) {
+                    editor.putBoolean(getString(R.string.preference_store_image_gallery), true);
+                } else {
+                    editor.putBoolean(getString(R.string.preference_store_image_gallery), false);
+                }
+                editor.apply();
+                Logger.d("Preferences: store gallery images "+preferences.getBoolean(getString(R.string.preference_store_image_gallery), false));
+            }
+        });
+
+
     }
 
 
@@ -201,7 +230,7 @@ public class SettingsActivity extends AppCompatActivity implements AppBarLayout.
                             User user = new User(getIntent().getExtras().getString("uidUser"), getIntent().getExtras().getString("nameUser"), String.valueOf(downloadUrl),
                                     new SharedPrefUtil(getApplicationContext()).getString(Constants.ARG_FIREBASE_TOKEN));
                             addUserToDatabase(getApplicationContext(), user);
-                           // UsersPhotos.addUserImageToCache(getApplicationContext(), user.getUid(), user.getPhotoUrl());
+                            // UsersPhotos.addUserImageToCache(getApplicationContext(), user.getUid(), user.getPhotoUrl());
                         }
                     });
                 } else {

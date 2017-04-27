@@ -28,6 +28,8 @@
     <string name="preference_user_photoUrl">photoUrl</string>
     <string name="preference_user_uid">uid</string>
     <string name="preference_user_paymentsSum">paymentsSum</string>
+    <string name="preference_store_image_gallery">store_image_gallery</string>
+    <string name="preference_store_image_chat">store_image_chat</string>
 
 
     <string name="sp_store_chat_images">store_chat_images</string>
@@ -194,5 +196,8 @@
     For now, you can try to change your user profile photo</string>
     <string name="title_activity_file_manager">FileManagerActivity</string>
     <string name="section_format">Hello World from section: %1$d</string>
+    <string name="settings_storage">Storage</string>
+    <string name="settings_save_gallery_images">Save Gallery Images</string>
+    <string name="settings_save_chat_images">Save Chat Images</string>
 
 </resources>

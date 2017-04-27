@@ -81,17 +81,18 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
                 // 1.1 SEARCH FOR IMAGE IN FILES
 
                 // 1.1.1 IF FOUND -> DISPLAY
-                // 1.1.2 ELSE -> ?
+                // 1.1.2 ELSE -> ? shit
 
             }
             // 2 IF IMAGES WASN'T SENT BY USER
             else {
 
-                // 2.1 SEARCH FOR IMAGE IN FILES
+                // 2.1 SEARCH FOR IMAGE IN "App Folder" FILES
 
                 // 2.1.1 IF EXIST -> DISPLAY
 
-                // 2.1.2 IF NOT   -> ASK FOR DOWNLOAD
+                // 2.1.2 IF NOT   -> ASK FOR DOWNLOAD  -> Display a thumbnail
+
 
             }
 

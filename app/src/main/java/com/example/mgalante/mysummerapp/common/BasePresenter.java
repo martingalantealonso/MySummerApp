@@ -13,7 +13,7 @@ import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
 
-public interface BasePresenter<T,V> {
+public interface BasePresenter<T, V> {
 
     void attach(T context, V view);
 

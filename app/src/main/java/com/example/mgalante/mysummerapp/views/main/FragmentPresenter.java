@@ -110,7 +110,6 @@ public class FragmentPresenter implements FragmentMainContract.Presenter {
         mView.updateView(sDays, sHours,sMinutes, sSeconds);
            }
 
-
     //Devuele un java.util.Date desde un String en formato dd-MM-yyyy
     //@param La fecha a convertir a formato date
     //@return Retorna la fecha en formato Date

@@ -18,4 +18,5 @@ public interface FragmentMainContract {
     interface Presenter extends BasePresenter<Context, View> {
         void getCountdownText(String futureDate);
     }
+
 }

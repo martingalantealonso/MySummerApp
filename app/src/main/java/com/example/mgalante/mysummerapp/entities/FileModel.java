@@ -1,13 +1,27 @@
 package com.example.mgalante.mysummerapp.entities;
 
+import com.example.mgalante.mysummerapp.database.PatinDatabase;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+
 /**
  * Created by Alessandro Barreto on 22/06/2016.
  */
-public class FileModel {
+@Table(database = PatinDatabase.class)
+public class FileModel extends BaseModel {
 
+    @Column
+    @PrimaryKey
+    int id;
+    @Column
     private String type;
+    @Column
     private String url_file;
+    @Column
     private String name_file;
+    @Column
     private String size_file;
 
     public FileModel() {
@@ -18,6 +32,14 @@ public class FileModel {
         this.url_file = url_file;
         this.name_file = name_file;
         this.size_file = size_file;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getType() {

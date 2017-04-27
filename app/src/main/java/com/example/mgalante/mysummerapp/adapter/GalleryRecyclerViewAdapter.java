@@ -13,10 +13,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.entities.ImageModel;
 import com.example.mgalante.mysummerapp.utils.MyVerticalMovingStyle;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.gjiazhe.scrollparallaximageview.ScrollParallaxImageView;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 
 /**
@@ -47,10 +49,9 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
     protected void populateViewHolder(MyGalleryViewHolder viewHolder, ImageModel model, int position) {
         if (model.getFileModel() != null) {
             Log.i("TEST GALLERY", model.toString());
-            viewHolder.setIvGalleryPhoto(model.getFileModel().getUrl_file());
+            viewHolder.setIvGalleryPhoto(model);
         }
     }
-
 
     public class MyGalleryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -70,29 +71,55 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
             mClickListenerGallery.clickImageGallery(v, position, file.getUserModel().getName(), file.getUserModel().getPhotoUrl(), file.getFileModel().getUrl_file());
         }
 
-        public void setIvGalleryPhoto(String url) {
+        public void setIvGalleryPhoto(ImageModel url) {
             if (ivGalleryPhoto == null) return;
-            Log.i("TEST setGALLERY", url);
+            Log.i("TEST setGALLERY", url.getFileModel().getUrl_file());
 
-            Glide.with(context).load(url).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
+            // 1º IF IMAGE WAS SENT BY USER
+            if (url.getUserModel().getUid() == FirebaseAuth.getInstance().getCurrentUser().getUid()) {
+
+
+                // 1.1 SEARCH FOR IMAGE IN FILES
+
+                // 1.1.1 IF FOUND -> DISPLAY
+                // 1.1.2 ELSE -> ?
+
+            }
+            // 2 IF IMAGES WASN'T SENT BY USER
+            else {
+
+                // 2.1 SEARCH FOR IMAGE IN FILES
+
+                // 2.1.1 IF EXIST -> DISPLAY
+
+                // 2.1.2 IF NOT   -> ASK FOR DOWNLOAD
+
+            }
+
+
+            Glide.with(context).load(url.getFileModel().getUrl_file()).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
                     .into(new SimpleTarget<Bitmap>() {
 
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                    //TODO STORE IF REQUIRED
-                    //CacheStore.getInstance().saveCacheFile(uid, resource);
-                    ivGalleryPhoto.setImageBitmap(resource);
-                }
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            //TODO STORE IF REQUIRED
+                            //CacheStore.getInstance().saveCacheFile(uid, resource);
+                            ivGalleryPhoto.setImageBitmap(resource);
+                        }
 
-                @Override
-                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                        @Override
+                        public void onLoadFailed(Exception e, Drawable errorDrawable) {
 
-                }
-            });
+                        }
+                    });
 
             ivGalleryPhoto.setOnClickListener(this);
 
+            FileModel fileModel = url.getFileModel();
+            String id=url.getFileModel().getName_file().replaceAll("[^\\d.]", "");
+            fileModel.setId(Integer.parseInt( id));
+            fileModel.save();
+
         }
     }
-
 }

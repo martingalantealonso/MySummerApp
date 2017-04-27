@@ -28,10 +28,11 @@ import butterknife.ButterKnife;
  * Created by mgalante on 20/04/17.
  */
 
-public class FragmentGallery extends Fragment implements ClickListenerGallery {
+public class FragmentGallery extends Fragment implements FragmentGalleryContract.View, ClickListenerGallery {
 
     private DatabaseReference mImagesDatabaseReference;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
+    private FragmentGalleryPresenter mFragmentGalleryPresenter;
 
     @BindView(R.id.gallery_recycler_view)
     RecyclerView mGalleryRecyclerView;
@@ -55,9 +56,20 @@ public class FragmentGallery extends Fragment implements ClickListenerGallery {
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
+        if (mFragmentGalleryPresenter == null) {
+            mFragmentGalleryPresenter = new FragmentGalleryPresenter();
+        }
+        mFragmentGalleryPresenter.attach(getContext(), this);
+
+        updateDatabaseImages();
+
         startLoadingImages();
 
         return view;
+    }
+
+    private void updateDatabaseImages() {
+        mFragmentGalleryPresenter.updateDatabaseImages();
     }
 
     @Override
@@ -96,4 +108,13 @@ public class FragmentGallery extends Fragment implements ClickListenerGallery {
         mGalleryRecyclerView.setAdapter(galleryRecyclerViewAdapter);
     }
 
+    @Override
+    public void setPresenter(FragmentGalleryContract.Presenter presenter) {
+
+    }
+
+    @Override
+    public void onValuePushedSuccess() {
+
+    }
 }

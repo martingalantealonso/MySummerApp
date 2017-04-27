@@ -13,6 +13,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
+import com.example.mgalante.mysummerapp.database.entities.DataBaseFileModel;
 import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.entities.ImageModel;
 import com.example.mgalante.mysummerapp.utils.MyVerticalMovingStyle;
@@ -71,12 +72,12 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
             mClickListenerGallery.clickImageGallery(v, position, file.getUserModel().getName(), file.getUserModel().getPhotoUrl(), file.getFileModel().getUrl_file());
         }
 
-        public void setIvGalleryPhoto(ImageModel url) {
+        public void setIvGalleryPhoto(ImageModel imageModel) {
             if (ivGalleryPhoto == null) return;
-            Log.i("TEST setGALLERY", url.getFileModel().getUrl_file());
+            Log.i("TEST setGALLERY", imageModel.getFileModel().getUrl_file());
 
             // 1º IF IMAGE WAS SENT BY USER
-            if (url.getUserModel().getUid() == FirebaseAuth.getInstance().getCurrentUser().getUid()) {
+            if (imageModel.getUserModel().getUid() == FirebaseAuth.getInstance().getCurrentUser().getUid()) {
 
 
                 // 1.1 SEARCH FOR IMAGE IN FILES
@@ -97,7 +98,7 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
             }
 
 
-            Glide.with(context).load(url.getFileModel().getUrl_file()).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
+            Glide.with(context).load(imageModel.getFileModel().getUrl_file()).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
                     .into(new SimpleTarget<Bitmap>() {
 
                         @Override
@@ -115,11 +116,14 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
             ivGalleryPhoto.setOnClickListener(this);
 
-            FileModel fileModel = url.getFileModel();
-            String id=url.getFileModel().getName_file().replaceAll("[^\\d.]", "");
-            fileModel.setId(Integer.parseInt( id));
-            fileModel.save();
-
+            FileModel fileModel = imageModel.getFileModel();
+            String id = imageModel.getTimeStamp();
+            if (id != null) {
+                //DataBaseFileModel(int id, String type, String url_file, String name_file, String size_file)
+                DataBaseFileModel dataBaseFileModel = new DataBaseFileModel(Integer.parseInt(id.substring(id.length() - 9)), fileModel.getType(), fileModel.getUrl_file(), fileModel.getName_file(), fileModel.getSize_file());
+                dataBaseFileModel.toString();
+                dataBaseFileModel.save();
+            }
         }
     }
 }

@@ -81,7 +81,7 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
     }
 
     @Override
-    public void sendGalleryPhotoToFirebase(StorageReference storageReference, Uri file, final DatabaseReference databaseReference, final ImageModel imageModel) {
+    public void sendGalleryPhotoToFirebase(StorageReference storageReference, final Uri file, final DatabaseReference databaseReference, final ImageModel imageModel) {
         if (storageReference != null) {
             final String name = DateFormat.format("yyyy-MM-dd_hhmmss", new Date()).toString();
             StorageReference imageGalleryRef = storageReference.child(file.getLastPathSegment() + name + "_gallery");
@@ -98,6 +98,7 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     FileModel fileModel = new FileModel("img", downloadUrl.toString(), name, "");
                     imageModel.setFileModel(fileModel);
+                    imageModel.setTimeStamp(String.valueOf(Calendar.getInstance().getTime().getTime()));
                     databaseReference.push().setValue(imageModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {

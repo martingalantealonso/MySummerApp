@@ -6,8 +6,8 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.example.mgalante.mysummerapp.database.entities.DataBaseFileModel;
 import com.example.mgalante.mysummerapp.entities.ChatModel;
-import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.utils.Util;
@@ -56,7 +56,7 @@ public class FragmentGalleryPresenter implements FragmentGalleryContract.Present
             Log.d("Files", "Size: " + files.length);
             for (int i = 0; i < files.length; i++) {
                 Log.d("Files", "FileName:" + files[i].getName());
-                FileModel fileModel = new FileModel("img", "", files[i].getName(), "");
+                DataBaseFileModel fileModel = new DataBaseFileModel("img", "", files[i].getName(), "");
                 fileModel.save();
             }
         }else{

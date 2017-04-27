@@ -16,12 +16,10 @@ import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -98,7 +96,7 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                    Log.i(TAG, "onSuccess sendFileFirebase");
+                    Logger.i("onSuccess sendFileFirebase");
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     //FileModel fileModel = new FileModel("img", downloadUrl.toString(), name, "");
                     final FileModel fileModel = new FileModel("img", downloadUrl.toString(), file.getLastPathSegment(), "");
@@ -108,6 +106,7 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
                     databaseReference.child(key).setValue(imageModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            Logger.i("onSuccess push value");
                             DataBaseImageSentModel dataBaseImageSentModel = new DataBaseImageSentModel(key, file.getPath());
                             dataBaseImageSentModel.save();
                             onPushValueSuccess();

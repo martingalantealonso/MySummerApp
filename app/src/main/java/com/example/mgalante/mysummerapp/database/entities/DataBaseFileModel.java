@@ -1,6 +1,6 @@
 package com.example.mgalante.mysummerapp.database.entities;
 
-import com.example.mgalante.mysummerapp.database.PatinDatabase;
+import com.example.mgalante.mysummerapp.database.PantinDatabase;
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
@@ -9,7 +9,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 /**
  * Created by Alessandro Barreto on 22/06/2016.
  */
-@Table(database = PatinDatabase.class)
+@Table(database = PantinDatabase.class)
 public class DataBaseFileModel extends BaseModel {
 
     @Column

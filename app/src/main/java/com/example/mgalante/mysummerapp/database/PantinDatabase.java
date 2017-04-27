@@ -5,8 +5,8 @@ import com.raizlabs.android.dbflow.annotation.Database;
 /**
  * Created by mgalante on 26/04/17.
  */
-@Database(name = PatinDatabase.NAME, version = PatinDatabase.VERSION)
-public class PatinDatabase {
+@Database(name = PantinDatabase.NAME, version = PantinDatabase.VERSION)
+public class PantinDatabase {
 
     public static final String NAME = "PantinDataBase";
 

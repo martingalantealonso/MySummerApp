@@ -102,10 +102,6 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
                 }
 
-
-
-
-
                 //endregion
 
             }

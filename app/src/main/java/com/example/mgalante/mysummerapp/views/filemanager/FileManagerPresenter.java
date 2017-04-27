@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.example.mgalante.mysummerapp.database.entities.DataBaseImageSentModel;
 import com.example.mgalante.mysummerapp.entities.ChatModel;
 import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.entities.ImageModel;
@@ -15,7 +16,10 @@ import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -93,16 +97,19 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
                     Log.i(TAG, "onSuccess sendFileFirebase");
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     //FileModel fileModel = new FileModel("img", downloadUrl.toString(), name, "");
-                    FileModel fileModel = new FileModel("img", downloadUrl.toString(), file.getLastPathSegment(), "");
+                    final FileModel fileModel = new FileModel("img", downloadUrl.toString(), file.getLastPathSegment(), "");
                     imageModel.setFileModel(fileModel);
                     imageModel.setTimeStamp(String.valueOf(Calendar.getInstance().getTime().getTime()));
-                    databaseReference.push().setValue(imageModel).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    final String key = databaseReference.child(databaseReference.getKey()).push().getKey();
+                    databaseReference.child(key).setValue(imageModel).addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
+                            DataBaseImageSentModel dataBaseImageSentModel = new DataBaseImageSentModel(key, file.getPath());
+                            dataBaseImageSentModel.save();
                             onPushValueSuccess();
                         }
                     });

@@ -3,6 +3,7 @@ package com.example.mgalante.mysummerapp.adapter;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +16,14 @@ import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.entities.ImageModel;
 import com.example.mgalante.mysummerapp.utils.MyVerticalMovingStyle;
+import com.example.mgalante.mysummerapp.utils.Util;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.gjiazhe.scrollparallaximageview.ScrollParallaxImageView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.orhanobut.logger.Logger;
+
+import java.io.File;
 
 /**
  * Created by mgalante on 20/04/17.
@@ -73,11 +78,20 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
         public void setIvGalleryPhoto(ImageModel imageModel) {
             if (ivGalleryPhoto == null) return;
             Log.i("TEST setGALLERY", imageModel.getFileModel().getUrl_file());
+            String filePath = imageModel.getFileModel().getUrl_file();
 
             // 1º IF IMAGE WAS SENT BY USER
-            if (imageModel.getUserModel().getUid() == FirebaseAuth.getInstance().getCurrentUser().getUid()) {
+            if (imageModel.getUserModel().getUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
+                //File file = new File(Environment.getExternalStorageDirectory() + Util.FOLDER_SD_IMAGES + imageModel.getFileModel().getName_file());
+                File file = new File(Environment.getExternalStorageDirectory() + Util.FOLDER_SD_IMAGES + imageModel.getFileModel().getName_file());
+                if (file.exists()) {
+                    Logger.d("User File exists:" + file.getAbsolutePath());
+                    filePath = file.getAbsolutePath();
+                } else {
+                    Logger.d("User File does not exists:" + file.getAbsolutePath());
 
+                }
                 // 1.1 SEARCH FOR IMAGE IN FILES
 
                 // 1.1.1 IF FOUND -> DISPLAY
@@ -88,16 +102,22 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
             else {
 
                 // 2.1 SEARCH FOR IMAGE IN "App Folder" FILES
+                File file = new File(Environment.getExternalStorageDirectory() + Util.FOLDER_SD_IMAGES + imageModel.getFileModel().getName_file());
+                if (file.exists()) {
+                    // 2.1.1 IF EXIST -> DISPLAY
+                    Logger.d("Non User File exists:" + file.getAbsolutePath());
+                    filePath = file.getAbsolutePath();
+                } else {
+                    // 2.1.2 IF NOT   -> ASK FOR DOWNLOAD  -> Display a thumbnail
+                    Logger.d("Non User File does not exists:" + file.getAbsolutePath());
 
-                // 2.1.1 IF EXIST -> DISPLAY
-
-                // 2.1.2 IF NOT   -> ASK FOR DOWNLOAD  -> Display a thumbnail
-
+                }
 
             }
+            Logger.d("GlideImage loaded from: " + filePath);
 
-
-            Glide.with(context).load(imageModel.getFileModel().getUrl_file()).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
+            //Glide.with(context).load(imageModel.getFileModel().getUrl_file()).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
+            Glide.with(context).load(filePath).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
                     .into(new SimpleTarget<Bitmap>() {
 
                         @Override

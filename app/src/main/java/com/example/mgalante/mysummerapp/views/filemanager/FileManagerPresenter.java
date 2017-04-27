@@ -96,7 +96,8 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                     Log.i(TAG, "onSuccess sendFileFirebase");
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                    FileModel fileModel = new FileModel("img", downloadUrl.toString(), name, "");
+                    //FileModel fileModel = new FileModel("img", downloadUrl.toString(), name, "");
+                    FileModel fileModel = new FileModel("img", downloadUrl.toString(), file.getLastPathSegment(), "");
                     imageModel.setFileModel(fileModel);
                     imageModel.setTimeStamp(String.valueOf(Calendar.getInstance().getTime().getTime()));
                     databaseReference.push().setValue(imageModel).addOnSuccessListener(new OnSuccessListener<Void>() {

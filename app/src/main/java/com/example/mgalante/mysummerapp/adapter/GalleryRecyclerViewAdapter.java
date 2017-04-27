@@ -13,8 +13,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
-import com.example.mgalante.mysummerapp.database.entities.DataBaseFileModel;
-import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.entities.ImageModel;
 import com.example.mgalante.mysummerapp.utils.MyVerticalMovingStyle;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -116,14 +114,14 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
             ivGalleryPhoto.setOnClickListener(this);
 
-            FileModel fileModel = imageModel.getFileModel();
+          /*  FileModel fileModel = imageModel.getFileModel();
             String id = imageModel.getTimeStamp();
             if (id != null) {
                 //DataBaseFileModel(int id, String type, String url_file, String name_file, String size_file)
                 DataBaseFileModel dataBaseFileModel = new DataBaseFileModel(Integer.parseInt(id.substring(id.length() - 9)), fileModel.getType(), fileModel.getUrl_file(), fileModel.getName_file(), fileModel.getSize_file());
                 dataBaseFileModel.toString();
                 dataBaseFileModel.save();
-            }
+            }*/
         }
     }
 }

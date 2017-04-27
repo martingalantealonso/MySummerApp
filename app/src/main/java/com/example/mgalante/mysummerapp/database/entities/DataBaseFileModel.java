@@ -16,6 +16,8 @@ public class DataBaseFileModel extends BaseModel {
     @PrimaryKey
     int id;
     @Column
+    String key;
+    @Column
     private String type;
     @Column
     private String url_file;
@@ -50,6 +52,14 @@ public class DataBaseFileModel extends BaseModel {
         this.id = id;
     }
 
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
     public String getType() {
         return type;
     }
@@ -82,5 +92,14 @@ public class DataBaseFileModel extends BaseModel {
         this.size_file = size_file;
     }
 
-
+    @Override
+    public String toString() {
+        return "DataBaseFileModel{" +
+                "id=" + id +
+                ", type='" + type + '\'' +
+                ", url_file='" + url_file + '\'' +
+                ", name_file='" + name_file + '\'' +
+                ", size_file='" + size_file + '\'' +
+                '}';
+    }
 }

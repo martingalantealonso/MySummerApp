@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -90,18 +89,55 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
             if (imageModel.getUserModel().getUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
 
                 //region sent by user
-                File file = new File(Environment.getExternalStorageDirectory() + Util.FOLDER_SD_IMAGES + imageModel.getFileModel().getName_file());
+                File file = new File(Util.FOLDER_SD_PICTURES_IMAGES_SENT + imageModel.getFileModel().getName_file());
                 // 1.1 SEARCH FOR IMAGE IN FILES
                 if (file.exists()) {
                     Logger.d("User File exists:" + file.getAbsolutePath());
                     // 1.1.1 IF FOUND -> DISPLAY
                     filePath = file.getAbsolutePath();
+                    downloadImage = false;
                 } else {
                     Logger.d("User File does not exists:" + file.getAbsolutePath());
                     // 1.1.2 ELSE -> ? shit
-
+                    if (preferences.getBoolean(context.getString(R.string.preference_store_image_gallery), true)) {
+                        downloadImage = true;
+                    }
                 }
 
+                Glide.with(context).load(filePath).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
+                        .into(new SimpleTarget<Bitmap>() {
+
+                            @Override
+                            public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                //TODO STORE IF REQUIRED
+                                //CacheStore.getInstance().saveCacheFile(uid, resource);
+                                ivGalleryPhoto.setImageBitmap(resource);
+                                if (downloadImage) {
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            File file = new File(
+                                                    Util.FOLDER_SD_PICTURES_IMAGES_SENT
+                                                            + imageModel.getFileModel().getName_file());
+                                            try {
+                                                file.createNewFile();
+                                                FileOutputStream ostream = new FileOutputStream(file);
+                                                resource.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+                                                ostream.close();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }).start();
+                                }
+                            }
+
+                            @Override
+                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+
+                            }
+                        });
                 //endregion
 
             }
@@ -109,11 +145,13 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
             else {
                 //region No sent by user
                 // 2.1 SEARCH FOR IMAGE IN "App Folder" FILES
-                File file = new File(Environment.getExternalStorageDirectory() + Util.FOLDER_SD_IMAGES + imageModel.getFileModel().getName_file());
+                File file = new File(Util.FOLDER_SD_PICTURES_IMAGES + imageModel.getFileModel().getName_file());
                 if (file.exists()) {
                     // 2.1.1 IF EXIST -> DISPLAY
                     Logger.d("Non User File exists:" + file.getAbsolutePath());
                     filePath = file.getAbsolutePath();
+                    downloadImage = false;
+
                 } else {
                     // 2.1.2 IF NOT   -> ASK FOR DOWNLOAD
                     Logger.d("Non User File does not exists:" + file.getAbsolutePath());
@@ -138,7 +176,7 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
                                         public void run() {
 
                                             File file = new File(
-                                                    Environment.getExternalStorageDirectory() + Util.FOLDER_SD_IMAGES
+                                                    Util.FOLDER_SD_PICTURES_IMAGES
                                                             + imageModel.getFileModel().getName_file());
                                             try {
                                                 file.createNewFile();

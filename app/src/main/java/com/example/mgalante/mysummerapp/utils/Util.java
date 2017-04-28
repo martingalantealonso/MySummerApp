@@ -2,6 +2,7 @@ package com.example.mgalante.mysummerapp.utils;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
@@ -45,6 +46,8 @@ public class Util {
     public static final String DEFAULT_NULL_IMAGE = "https://firebasestorage.googleapis.com/v0/b/pantinapp-c16a0.appspot.com/o/magrathea2.png?alt=media&token=08a67b44-e623-4836-81c0-d21c06499045";
     public static final String FOLDER_SD_IMAGES = "/PantinClassic/PantinGallery/";
     public static final String FOLDER_SD_IMAGES2 = "/PantinClassic/PantinGallery";
+    public static final String FOLDER_SD_PICTURES_IMAGES = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "PantinClassic/PantinGallery" + File.separator;
+    public static final String FOLDER_SD_PICTURES_IMAGES_SENT = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "PantinClassic/PantinGallery/sent" + File.separator;
 
     public static void initToast(Context c, String message) {
         Toast.makeText(c, message, Toast.LENGTH_SHORT).show();

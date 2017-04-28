@@ -2,18 +2,25 @@ package com.example.mgalante.mysummerapp.views.filemanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.database.entities.DataBaseImageSentModel;
 import com.example.mgalante.mysummerapp.entities.ChatModel;
 import com.example.mgalante.mysummerapp.entities.FileModel;
 import com.example.mgalante.mysummerapp.entities.ImageModel;
 import com.example.mgalante.mysummerapp.entities.PaymentModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
+import com.example.mgalante.mysummerapp.utils.Util;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -22,9 +29,12 @@ import com.google.firebase.storage.UploadTask;
 import com.orhanobut.logger.Logger;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import static android.R.attr.resource;
 
 /**
  * Created by mgalante on 25/04/17.
@@ -96,6 +106,41 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+
+                    //region store image in the sent directory
+
+                    Glide.with(mContext).load(file).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
+                            .into(new SimpleTarget<Bitmap>() {
+
+                                @Override
+                                public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                    new Thread(new Runnable() {
+                                        @Override
+                                        public void run() {
+
+                                            File file = new File(
+                                                   Util.FOLDER_SD_PICTURES_IMAGES_SENT
+                                                            + imageModel.getFileModel().getName_file());
+                                            try {
+                                                file.createNewFile();
+                                                FileOutputStream ostream = new FileOutputStream(file);
+                                                resource.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+                                                ostream.close();
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+                                            }
+                                        }
+                                    }).start();
+                                }
+
+                                @Override
+                                public void onLoadFailed(Exception e, Drawable errorDrawable) {
+
+                                }
+                            });
+
+                    //endregion
+
                     Logger.i("onSuccess sendFileFirebase");
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
                     //FileModel fileModel = new FileModel("img", downloadUrl.toString(), name, "");

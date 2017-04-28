@@ -1,7 +1,6 @@
 package com.example.mgalante.mysummerapp;
 
 import android.app.Application;
-import android.os.Environment;
 
 import com.example.mgalante.mysummerapp.utils.Util;
 import com.orhanobut.logger.Logger;
@@ -25,23 +24,32 @@ public class FirebaseChatMainApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-       // Fabric.with(this, new Crashlytics());
+        // Fabric.with(this, new Crashlytics());
 
         FlowManager.init(new FlowConfig.Builder(this).build());
 
+        //region App Folders creation
         //File folder = new File(Environment.getExternalStorageDirectory() + "/yourDirectoryName");
-        File folder = new File(Environment.getExternalStorageDirectory() + Util.FOLDER_SD_IMAGES2);
-        boolean success = true;
+        File folder = new File(Util.FOLDER_SD_PICTURES_IMAGES);
+        File folderSent = new File(Util.FOLDER_SD_PICTURES_IMAGES_SENT);
+        boolean success = false;
+        boolean successSent = false;
         if (!folder.exists()) {
             success = folder.mkdirs();
-        }else{
-            Logger.d("Folder already created:" +folder.getAbsolutePath());
-        }
-        if (success) {
-            // Do something on success
-            Logger.d("Folder successfully created:" +folder.getAbsolutePath());
         } else {
-            Logger.d("Folder creation failed: "+folder.getAbsolutePath());
+            Logger.d("Folder already created:" + folder.getAbsolutePath());
         }
+        if (!folderSent.exists()) {
+            successSent = folderSent.mkdirs();
+        } else {
+            Logger.d("Folder already created:" + folderSent.getAbsolutePath());
+        }
+        if (success && successSent) {
+            // Do something on success
+            Logger.d("Folders successfully created:" + folder.getAbsolutePath() + "\n" + folderSent.getAbsolutePath());
+        } else {
+            Logger.d("Folder creation failed: " + folder.getAbsolutePath() + "\n" + folderSent.getAbsolutePath());
+        }
+        //endregion
     }
 }

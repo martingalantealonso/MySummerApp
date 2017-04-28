@@ -2,6 +2,7 @@ package com.example.mgalante.mysummerapp.views.main.Fragment4Gallery;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,9 +31,12 @@ import butterknife.ButterKnife;
 
 public class FragmentGallery extends Fragment implements FragmentGalleryContract.View, ClickListenerGallery {
 
+    private static final String KEY_RECYCLER_STATE = "mGalleryRecyclerView";
     private DatabaseReference mImagesDatabaseReference;
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private FragmentGalleryPresenter mFragmentGalleryPresenter;
+    private static Bundle mBundleRecyclerViewState;
+
 
     @BindView(R.id.gallery_recycler_view)
     RecyclerView mGalleryRecyclerView;
@@ -62,15 +66,25 @@ public class FragmentGallery extends Fragment implements FragmentGalleryContract
         mFragmentGalleryPresenter.attach(getContext(), this);
 
         updateDatabaseImages();
-
         startLoadingImages();
 
         return view;
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        // save RecyclerView state
+        mBundleRecyclerViewState = new Bundle();
+        Parcelable listState = mGalleryRecyclerView.getLayoutManager().onSaveInstanceState();
+        mBundleRecyclerViewState.putParcelable(KEY_RECYCLER_STATE, listState);
+
+    }
+
     private void updateDatabaseImages() {
         mFragmentGalleryPresenter.updateDatabaseImages();
     }
+
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -107,6 +121,7 @@ public class FragmentGallery extends Fragment implements FragmentGalleryContract
         mGalleryRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mGalleryRecyclerView.setAdapter(galleryRecyclerViewAdapter);
     }
+
 
     @Override
     public void setPresenter(FragmentGalleryContract.Presenter presenter) {

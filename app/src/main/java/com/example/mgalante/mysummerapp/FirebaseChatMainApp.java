@@ -6,6 +6,7 @@ import com.example.mgalante.mysummerapp.utils.Util;
 import com.orhanobut.logger.Logger;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.io.File;
 
@@ -27,6 +28,8 @@ public class FirebaseChatMainApp extends Application {
         // Fabric.with(this, new Crashlytics());
 
         FlowManager.init(new FlowConfig.Builder(this).build());
+
+        this.initializeLeakDetection();
 
         //region App Folders creation
         //File folder = new File(Environment.getExternalStorageDirectory() + "/yourDirectoryName");
@@ -51,5 +54,14 @@ public class FirebaseChatMainApp extends Application {
             Logger.d("Folder creation failed: " + folder.getAbsolutePath() + "\n" + folderSent.getAbsolutePath());
         }
         //endregion
+    }
+
+    private void initializeLeakDetection(){
+        if(BuildConfig.DEBUG){
+            if(LeakCanary.isInAnalyzerProcess(this)){
+                return;
+            }
+            LeakCanary.install(this);
+        }
     }
 }

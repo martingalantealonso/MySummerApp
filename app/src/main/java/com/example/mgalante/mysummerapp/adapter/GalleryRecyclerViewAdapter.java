@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.mgalante.mysummerapp.R;
@@ -161,41 +162,41 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
                 }
 
                 //Glide.with(context).load(imageModel.getFileModel().getUrl_file()).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
-                Glide.with(context).load(filePath).asBitmap().thumbnail(0.1f) // display the original image reduced to 10% of the size
-                        .into(new SimpleTarget<Bitmap>() {
+                Glide.with(context).load(filePath).asBitmap().thumbnail(0.1f)// display the original image reduced to 10% of the size
+                        .skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(new SimpleTarget<Bitmap>() {
 
-                            @Override
-                            public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                //TODO STORE IF REQUIRED
-                                //CacheStore.getInstance().saveCacheFile(uid, resource);
-                                ivGalleryPhoto.setImageBitmap(resource);
+                    @Override
+                    public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        //TODO STORE IF REQUIRED
+                        //CacheStore.getInstance().saveCacheFile(uid, resource);
+                        ivGalleryPhoto.setImageBitmap(resource);
 
-                                if (downloadImage) {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
+                        if (downloadImage) {
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
 
-                                            File file = new File(
-                                                    Util.FOLDER_SD_PICTURES_IMAGES
-                                                            + imageModel.getFileModel().getName_file());
-                                            try {
-                                                file.createNewFile();
-                                                FileOutputStream ostream = new FileOutputStream(file);
-                                                resource.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
-                                                ostream.close();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }).start();
+                                    File file = new File(
+                                            Util.FOLDER_SD_PICTURES_IMAGES
+                                                    + imageModel.getFileModel().getName_file());
+                                    try {
+                                        file.createNewFile();
+                                        FileOutputStream ostream = new FileOutputStream(file);
+                                        resource.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+                                        ostream.close();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
                                 }
-                            }
+                            }).start();
+                        }
+                    }
 
-                            @Override
-                            public void onLoadFailed(Exception e, Drawable errorDrawable) {
+                    @Override
+                    public void onLoadFailed(Exception e, Drawable errorDrawable) {
 
-                            }
-                        });
+                    }
+                });
 //endregion
             }
             Logger.d("GlideImage loaded from: " + filePath);

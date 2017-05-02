@@ -10,15 +10,17 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.mgalante.mysummerapp.R;
@@ -26,26 +28,48 @@ import com.example.mgalante.mysummerapp.views.main.FullScreenGalleryImageActivit
 
 import java.io.File;
 
-public class MediaThumbMainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<Cursor>, MediaStoreAdapter.OnClickThumbListener {
+import butterknife.ButterKnife;
+
+public class MediaThumbMainActivity extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MediaStoreAdapter.OnClickThumbListener {
 
     private final static int READ_EXTERNAL_STORAGE_PERMMISSION_RESULT = 0;
     private final static int MEDIASTORE_LOADER_ID = 0;
     private RecyclerView mThumbnailRecyclerView;
     private MediaStoreAdapter mMediaStoreAdapter;
+    private static Bundle mBundleRecyclerViewState;
 
+
+    public MediaThumbMainActivity() {
+    }
+
+
+    public static MediaThumbMainActivity newInstance() {
+        Bundle args = new Bundle();
+        MediaThumbMainActivity mediaThumbMainActivity = new MediaThumbMainActivity();
+        mediaThumbMainActivity.setArguments(args);
+        return mediaThumbMainActivity;
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_media_thumb_main);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_media_thumb_main, container, false);
+        ButterKnife.bind(this, view);
+        setHasOptionsMenu(true);
 
-        mThumbnailRecyclerView = (RecyclerView) findViewById(R.id.thumbnailRecyclerView);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        StaggeredGridLayoutManager mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        mThumbnailRecyclerView = (RecyclerView) view.findViewById(R.id.thumbnailRecyclerView);
+
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
         mThumbnailRecyclerView.setLayoutManager(gridLayoutManager);
-        mMediaStoreAdapter = new MediaStoreAdapter(this);
+
+       /* StaggeredGridLayoutManager mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+        mThumbnailRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);*/
+        mMediaStoreAdapter = new MediaStoreAdapter(getActivity());
         mThumbnailRecyclerView.setAdapter(mMediaStoreAdapter);
 
         checkReadExternalStoragePermission();
+
+        return view;
     }
 
     @Override
@@ -55,7 +79,7 @@ public class MediaThumbMainActivity extends AppCompatActivity implements LoaderM
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     //Call cursor loader
                     // Toast.makeText(this, "Now have access to view thumbs", Toast.LENGTH_SHORT).show();
-                    getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
+                    getActivity().getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
                 }
                 break;
             default:
@@ -65,20 +89,20 @@ public class MediaThumbMainActivity extends AppCompatActivity implements LoaderM
 
     private void checkReadExternalStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
                     PackageManager.PERMISSION_GRANTED) {
                 // Start cursor loader
-                getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
+                getActivity().getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
             } else {
                 if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(this, "App needs to view thumbnails", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "App needs to view thumbnails", Toast.LENGTH_SHORT).show();
                 }
                 requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                         READ_EXTERNAL_STORAGE_PERMMISSION_RESULT);
             }
         } else {
             // Start cursor loader
-            getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
+            getActivity().getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
         }
     }
 
@@ -96,7 +120,7 @@ public class MediaThumbMainActivity extends AppCompatActivity implements LoaderM
         String selection = MediaStore.Images.Thumbnails.DATA + " like ? ";
 
         return new CursorLoader(
-                this,
+                getActivity(),
                 MediaStore.Files.getContentUri("external"),
                 projection,
                 selection,
@@ -118,7 +142,7 @@ public class MediaThumbMainActivity extends AppCompatActivity implements LoaderM
     @Override
     public void OnClickImage(Uri imageUri) {
         // Toast.makeText(MediaThumbMainActivity.this, "Image uri = " + imageUri.toString(), Toast.LENGTH_SHORT).show();
-        Intent fullScreenIntent = new Intent(this, FullScreenGalleryImageActivity.class);
+        Intent fullScreenIntent = new Intent(getActivity(), FullScreenGalleryImageActivity.class);
         fullScreenIntent.setData(imageUri);
         startActivity(fullScreenIntent);
     }

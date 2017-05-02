@@ -141,8 +141,10 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                         .setRequestCode(LOUVRE_REQUEST_CODE)
                                         .setMaxSelection(10)
                                         .open();*/
-                                Intent intentGallery = new Intent(getApplicationContext(), MediaThumbMainActivity.class);
-                                startActivity(intentGallery);
+                                /*Intent intentGallery = new Intent(getApplicationContext(), MediaThumbMainActivity.class);
+                                startActivity(intentGallery);*/
+                                fragment = new MediaThumbMainActivity();
+                                fragmentTransaction = true;
                                 break;
                             case R.id.menu_opcion_1:
                                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);

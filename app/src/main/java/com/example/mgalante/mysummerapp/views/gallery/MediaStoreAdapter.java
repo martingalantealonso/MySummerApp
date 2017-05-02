@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.mgalante.mysummerapp.R;
@@ -29,7 +30,7 @@ public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.Vi
     }
     public MediaStoreAdapter(Activity activity) {
         this.mActivity = activity;
-        this.mOnClickThumbListener = (OnClickThumbListener)activity;
+        //this.mOnClickThumbListener = (OnClickThumbListener)activity;
     }
 
     @Override
@@ -69,7 +70,7 @@ public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.Vi
             mImageView.setOnClickListener(this);
         }
 
-        public ScrollParallaxImageView getImageView() {
+        public ImageView getImageView() {
             return mImageView;
         }
 
@@ -143,7 +144,7 @@ public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.Vi
 
         switch (mMediaStoreCursor.getInt(mediaTypeIndex)) {
             case MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE:
-                mOnClickThumbListener.OnClickImage(mediaUri);
+               // mOnClickThumbListener.OnClickImage(mediaUri);
                 break;
             case MediaStore.Files.FileColumns.MEDIA_TYPE_VIDEO:
                 mOnClickThumbListener.OnClickVideo(mediaUri);

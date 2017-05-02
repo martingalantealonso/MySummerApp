@@ -94,6 +94,15 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+
+
+        <activity
+            android:name="com.andremion.louvre.home.GalleryActivity"
+            android:theme="@style/AppTheme.Louvre.Dark" />
+        <activity
+            android:name="com.andremion.louvre.preview.PreviewActivity"
+            android:theme="@style/AppTheme.Louvre.Preview" />
+
     </application>
 
 </manifest>

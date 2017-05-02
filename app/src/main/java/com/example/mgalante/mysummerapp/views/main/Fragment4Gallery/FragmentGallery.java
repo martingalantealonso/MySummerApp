@@ -36,6 +36,7 @@ public class FragmentGallery extends Fragment implements FragmentGalleryContract
     private StaggeredGridLayoutManager mStaggeredGridLayoutManager;
     private FragmentGalleryPresenter mFragmentGalleryPresenter;
     private static Bundle mBundleRecyclerViewState;
+    GalleryRecyclerViewAdapter galleryRecyclerViewAdapter;
 
 
     @BindView(R.id.gallery_recycler_view)
@@ -56,7 +57,7 @@ public class FragmentGallery extends Fragment implements FragmentGalleryContract
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.fragment_gallery, container, false);
+        View view = inflater.inflate(R.layout.fragment_gallery_old, container, false);
         ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
@@ -64,6 +65,10 @@ public class FragmentGallery extends Fragment implements FragmentGalleryContract
             mFragmentGalleryPresenter = new FragmentGalleryPresenter();
         }
         mFragmentGalleryPresenter.attach(getContext(), this);
+
+        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
+
+        galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(getContext(), mImagesDatabaseReference, FirebaseAuth.getInstance().getCurrentUser().getUid(), this);
 
         updateDatabaseImages();
         startLoadingImages();
@@ -113,10 +118,6 @@ public class FragmentGallery extends Fragment implements FragmentGalleryContract
 
 
     private void startLoadingImages() {
-
-        mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(4, LinearLayoutManager.VERTICAL);
-
-        final GalleryRecyclerViewAdapter galleryRecyclerViewAdapter = new GalleryRecyclerViewAdapter(getContext(), mImagesDatabaseReference, FirebaseAuth.getInstance().getCurrentUser().getUid(), this);
 
         mGalleryRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
         mGalleryRecyclerView.setAdapter(galleryRecyclerViewAdapter);

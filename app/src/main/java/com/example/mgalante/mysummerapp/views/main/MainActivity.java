@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.andremion.louvre.Louvre;
 import com.bumptech.glide.Glide;
 import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
@@ -54,6 +55,7 @@ import static com.example.mgalante.mysummerapp.utils.UsersPhotos.addUserImageToC
 
 public class MainActivity extends BaseActivity implements GetUsersContract.View, GetCurrentUserContract.View {
 
+    private static final int LOUVRE_REQUEST_CODE = 1;
     private GetCurrentUserPresenter mGetCurrentUserPresenter;
     private GetUsersPresenter mGetUsersPresenter;
 
@@ -133,8 +135,12 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_seccion_4:
-                                fragment = fragmentGallery;
-                                fragmentTransaction = true;
+                                /*fragment = fragmentGallery;
+                                fragmentTransaction = true;*/
+                                Louvre.init(MainActivity.this)
+                                        .setRequestCode(LOUVRE_REQUEST_CODE)
+                                        .setMaxSelection(10)
+                                        .open();
                                 break;
                             case R.id.menu_opcion_1:
                                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);

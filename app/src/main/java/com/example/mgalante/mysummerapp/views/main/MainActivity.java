@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.andremion.louvre.Louvre;
 import com.bumptech.glide.Glide;
 import com.example.mgalante.mysummerapp.FirebaseChatMainApp;
 import com.example.mgalante.mysummerapp.R;
@@ -34,6 +33,7 @@ import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.utils.Constants;
 import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
 import com.example.mgalante.mysummerapp.utils.Util;
+import com.example.mgalante.mysummerapp.views.gallery.MediaThumbMainActivity;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
 import com.example.mgalante.mysummerapp.views.main.Fragment4Gallery.FragmentGallery;
@@ -137,10 +137,12 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                             case R.id.menu_seccion_4:
                                 /*fragment = fragmentGallery;
                                 fragmentTransaction = true;*/
-                                Louvre.init(MainActivity.this)
+                              /*  Louvre.init(MainActivity.this)
                                         .setRequestCode(LOUVRE_REQUEST_CODE)
                                         .setMaxSelection(10)
-                                        .open();
+                                        .open();*/
+                                Intent intentGallery = new Intent(getApplicationContext(), MediaThumbMainActivity.class);
+                                startActivity(intentGallery);
                                 break;
                             case R.id.menu_opcion_1:
                                 Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);

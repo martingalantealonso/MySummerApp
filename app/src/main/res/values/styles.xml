@@ -70,13 +70,13 @@
     </style>
 
 
-    <style name="AppTheme.Louvre.Dark" parent="Louvre.Theme.Dark">
+  <!--  <style name="AppTheme.Louvre.Dark" parent="Louvre.Theme.Dark">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
     <style name="AppTheme.Louvre.Preview" parent="Louvre.Theme.Preview">
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
+    </style>-->
 
 </resources>

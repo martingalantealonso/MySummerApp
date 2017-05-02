@@ -69,12 +69,29 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
+    // okhttp
+    // event bus
+
+
+    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
+        transitive = true;
+    }
+
+
+    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
+    compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+
+    //region LeakCanary
+    debugCompile "com.squareup.leakcanary:leakcanary-android:${leakCanary}"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanary}"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanary}"
+    //endregion
+
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.1'
     compile 'com.android.support:gridlayout-v7:25.3.1'
-    testCompile 'junit:junit:4.12'
     compile 'com.jakewharton:butterknife:8.5.1'
-    apt 'com.jakewharton:butterknife-compiler:8.5.1'
     compile 'com.google.firebase:firebase-messaging:10.2.1'
     compile 'com.google.firebase:firebase-database:10.2.1'
     compile 'com.google.firebase:firebase-auth:10.2.1'
@@ -87,35 +104,16 @@ dependencies {
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.github.clans:fab:1.6.4'
-    // okhttp
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    // event bus
     compile 'org.greenrobot:eventbus:3.0.0'
-
     compile 'me.himanshusoni.chatmessageview:chat-message-view:1.0.7'
-
     compile 'com.android.support:palette-v7:25.3.1'
-
     compile 'ru.egslava:blurredview:1.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.7@aar') {
-        transitive = true;
-    }
-
     compile 'com.gjiazhe:scrollparallaximageview:1.0'
-
-    apt "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
-    compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
-    compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
-
     compile 'com.orhanobut:logger:1.15'
-
-    //region LeakCanary
-    debugCompile "com.squareup.leakcanary:leakcanary-android:${leakCanary}"
-    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanary}"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanary}"
-    //endregion
-
-    compile 'com.github.andremion:louvre:1.0.1'
+    //compile 'com.github.andremion:louvre:1.0.1'
+    testCompile 'junit:junit:4.12'
+    apt 'com.jakewharton:butterknife-compiler:8.5.1'
 }
 
 

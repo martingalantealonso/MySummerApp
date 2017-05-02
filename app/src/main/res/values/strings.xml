@@ -199,5 +199,7 @@
     <string name="settings_storage">Storage</string>
     <string name="settings_save_gallery_images">Save Gallery Images</string>
     <string name="settings_save_chat_images">Save Chat Images</string>
+    <string name="img_description">img_description</string>
+    <string name="img_original_description">original_description</string>
 
 </resources>

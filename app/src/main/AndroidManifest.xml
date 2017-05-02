@@ -35,9 +35,7 @@
 
         <activity
             android:name=".views.main.MainActivity"
-            android:windowSoftInputMode="adjustPan">
-
-        </activity>
+            android:windowSoftInputMode="adjustPan"></activity>
         <activity
             android:name=".views.splash.SplashActivity"
             android:theme="@style/AppTheme.ActionBar.Transparent">
@@ -94,15 +92,18 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-
-
+        <!-- <activity
+             android:name="com.andremion.louvre.home.GalleryActivity"
+             android:theme="@style/AppTheme.Louvre.Dark" />
+         <activity
+             android:name="com.andremion.louvre.preview.PreviewActivity"
+             android:theme="@style/AppTheme.Louvre.Preview" />-->
         <activity
-            android:name="com.andremion.louvre.home.GalleryActivity"
-            android:theme="@style/AppTheme.Louvre.Dark" />
-        <activity
-            android:name="com.andremion.louvre.preview.PreviewActivity"
-            android:theme="@style/AppTheme.Louvre.Preview" />
+            android:name=".views.gallery.MediaThumbMainActivity"
+            android:theme="@style/AppTheme" />
 
+        <activity android:name=".views.main.FullScreenGalleryImageActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

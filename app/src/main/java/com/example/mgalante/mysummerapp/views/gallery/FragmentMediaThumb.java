@@ -30,7 +30,7 @@ import java.io.File;
 
 import butterknife.ButterKnife;
 
-public class MediaThumbMainActivity extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MediaStoreAdapter.OnClickThumbListener {
+public class FragmentMediaThumb extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MediaStoreAdapter.OnClickThumbListener {
 
     private final static int READ_EXTERNAL_STORAGE_PERMMISSION_RESULT = 0;
     private final static int MEDIASTORE_LOADER_ID = 0;
@@ -39,16 +39,16 @@ public class MediaThumbMainActivity extends Fragment implements LoaderManager.Lo
     private static Bundle mBundleRecyclerViewState;
 
 
-    public MediaThumbMainActivity() {
+    public FragmentMediaThumb() {
     }
 
 
-    public static MediaThumbMainActivity newInstance() {
+   /* public static MediaThumbMainActivity newInstance() {
         Bundle args = new Bundle();
         MediaThumbMainActivity mediaThumbMainActivity = new MediaThumbMainActivity();
         mediaThumbMainActivity.setArguments(args);
         return mediaThumbMainActivity;
-    }
+    }*/
 
     @Nullable
     @Override
@@ -59,7 +59,7 @@ public class MediaThumbMainActivity extends Fragment implements LoaderManager.Lo
 
         mThumbnailRecyclerView = (RecyclerView) view.findViewById(R.id.thumbnailRecyclerView);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 3);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
         mThumbnailRecyclerView.setLayoutManager(gridLayoutManager);
 
        /* StaggeredGridLayoutManager mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);

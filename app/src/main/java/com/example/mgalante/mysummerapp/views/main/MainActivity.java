@@ -33,7 +33,7 @@ import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.utils.Constants;
 import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
 import com.example.mgalante.mysummerapp.utils.Util;
-import com.example.mgalante.mysummerapp.views.gallery.MediaThumbMainActivity;
+import com.example.mgalante.mysummerapp.views.gallery.FragmentMediaThumb;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
 import com.example.mgalante.mysummerapp.views.main.Fragment4Gallery.FragmentGallery;
@@ -143,7 +143,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                         .open();*/
                                 /*Intent intentGallery = new Intent(getApplicationContext(), MediaThumbMainActivity.class);
                                 startActivity(intentGallery);*/
-                                fragment = new MediaThumbMainActivity();
+                                fragment = new FragmentMediaThumb();
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_opcion_1:

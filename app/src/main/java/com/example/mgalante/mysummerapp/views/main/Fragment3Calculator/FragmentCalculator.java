@@ -571,7 +571,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                         userModel.setPaymentsSum(userModel.getPaymentsSum() + Double.parseDouble(mPaymentAmount.getText().toString()));
                     }
 
-                    Util.updateUserToDatabase(getActivity(), userModel,paymentSum);
+                    Util.updateUserToDatabase(getActivity(), userModel, paymentSum);
 
                     mPaymentAmount.setText("");
                     mPaymentTitle.setText("");
@@ -659,7 +659,9 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         } else {
             userModel.setPaymentsSum(userModel.getPaymentsSum() + Double.parseDouble(mPaymentAmount.getText().toString()));
         }
-        Util.updateUserToDatabase(getActivity(), userModel,paymentSum);
+        Util.updateUserToDatabase(getActivity(), userModel, paymentSum);
+
+        Snackbar.make(getView(), getString(R.string.payment_success), Snackbar.LENGTH_LONG).show();
 
         mPaymentAmount.setText("");
         mPaymentTitle.setText("");

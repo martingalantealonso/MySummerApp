@@ -299,6 +299,11 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
 
     }
 
+    @Override
+    public void onGetAllUsersPayments(Double payments) {
+
+    }
+
     public void addFireUserToDatabase(Context context, final FirebaseUser firebaseUser) {
         User user = new User(firebaseUser.getUid(), firebaseUser.getDisplayName(), String.valueOf(firebaseUser.getPhotoUrl()),
                 new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN));

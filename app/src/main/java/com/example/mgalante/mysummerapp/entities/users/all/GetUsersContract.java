@@ -17,21 +17,28 @@ public interface GetUsersContract {
 
         void onGetAllUsersFailure(String message);
 
+        void onGetAllUsersPayments(Double payments);
+
     }
 
     interface Presenter {
         void getAllUsers();
+
+        void getAllUsersPayments();
     }
 
     interface Interactor {
         void getAllUsersFromFirebase();
 
+        void getAllUsersPaymentsFromFirebase();
     }
 
     interface OnGetAllUsersListener {
         void onGetAllUsersSuccess(List<User> users);
 
         void onGetAllUsersFailure(String message);
+
+        void onGetAllUsersPayments(Double payments);
     }
 
 }

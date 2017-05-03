@@ -26,6 +26,12 @@ public class GetUsersPresenter implements GetUsersContract.Presenter, GetUsersCo
     }
 
     @Override
+    public void getAllUsersPayments() {
+        mGetUsersInteractor.getAllUsersPaymentsFromFirebase();
+    }
+
+
+    @Override
     public void onGetAllUsersSuccess(List<User> users) {
         mView.onGetAllUsersSuccess(users);
     }
@@ -33,5 +39,10 @@ public class GetUsersPresenter implements GetUsersContract.Presenter, GetUsersCo
     @Override
     public void onGetAllUsersFailure(String message) {
         mView.onGetAllUsersFailure(message);
+    }
+
+    @Override
+    public void onGetAllUsersPayments(Double payments) {
+        mView.onGetAllUsersPayments(payments);
     }
 }

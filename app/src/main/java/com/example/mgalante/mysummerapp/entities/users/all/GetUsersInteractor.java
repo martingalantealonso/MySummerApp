@@ -57,4 +57,31 @@ public class GetUsersInteractor implements GetUsersContract.Interactor {
         });
     }
 
+    @Override
+    public void getAllUsersPaymentsFromFirebase() {
+        FirebaseDatabase.getInstance().getReference().child(Constants.ARG_USERS).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Iterator<DataSnapshot> dataSnapshots = dataSnapshot.getChildren().iterator();
+                List<User> users = new ArrayList<>();
+                while (dataSnapshots.hasNext()) {
+                    DataSnapshot dataSnapshotChild = dataSnapshots.next();
+                    User user = dataSnapshotChild.getValue(User.class);
+                    users.add(user);
+
+                }
+                Double paymentsSum = 0.0;
+                for (User user : users) {
+                    paymentsSum = paymentsSum + user.getPaymentsSum();
+                }
+                mOnGetAllUsersListener.onGetAllUsersPayments(paymentsSum);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                //mOnGetAllUsersListener.onGetAllUsersFailure(databaseError.getMessage());
+            }
+        });
+    }
+
 }

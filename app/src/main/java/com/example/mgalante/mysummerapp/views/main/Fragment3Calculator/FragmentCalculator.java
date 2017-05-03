@@ -467,15 +467,16 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         for (User user : users) {
             totalPaymentSum = totalPaymentSum + user.getPaymentsSum();
         }
-        try {
-            mTotalSumTextView.setText(String.valueOf(totalPaymentSum + paymentSum + "€"));
-        }catch (NullPointerException ex){
-            mTotalSumTextView.setVisibility(View.GONE);
-        }
+
     }
 
     @Override
     public void onGetAllUsersFailure(String message) {
+    }
+
+    @Override
+    public void onGetAllUsersPayments(Double payments) {
+        mTotalSumTextView.setText(String.valueOf(payments + "€"));
     }
 
     private void initializeUsers() {
@@ -483,6 +484,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         //With recyclerview adapter
         mGetCurrentUserPresenter.getCurrentUserPayments();
         mGetUsersPresenter.getAllUsers();
+        mGetUsersPresenter.getAllUsersPayments();
 
 
         // with firebaserecyclerview adapter
@@ -559,6 +561,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                 @Override
                 public void onSuccess(Void aVoid) {
                     mGetCurrentUserPresenter.getCurrentUserPayments();
+                    mGetUsersPresenter.getAllUsersPayments();
                 }
             });
         }

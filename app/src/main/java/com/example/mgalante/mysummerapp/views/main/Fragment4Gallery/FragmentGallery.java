@@ -119,7 +119,8 @@ public class FragmentGallery extends Fragment implements FragmentGalleryContract
 
     private void startLoadingImages() {
 
-        mGalleryRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
+        //mGalleryRecyclerView.setLayoutManager(mStaggeredGridLayoutManager);
+        mGalleryRecyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         mGalleryRecyclerView.setAdapter(galleryRecyclerViewAdapter);
     }
 

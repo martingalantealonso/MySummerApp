@@ -6,7 +6,6 @@ import com.example.mgalante.mysummerapp.utils.Util;
 import com.orhanobut.logger.Logger;
 import com.raizlabs.android.dbflow.config.FlowConfig;
 import com.raizlabs.android.dbflow.config.FlowManager;
-import com.squareup.leakcanary.LeakCanary;
 
 import java.io.File;
 
@@ -57,11 +56,12 @@ public class FirebaseChatMainApp extends Application {
     }
 
     private void initializeLeakDetection(){
-        if(BuildConfig.DEBUG){
+       /* if(BuildConfig.DEBUG){
             if(LeakCanary.isInAnalyzerProcess(this)){
                 return;
             }
             LeakCanary.install(this);
-        }
+        }*/
     }
+
 }

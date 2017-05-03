@@ -83,6 +83,7 @@ import static com.example.mgalante.mysummerapp.utils.Util.expand;
  * Created by mgalante on 31/03/17.
  */
 
+//TODO DELETE RECEIPT IMAGE(reference) AFTER UPLOAD IT
 public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView {
 
     private static final String TAG = "PantinCalculator";
@@ -113,6 +114,9 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     private StorageReference imageCameraRef;
     private StorageReference imageGalleryRef;
 
+    private Double paymentSum;
+    private Double totalPaymentSum;
+
     //region BindViews
     @BindView(R.id.calculator_main_holder)
     LinearLayout mMainHolder;
@@ -122,8 +126,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     LinearLayout mImageNameHolder;
     @BindView(R.id.llEditTextHolder)
     LinearLayout llTextHolder;
-    @BindView(R.id.calculator_txtv_spent)
-    TextView mSpentTextView;
     @BindView(R.id.calculator_user_photo)
     CircleImageView mUserPhoto;
     @BindView(R.id.user_list_detail)
@@ -134,6 +136,10 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     @BindView(R.id.backgroundViewShadow)
     View mBackgroundViewShadow;
 
+    @BindView(R.id.calculator_txtv_spent)
+    TextView mSpentTextView;
+    @BindView(R.id.calculator_txtv_total_sum)
+    TextView mTotalSumTextView;
     @BindView(R.id.input_payment_amount)
     TextInputLayout mtilPAmount;
     @BindView(R.id.input_payment_title)
@@ -433,7 +439,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     @Override
     public void onGetCurrentUserPaymentsSuccess(List<PaymentModel> payments) {
 
-        Double paymentSum = 0.0;
+        paymentSum = 0.0;
         for (PaymentModel payment : payments) {
             paymentSum = paymentSum + payment.getAmount();
         }
@@ -447,6 +453,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         Drawable horizontalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
         mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
+
     }
 
     @Override
@@ -456,6 +463,15 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         adapter = new UserListArrayAdapter(getContext(), this, users);
         mRecyclerView.setAdapter(adapter);
 
+        totalPaymentSum = 0.0;
+        for (User user : users) {
+            totalPaymentSum = totalPaymentSum + user.getPaymentsSum();
+        }
+        try {
+            mTotalSumTextView.setText(String.valueOf(totalPaymentSum + paymentSum + "€"));
+        }catch (NullPointerException ex){
+            mTotalSumTextView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -467,6 +483,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         //With recyclerview adapter
         mGetCurrentUserPresenter.getCurrentUserPayments();
         mGetUsersPresenter.getAllUsers();
+
 
         // with firebaserecyclerview adapter
         /*final PaymentsFirebaseAdapter paymentsFirebaseAdapter = new PaymentsFirebaseAdapter(getContext(), mPaymentsDatabaseReference, userModel.getUid(), this);

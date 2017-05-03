@@ -111,15 +111,48 @@
 
             </LinearLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/user_list_detail"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layoutManager="LinearLayoutManager"
-                app:stackFromEnd="true"
-                app:spanCount="2"
-                tools:listitem="@layout/fragment_user_resource" />
+                android:orientation="vertical">
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/user_list_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".1"
+                    app:layoutManager="LinearLayoutManager"
+                    app:spanCount="2"
+                    app:stackFromEnd="true"
+                    tools:listitem="@layout/fragment_user_resource" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight=".9"
+                    android:background="@android:color/black"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|end"
+                        android:text="Total: "
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/calculator_txtv_total_sum"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center|start"
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="24sp"
+                        tools:text="+sum" />
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -131,7 +164,7 @@
             android:background="@color/primary"
             android:gravity="top"
             android:orientation="vertical"
-            tools:visibility="visible">
+            tools:visibility="gone">
 
             <FrameLayout
                 android:layout_width="match_parent"

@@ -112,12 +112,13 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
                 MediaStore.Files.FileColumns._ID,
                 MediaStore.Files.FileColumns.DATE_ADDED,
                 MediaStore.Files.FileColumns.DATA,
-                MediaStore.Files.FileColumns.MEDIA_TYPE
+                MediaStore.Files.FileColumns.MEDIA_TYPE,
+                MediaStore.Files.FileColumns.DISPLAY_NAME
         };
-        String[] selectionArgs = new String[]{"%" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "PantinClassic/PantinGallery" + File.separator + "%"};
         /*String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;*/
         String selection = MediaStore.Images.Thumbnails.DATA + " like ? ";
+        String[] selectionArgs = new String[]{"%" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "PantinClassic/PantinGallery" + File.separator + "%"};
 
         return new CursorLoader(
                 getActivity(),

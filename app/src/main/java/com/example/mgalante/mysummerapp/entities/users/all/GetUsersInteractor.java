@@ -15,12 +15,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Author: Kartik Sharma
- * Created on: 9/2/2016 , 10:08 PM
- * Project: FirebaseChat
- */
-
 public class GetUsersInteractor implements GetUsersContract.Interactor {
     private static final String TAG = "GetUsersInteractor";
 

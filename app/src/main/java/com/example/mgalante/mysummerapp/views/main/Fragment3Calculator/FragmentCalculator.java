@@ -454,6 +454,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         horizontalDecoration.setDrawable(horizontalDivider);
         mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
 
+
+
     }
 
     @Override
@@ -641,7 +643,9 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     @Override
     public void onValuePushedSuccess() {
         Log.i(TAG, "HAAAAA!!");
-        mGetCurrentUserPresenter.getCurrentUserPayments();
+      /*  mGetCurrentUserPresenter.getCurrentUserPayments();
+        mGetUsersPresenter.getAllUsersPayments();*/
+      initializeUsers();
         filePathImageCamera = null;
     }
 

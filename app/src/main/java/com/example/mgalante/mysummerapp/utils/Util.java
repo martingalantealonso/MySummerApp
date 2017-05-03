@@ -66,7 +66,7 @@ public class Util {
         return "https://maps.googleapis.com/maps/api/staticmap?center=" + latitudeFinal + "," + longitudeFinal + "&zoom=18&size=280x280&markers=color:red|" + latitudeFinal + "," + longitudeFinal;
     }*/
 
-    public static void updateUserToDatabase(Context context, User firebaseUser) {
+    public static void updateUserToDatabase(Context context, User firebaseUser, Double paymentSum) {
         User user = new User(firebaseUser.getUid(), firebaseUser.getName(),
                 firebaseUser.getPhotoUrl(),
                 new SharedPrefUtil(context).getString(Constants.ARG_FIREBASE_TOKEN), firebaseUser.getPaymentsSum());

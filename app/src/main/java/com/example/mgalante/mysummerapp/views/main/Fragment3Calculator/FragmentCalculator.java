@@ -117,6 +117,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     private Double paymentSum;
     private Double totalPaymentSum;
 
+
     //region BindViews
     @BindView(R.id.calculator_main_holder)
     LinearLayout mMainHolder;
@@ -455,7 +456,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
 
 
-
     }
 
     @Override
@@ -479,6 +479,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     @Override
     public void onGetAllUsersPayments(Double payments) {
         mTotalSumTextView.setText(String.valueOf(payments + "€"));
+        totalPaymentSum = payments;
     }
 
     private void initializeUsers() {
@@ -562,38 +563,44 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             mPaymentsDatabaseReference.push().setValue(model).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void aVoid) {
-                    mGetCurrentUserPresenter.getCurrentUserPayments();
-                    mGetUsersPresenter.getAllUsersPayments();
-                }
-            });
-        }
 
-        // Sum payment to user
-        if (String.valueOf(userModel.getPaymentsSum()).equals("0.0")) {
-            userModel.setPaymentsSum(Double.parseDouble(mPaymentAmount.getText().toString()));
-        } else {
-            userModel.setPaymentsSum(userModel.getPaymentsSum() + Double.parseDouble(mPaymentAmount.getText().toString()));
-        }
-        Util.updateUserToDatabase(getActivity(), userModel);
-        //mGetCurrentUserPresenter.getCurrentUserPayments();
+                    // Sum payment to user
+                    if (String.valueOf(userModel.getPaymentsSum()).equals("0.0")) {
+                        userModel.setPaymentsSum(Double.parseDouble(mPaymentAmount.getText().toString()));
+                    } else {
+                        userModel.setPaymentsSum(userModel.getPaymentsSum() + Double.parseDouble(mPaymentAmount.getText().toString()));
+                    }
 
-        mPaymentAmount.setText("");
-        mPaymentTitle.setText("");
-        mPaymentDescription.setText("");
+                    Util.updateUserToDatabase(getActivity(), userModel,paymentSum);
 
-        Snackbar.make(getView(), getString(R.string.payment_success), Snackbar.LENGTH_LONG)
-                .setActionTextColor(getResources().getColor(R.color.snack_accent))
+                    mPaymentAmount.setText("");
+                    mPaymentTitle.setText("");
+                    mPaymentDescription.setText("");
+
+                    Snackbar.make(getView(), getString(R.string.payment_success), Snackbar.LENGTH_LONG)
+                            .setActionTextColor(getResources().getColor(R.color.snack_accent))
                /* .setAction(getString(R.string.cancel), new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         Log.i("Snackbar", "Pulsada acción snackbar!");
                     }
                 })*/
-                .show();
+                            .show();
+
+                    mGetCurrentUserPresenter.getCurrentUserPayments();
+                    mGetUsersPresenter.getAllUsersPayments();
+
+                    adapter.notifyDataSetChanged();
+                }
+            });
+        }
+
+
+        //mGetCurrentUserPresenter.getCurrentUserPayments();
+
 
         hidePaymentView(llTextHolder.getRight(), llTextHolder.getTop());
 
-        adapter.notifyDataSetChanged();
 
     }
 
@@ -645,8 +652,23 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         Log.i(TAG, "HAAAAA!!");
       /*  mGetCurrentUserPresenter.getCurrentUserPayments();
         mGetUsersPresenter.getAllUsersPayments();*/
-      initializeUsers();
+
+        // Sum payment to user
+        if (String.valueOf(userModel.getPaymentsSum()).equals("0.0")) {
+            userModel.setPaymentsSum(Double.parseDouble(mPaymentAmount.getText().toString()));
+        } else {
+            userModel.setPaymentsSum(userModel.getPaymentsSum() + Double.parseDouble(mPaymentAmount.getText().toString()));
+        }
+        Util.updateUserToDatabase(getActivity(), userModel,paymentSum);
+
+        mPaymentAmount.setText("");
+        mPaymentTitle.setText("");
+        mPaymentDescription.setText("");
+
+        initializeUsers();
+
         filePathImageCamera = null;
+
     }
 
 }

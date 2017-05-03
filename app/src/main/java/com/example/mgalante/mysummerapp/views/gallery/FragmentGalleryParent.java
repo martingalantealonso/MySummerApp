@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.mgalante.mysummerapp.R;
-import com.example.mgalante.mysummerapp.views.main.FragmentMain;
+import com.example.mgalante.mysummerapp.views.main.Fragment4Gallery.FragmentGallery;
 
 /**
  * Created by mgalante on 3/05/17.
@@ -53,7 +53,7 @@ public class FragmentGalleryParent extends Fragment {
                 return FragmentMediaThumb.newInstance();
             }
 
-            return FragmentMain.newInstance();
+            return FragmentGallery.newInstance();
 
         }
 

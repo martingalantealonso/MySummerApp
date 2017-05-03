@@ -32,8 +32,10 @@ import butterknife.ButterKnife;
 
 public class FragmentMediaThumb extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>, MediaStoreAdapter.OnClickThumbListener {
 
+    private final static String LOG_TAG = "FragmentMedia";
     private final static int READ_EXTERNAL_STORAGE_PERMMISSION_RESULT = 0;
     private final static int MEDIASTORE_LOADER_ID = 0;
+    public static final int POSITION_KEY = 1;
     private RecyclerView mThumbnailRecyclerView;
     private MediaStoreAdapter mMediaStoreAdapter;
     private static Bundle mBundleRecyclerViewState;
@@ -43,12 +45,12 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
     }
 
 
-   /* public static MediaThumbMainActivity newInstance() {
+    public static FragmentMediaThumb newInstance() {
         Bundle args = new Bundle();
-        MediaThumbMainActivity mediaThumbMainActivity = new MediaThumbMainActivity();
+        FragmentMediaThumb mediaThumbMainActivity = new FragmentMediaThumb();
         mediaThumbMainActivity.setArguments(args);
         return mediaThumbMainActivity;
-    }*/
+    }
 
     @Nullable
     @Override
@@ -69,8 +71,10 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
 
         checkReadExternalStoragePermission();
 
+
         return view;
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

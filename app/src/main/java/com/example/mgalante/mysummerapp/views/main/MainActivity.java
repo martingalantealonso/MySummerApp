@@ -33,7 +33,7 @@ import com.example.mgalante.mysummerapp.utils.CacheStore;
 import com.example.mgalante.mysummerapp.utils.Constants;
 import com.example.mgalante.mysummerapp.utils.SharedPrefUtil;
 import com.example.mgalante.mysummerapp.utils.Util;
-import com.example.mgalante.mysummerapp.views.gallery.FragmentMediaThumb;
+import com.example.mgalante.mysummerapp.views.gallery.FragmentGalleryParent;
 import com.example.mgalante.mysummerapp.views.main.Fragment2Chat.FragmentChat;
 import com.example.mgalante.mysummerapp.views.main.Fragment3Calculator.FragmentCalculator;
 import com.example.mgalante.mysummerapp.views.main.Fragment4Gallery.FragmentGallery;
@@ -66,6 +66,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
     private FragmentChat fragmentChat;
     private FragmentCalculator fragmentCalculator;
     private FragmentGallery fragmentGallery;
+    private FragmentGalleryParent fragmentGalleryParent;
 
     Fragment fragment;
 
@@ -87,6 +88,7 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         fragmentChat = new FragmentChat();
         fragmentCalculator = new FragmentCalculator();
         fragmentGallery = new FragmentGallery();
+        fragmentGalleryParent = new FragmentGalleryParent();
 
         mGetCurrentUserPresenter = new GetCurrentUserPresenter(this);
         mGetUsersPresenter = new GetUsersPresenter(this);
@@ -143,7 +145,9 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
                                         .open();*/
                                 /*Intent intentGallery = new Intent(getApplicationContext(), MediaThumbMainActivity.class);
                                 startActivity(intentGallery);*/
-                                fragment = new FragmentMediaThumb();
+
+                                //fragment = new FragmentMediaThumb();
+                                fragment = fragmentGalleryParent;
                                 fragmentTransaction = true;
                                 break;
                             case R.id.menu_opcion_1:

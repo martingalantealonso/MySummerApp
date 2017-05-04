@@ -1,12 +1,15 @@
 package com.example.mgalante.mysummerapp.views.filemanager;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -71,7 +74,7 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
             displayFinishDialog("Please, sing in the application");
         } else {
-            userModel=new User();
+            userModel = new User();
             userModel.setName(FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
             userModel.setPhotoUrl(String.valueOf(FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl()));
             userModel.setUid(FirebaseAuth.getInstance().getCurrentUser().getUid());
@@ -193,6 +196,7 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
          */
         private static final String ARG_SECTION_NUMBER = "section_number";
         private static final String ARG_SECTION_IMAGE = "section_image";
+        private static final String ARG_SECTION_IMAGE_NAME = "section_image_name";
 
         public PlaceholderFragment() {
         }
@@ -215,8 +219,9 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_file_manager, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+            //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             textView.setText(getArguments().getString(ARG_SECTION_IMAGE));
+            textView.setText(getRealPathFromUri(getContext(), Uri.parse(getArguments().getString(ARG_SECTION_IMAGE))));
             //final TouchImageView imageHolder = (TouchImageView) rootView.findViewById(R.id.touch_image_view);
             final ImageView imageHolder = (ImageView) rootView.findViewById(R.id.touch_image_view);
            /* Glide.with(this).load(Uri.parse(getArguments().getString(ARG_SECTION_IMAGE)))
@@ -245,6 +250,21 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
             //Picasso.with(getContext()).load(Uri.parse(getArguments().getString(ARG_SECTION_IMAGE))).into(imageHolder);
 
             return rootView;
+        }
+
+        public String getRealPathFromUri(Context context, Uri contentUri) {
+            Cursor cursor = null;
+            try {
+                String[] proj = {MediaStore.Images.Media.DATA};
+                cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
+                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                cursor.moveToFirst();
+                return cursor.getString(column_index);
+            } finally {
+                if (cursor != null) {
+                    cursor.close();
+                }
+            }
         }
     }
 

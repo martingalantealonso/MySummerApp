@@ -2,10 +2,11 @@ package com.example.mgalante.mysummerapp.views.filemanager;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.format.DateFormat;
@@ -33,8 +34,6 @@ import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-
-import static android.R.attr.resource;
 
 /**
  * Created by mgalante on 25/04/17.
@@ -162,7 +161,6 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
             });
         }
     }
-
 
     @Override
     public void onPushValueSuccess() {

@@ -194,7 +194,7 @@
     <string name="coming_soon">Settings coming soon! :)\n\n
 
     For now, you can try to change your user profile photo</string>
-    <string name="title_activity_file_manager">FileManagerActivity</string>
+    <string name="title_activity_file_manager">Pantín Classic</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="settings_storage">Storage</string>
     <string name="settings_save_gallery_images">Save Gallery Images</string>

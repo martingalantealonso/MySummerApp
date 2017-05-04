@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerGallery;
 import com.example.mgalante.mysummerapp.adapter.GalleryRecyclerViewAdapter;
+import com.example.mgalante.mysummerapp.entities.ImageModel;
 import com.example.mgalante.mysummerapp.views.main.FullScreenImageActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -114,6 +115,11 @@ public class FragmentGallery extends Fragment implements FragmentGalleryContract
         intent.putExtra("urlPhotoClick", urlPhotoClick);
 
         startActivity(intent);
+    }
+
+    @Override
+    public void clickIconDownload(View view, int position, ImageModel imageModel) {
+
     }
 
 

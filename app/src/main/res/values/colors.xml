@@ -20,6 +20,9 @@
     <color name="colorWhite" >#ffffff</color>
     <color name="colorIconColor" >#757575</color>
     <color name="snack_accent" >#ff7663</color>
+    <color name="colorIconColorWhite">#FFF</color>
+    <color name="pale_icon_half_alpha">#4dFFFFFF</color>
+
 
 
 </resources>

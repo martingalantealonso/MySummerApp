@@ -98,4 +98,6 @@ public class FragmentGalleryPresenter implements FragmentGalleryContract.Present
 
         }*/
     }
+
+
 }

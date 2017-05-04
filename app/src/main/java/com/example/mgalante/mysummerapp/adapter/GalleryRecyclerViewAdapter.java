@@ -3,7 +3,11 @@ package com.example.mgalante.mysummerapp.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
+import android.support.annotation.DrawableRes;
+import android.support.graphics.drawable.AnimatedVectorDrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,7 +84,14 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
         public void onClick(View v) {
             int position = getAdapterPosition();
             ImageModel file = getItem(position);
-            mClickListenerGallery.clickImageGallery(v, position, file.getUserModel().getName(), file.getUserModel().getPhotoUrl(), file.getFileModel().getUrl_file());
+            switch (v.getId()) {
+                case R.id.ivItemGridImage:
+                    mClickListenerGallery.clickImageGallery(v, position, file.getUserModel().getName(), file.getUserModel().getPhotoUrl(), file.getFileModel().getUrl_file());
+                    break;
+                case R.id.item_image_image_icon:
+                    mClickListenerGallery.clickIconDownload(v, position, file);
+                    break;
+            }
         }
 
         public void setIvGalleryPhoto(final ImageModel imageModel) {
@@ -91,9 +102,8 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
             // 1º IF IMAGE WAS SENT BY USER
             if (imageModel.getUserModel().getUid().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-
                 //region sent by user
-                File file = new File(Util.FOLDER_SD_PICTURES_IMAGES_SENT + imageModel.getFileModel().getName_file());
+                final File file = new File(Util.FOLDER_SD_PICTURES_IMAGES_SENT + imageModel.getFileModel().getName_file());
                 // 1.1 SEARCH FOR IMAGE IN FILES
                 if (file.exists()) {
                     Logger.d("User File exists:" + file.getAbsolutePath());
@@ -115,27 +125,11 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
                             @Override
                             public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                //TODO STORE IF REQUIRED
                                 //CacheStore.getInstance().saveCacheFile(uid, resource);
                                 ivGalleryPhoto.setImageBitmap(resource);
                                 if (downloadImage) {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-                                            File file = new File(
-                                                    Util.FOLDER_SD_PICTURES_IMAGES_SENT
-                                                            + imageModel.getFileModel().getName_file());
-                                            try {
-                                                file.createNewFile();
-                                                FileOutputStream ostream = new FileOutputStream(file);
-                                                resource.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
-                                                ostream.close();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }).start();
+                                    new DownloadFileFromURL(Util.FOLDER_SD_PICTURES_IMAGES_SENT
+                                            + imageModel.getFileModel().getName_file(), resource).execute();
                                 }
                             }
 
@@ -145,13 +139,12 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
                             }
                         });
                 //endregion
-
             }
             // 2 IF IMAGE WASN'T SENT BY USER
             else {
                 //region No sent by user
                 // 2.1 SEARCH FOR IMAGE IN "App Folder" FILES
-                File file = new File(Util.FOLDER_SD_PICTURES_IMAGES + imageModel.getFileModel().getName_file());
+                final File file = new File(Util.FOLDER_SD_PICTURES_IMAGES + imageModel.getFileModel().getName_file());
                 if (file.exists()) {
                     // 2.1.1 IF EXIST -> DISPLAY
                     Logger.d("Non User File exists:" + file.getAbsolutePath());
@@ -180,25 +173,10 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
                                 ivGalleryPhoto.setImageBitmap(resource);
 
                                 if (downloadImage) {
-                                    new Thread(new Runnable() {
-                                        @Override
-                                        public void run() {
-
-                                            File file = new File(
-                                                    Util.FOLDER_SD_PICTURES_IMAGES
-                                                            + imageModel.getFileModel().getName_file());
-                                            try {
-                                                file.createNewFile();
-                                                FileOutputStream ostream = new FileOutputStream(file);
-                                                resource.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
-                                                ostream.close();
-                                            } catch (Exception e) {
-                                                e.printStackTrace();
-                                            }
-                                        }
-                                    }).start();
+                                    new DownloadFileFromURL(Util.FOLDER_SD_PICTURES_IMAGES + imageModel.getFileModel().getName_file(), resource).execute();
                                 }
                             }
+
 
                             @Override
                             public void onLoadFailed(Exception e, Drawable errorDrawable) {
@@ -207,11 +185,122 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
                         });
 //endregion
             }
+
             Logger.d("GlideImage loaded from: " + filePath);
 
             ivGalleryPhoto.setOnClickListener(this);
+
+            ivDownloadIcon.setOnClickListener(this);
+
+        }
+
+        private void swapAnimation(@DrawableRes int drawableResId) {
+
+            final Drawable avd = AnimatedVectorDrawableCompat.create(context, drawableResId);
+            ivDownloadIcon.setImageDrawable(avd);
+            ((Animatable) avd).start();
+        }
+
+
+        class DownloadFileFromURL extends AsyncTask<String, Bitmap, String> {
+
+            String filePath;
+            Bitmap resource;
+            Boolean success;
+
+            public DownloadFileFromURL(String s, Bitmap resource) {
+                this.filePath = s;
+                this.resource = resource;
+            }
+
+            /**
+             * Before starting background thread
+             */
+            @Override
+            protected void onPreExecute() {
+                super.onPreExecute();
+                System.out.println("Starting download");
+                swapAnimation(R.drawable.avd_downloading_begin);
+            }
+
+            /**
+             * Downloading file in background thread
+             */
+            @Override
+            protected String doInBackground(String... f_url) {
+                int count;
+                try {
+                    System.out.println("Downloading");
+
+
+                    //region code
+               /* URLConnection conection = url.openConnection();
+                conection.connect();
+                // getting file length
+                int lenghtOfFile = conection.getContentLength();
+
+                // input stream to read file - with 8k buffer
+                InputStream input = new BufferedInputStream(url.openStream(), 8192);
+
+                // Output stream to write file
+
+                OutputStream output = new         FileOutputStream(root+"/downloadedfile.jpg");
+                byte data[] = new byte[1024];
+
+                long total = 0;
+                while ((count = input.read(data)) != -1) {
+                    total += count;
+
+                    // writing data to file
+                    output.write(data, 0, count);
+
+                }
+
+                // flushing output
+                output.flush();
+
+                // closing streams
+                output.close();
+                input.close();*/
+
+                    //endregion
+
+                    File file = new File(filePath);
+                    try {
+                        success = file.createNewFile();
+                        FileOutputStream ostream = new FileOutputStream(file);
+                        resource.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+                        ostream.close();
+                        //  swapAnimation(R.drawable.avd_downloading_begin);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                } catch (Exception e) {
+                    Log.e("Error: ", e.getMessage());
+                }
+
+                return null;
+            }
+
+
+            /**
+             * After completing background task
+             **/
+            @Override
+            protected void onPostExecute(String file_url) {
+                System.out.println("Downloaded");
+                if (success) {
+                    swapAnimation(R.drawable.avd_downloading_finish);
+                    ivDownloadIcon.animate().alpha(0f).setDuration(5000).start();
+                }
+            }
+
         }
 
 
     }
+
+
 }

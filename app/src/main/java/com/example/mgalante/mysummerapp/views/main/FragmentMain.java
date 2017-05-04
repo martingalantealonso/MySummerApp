@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.adapter.ClickListenerGallery;
 import com.example.mgalante.mysummerapp.adapter.GalleryRecyclerViewAdapter;
+import com.example.mgalante.mysummerapp.entities.ImageModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -188,6 +189,11 @@ public class FragmentMain extends Fragment implements FragmentMainContract.View,
 
     @Override
     public void clickImageGallery(View view, int position, String nameUser, String urlPhotoUser, String urlPhotoClick) {
+
+    }
+
+    @Override
+    public void clickIconDownload(View view, int position, ImageModel imageModel) {
 
     }
 

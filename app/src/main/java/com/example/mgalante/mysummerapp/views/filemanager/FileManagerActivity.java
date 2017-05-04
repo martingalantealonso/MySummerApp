@@ -130,6 +130,7 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
             @Override
             public void onClick(View view) {
                 if (imageUris != null) {
+                    Toast.makeText(getApplicationContext(), getString(R.string.uploading_files), Toast.LENGTH_LONG).show();
                     for (Uri imageUir : imageUris) {
                         ImageModel imageModel = new ImageModel();
                         imageModel.setUserModel(userModel);
@@ -156,7 +157,7 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_file_manager, menu);
+       // getMenuInflater().inflate(R.menu.menu_file_manager, menu);
         return true;
     }
 

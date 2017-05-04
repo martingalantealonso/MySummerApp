@@ -132,7 +132,12 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
                         ImageModel imageModel = new ImageModel();
                         imageModel.setUserModel(userModel);
                         // presenter.sendFileFromGalleryTofirebase(storageRef, imageUir, mGalleryPhotosReference,);
+
+                        //*************************************************************************************************************
                         presenter.sendGalleryPhotoToFirebase(storageRef, imageUir, mGalleryPhotosReference, imageModel);
+                        // presenter.sendGalleryPhotoToFirebase(storageRef, Uri.parse(presenter.getRealPathFromUri(getApplicationContext(), Uri.parse(imageUir.getPath()))), mGalleryPhotosReference, imageModel);
+                        //*************************************************************************************************************
+
                     }
                 }
             }
@@ -220,12 +225,14 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
             View rootView = inflater.inflate(R.layout.fragment_file_manager, container, false);
             TextView textView = (TextView) rootView.findViewById(R.id.section_label);
             //textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+
+            //*************************************************************************************************************
             textView.setText(getArguments().getString(ARG_SECTION_IMAGE));
-            textView.setText(getRealPathFromUri(getContext(), Uri.parse(getArguments().getString(ARG_SECTION_IMAGE))));
+            // textView.setText(getRealPathFromUri(getContext(), Uri.parse(getArguments().getString(ARG_SECTION_IMAGE))));
+            //*************************************************************************************************************
+
             //final TouchImageView imageHolder = (TouchImageView) rootView.findViewById(R.id.touch_image_view);
             final ImageView imageHolder = (ImageView) rootView.findViewById(R.id.touch_image_view);
-           /* Glide.with(this).load(Uri.parse(getArguments().getString(ARG_SECTION_IMAGE)))
-                    .into(imageHolder);*/
 
             Glide.with(this).load(Uri.parse(getArguments().getString(ARG_SECTION_IMAGE))).asBitmap().fitCenter().into(new SimpleTarget<Bitmap>() {
 
@@ -245,9 +252,6 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
                     Log.e("Erro Glide", e.getMessage() + ": " + getArguments().getString(ARG_SECTION_IMAGE));
                 }
             });
-
-            //imageHolder.setImageURI(Uri.parse(getArguments().getString(ARG_SECTION_IMAGE)));
-            //Picasso.with(getContext()).load(Uri.parse(getArguments().getString(ARG_SECTION_IMAGE))).into(imageHolder);
 
             return rootView;
         }

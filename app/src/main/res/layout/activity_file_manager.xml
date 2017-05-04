@@ -41,12 +41,4 @@
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/vd_check" />
 
-    <ProgressBar
-        android:id="@+id/progressBar1"
-        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:indeterminate="true" />
-
-
 </android.support.design.widget.CoordinatorLayout>

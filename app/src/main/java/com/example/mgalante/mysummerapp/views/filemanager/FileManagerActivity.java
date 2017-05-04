@@ -184,7 +184,6 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
     @Override
     public void onValuePushedSuccess() {
 
-
     }
 
     @Override

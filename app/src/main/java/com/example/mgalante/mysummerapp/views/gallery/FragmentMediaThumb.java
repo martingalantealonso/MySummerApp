@@ -121,9 +121,10 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
         };
         /*String selection = MediaStore.Files.FileColumns.MEDIA_TYPE + "="
                 + MediaStore.Files.FileColumns.MEDIA_TYPE_IMAGE;*/
-        String selection = MediaStore.Images.Thumbnails.DATA + " like ? ";
-        String[] selectionArgs = new String[]{"%" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "PantinClassic/PantinGallery" + File.separator + "%"};
-
+        //String selection = MediaStore.Images.Thumbnails.DATA + " like ? ";
+        String selection = MediaStore.Images.Thumbnails.DATA + " like ? or " + MediaStore.Images.Thumbnails.DATA + " like ?";
+        String[] selectionArgs = new String[]{"%" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "PantinClassic/PantinGallery" + File.separator + "%",
+                "%" + Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + File.separator + "PantinClassic/PantinGallery/sent" + File.separator + "%"};
         return new CursorLoader(
                 getActivity(),
                 MediaStore.Files.getContentUri("external"),
@@ -132,6 +133,7 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
                 selectionArgs,
                 MediaStore.Files.FileColumns.DATE_ADDED + " DESC"
         );
+
     }
 
     @Override

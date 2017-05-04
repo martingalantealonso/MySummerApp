@@ -83,9 +83,9 @@ dependencies {
     compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
 
     //region LeakCanary
-    debugCompile "com.squareup.leakcanary:leakcanary-android:${leakCanary}"
+   /* debugCompile "com.squareup.leakcanary:leakcanary-android:${leakCanary}"
     releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanary}"
-    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanary}"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanary}"*/
     //endregion
 
     compile 'com.android.support:appcompat-v7:25.3.1'

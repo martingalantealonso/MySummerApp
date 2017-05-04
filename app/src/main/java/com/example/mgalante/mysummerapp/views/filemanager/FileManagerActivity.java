@@ -35,6 +35,7 @@ import com.example.mgalante.mysummerapp.R;
 import com.example.mgalante.mysummerapp.entities.ImageModel;
 import com.example.mgalante.mysummerapp.entities.users.User;
 import com.example.mgalante.mysummerapp.utils.Util;
+import com.example.mgalante.mysummerapp.views.main.MainActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -132,18 +133,21 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
                     for (Uri imageUir : imageUris) {
                         ImageModel imageModel = new ImageModel();
                         imageModel.setUserModel(userModel);
-                        // presenter.sendFileFromGalleryTofirebase(storageRef, imageUir, mGalleryPhotosReference,);
 
                         //*************************************************************************************************************
+                        // presenter.sendFileFromGalleryTofirebase(storageRef, imageUir, mGalleryPhotosReference,);
                         presenter.sendGalleryPhotoToFirebase(storageRef, imageUir, mGalleryPhotosReference, imageModel);
-
                         //presenter.sendGalleryPhotoToFirebase(storageRef, Uri.parse(presenter.getRealPathFromUri(imageUir.getPath())), mGalleryPhotosReference, imageModel);
-
                         // presenter.sendGalleryPhotoToFirebase(storageRef, Uri.parse(presenter.getRealPathFromUri(getApplicationContext(), Uri.parse(imageUir.getPath()))), mGalleryPhotosReference, imageModel);
                         //*************************************************************************************************************
 
                     }
                 }
+
+                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
+                finish();
             }
         });
 
@@ -178,6 +182,7 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
 
     @Override
     public void onValuePushedSuccess() {
+
 
     }
 

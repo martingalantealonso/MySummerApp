@@ -26,7 +26,6 @@
         android:layout_marginStart="@dimen/default_small_margin"
         android:layout_weight=".8"
         android:gravity="center"
-        android:text="File name: this is the name of the file"
         android:textColor="@color/colorWhite"
         tools:text="File name: this is the name of the file" />
 
@@ -36,7 +35,8 @@
         android:layout_height="match_parent"
         android:layout_weight=".2"
         android:src="@drawable/vd_file_download"
-        tools:src="@drawable/vd_file_download" />
+        tools:src="@drawable/vd_file_download"
+        android:visibility="invisible"/>
 
 
 </LinearLayout>

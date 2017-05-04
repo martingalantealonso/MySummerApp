@@ -3,6 +3,7 @@ package com.example.mgalante.mysummerapp.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
@@ -29,6 +30,8 @@ import com.orhanobut.logger.Logger;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
 
 /**
  * Created by mgalante on 20/04/17.
@@ -44,7 +47,7 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
 
     public GalleryRecyclerViewAdapter(Context context, DatabaseReference ref, String uid, ClickListenerGallery mClickListenerGallery) {
-        super(ImageModel.class, R.layout.item_image, GalleryRecyclerViewAdapter.MyGalleryViewHolder.class, ref);
+        super(ImageModel.class, R.layout.item_image_v2, GalleryRecyclerViewAdapter.MyGalleryViewHolder.class, ref);
         this.context = context;
         this.userId = uid;
         this.mClickListenerGallery = mClickListenerGallery;
@@ -129,7 +132,7 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
                                 ivGalleryPhoto.setImageBitmap(resource);
                                 if (downloadImage) {
                                     new DownloadFileFromURL(Util.FOLDER_SD_PICTURES_IMAGES_SENT
-                                            + imageModel.getFileModel().getName_file(), resource).execute();
+                                            + imageModel.getFileModel().getName_file(), imageModel.getFileModel().getUrl_file()).execute();
                                 }
                             }
 
@@ -173,7 +176,7 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
                                 ivGalleryPhoto.setImageBitmap(resource);
 
                                 if (downloadImage) {
-                                    new DownloadFileFromURL(Util.FOLDER_SD_PICTURES_IMAGES + imageModel.getFileModel().getName_file(), resource).execute();
+                                    new DownloadFileFromURL(Util.FOLDER_SD_PICTURES_IMAGES + imageModel.getFileModel().getName_file(), imageModel.getFileModel().getUrl_file()).execute();
                                 }
                             }
 
@@ -205,10 +208,10 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
         class DownloadFileFromURL extends AsyncTask<String, Bitmap, String> {
 
             String filePath;
-            Bitmap resource;
+            String resource;
             Boolean success;
 
-            public DownloadFileFromURL(String s, Bitmap resource) {
+            public DownloadFileFromURL(String s, String resource) {
                 this.filePath = s;
                 this.resource = resource;
             }
@@ -267,11 +270,20 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
                     File file = new File(filePath);
                     try {
+
+                        java.net.URL url = new java.net.URL(resource);
+                        HttpURLConnection connection = (HttpURLConnection) url
+                                .openConnection();
+                        connection.setDoInput(true);
+                        connection.connect();
+                        InputStream input = connection.getInputStream();
+                        Bitmap myBitmap = BitmapFactory.decodeStream(input);
+
                         success = file.createNewFile();
                         FileOutputStream ostream = new FileOutputStream(file);
-                        resource.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
+                        myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, ostream);
                         ostream.close();
-                        //  swapAnimation(R.drawable.avd_downloading_begin);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -1,5 +1,6 @@
 package com.example.mgalante.mysummerapp.views.filemanager;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -118,7 +119,7 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
                                         public void run() {
 
                                             File file = new File(
-                                                   Util.FOLDER_SD_PICTURES_IMAGES_SENT
+                                                    Util.FOLDER_SD_PICTURES_IMAGES_SENT
                                                             + imageModel.getFileModel().getName_file());
                                             try {
                                                 file.createNewFile();
@@ -142,8 +143,11 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
 
                     Logger.i("onSuccess sendFileFirebase");
                     Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                    //*************************************************************************************************************
                     //FileModel fileModel = new FileModel("img", downloadUrl.toString(), name, "");
-                    final FileModel fileModel = new FileModel("img", downloadUrl.toString(), file.getLastPathSegment(), "");
+                    //final FileModel fileModel = new FileModel("img", downloadUrl.toString(), file.getLastPathSegment(), "");
+                    final FileModel fileModel = new FileModel("img", downloadUrl.toString(), getRealPathFromUri(String.valueOf(file)), "");
+                    //*************************************************************************************************************
                     imageModel.setFileModel(fileModel);
                     imageModel.setTimeStamp(String.valueOf(Calendar.getInstance().getTime().getTime()));
                     final String key = databaseReference.child(databaseReference.getKey()).push().getKey();
@@ -166,7 +170,7 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
     public String getRealPathFromUri(Context context, Uri contentUri) {
         Cursor cursor = null;
         try {
-            String[] proj = { MediaStore.Images.Media.DATA };
+            String[] proj = {MediaStore.Images.Media.DATA};
             cursor = context.getContentResolver().query(contentUri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
@@ -176,6 +180,24 @@ public class FileManagerPresenter implements FileManagerContract.Presenter, File
                 cursor.close();
             }
         }
+    }
+
+    @Override
+    public String getRealPathFromUri(String uri) {
+        String fileName = Uri.parse(uri).getLastPathSegment();
+        ContentResolver cr = mContext.getContentResolver();
+        String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
+        Cursor metaCursor = cr.query(Uri.parse(uri), projection, null, null, null);
+        if (metaCursor != null) {
+            try {
+                if (metaCursor.moveToFirst()) {
+                    fileName = metaCursor.getString(0);
+                }
+            } finally {
+                metaCursor.close();
+            }
+        }
+        return fileName;
     }
 
 

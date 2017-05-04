@@ -1,6 +1,7 @@
 package com.example.mgalante.mysummerapp.views.filemanager;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -135,6 +136,9 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
 
                         //*************************************************************************************************************
                         presenter.sendGalleryPhotoToFirebase(storageRef, imageUir, mGalleryPhotosReference, imageModel);
+
+                        //presenter.sendGalleryPhotoToFirebase(storageRef, Uri.parse(presenter.getRealPathFromUri(imageUir.getPath())), mGalleryPhotosReference, imageModel);
+
                         // presenter.sendGalleryPhotoToFirebase(storageRef, Uri.parse(presenter.getRealPathFromUri(getApplicationContext(), Uri.parse(imageUir.getPath()))), mGalleryPhotosReference, imageModel);
                         //*************************************************************************************************************
 
@@ -228,6 +232,9 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
 
             //*************************************************************************************************************
             textView.setText(getArguments().getString(ARG_SECTION_IMAGE));
+
+
+            textView.setText(getRealPathFromUri());
             // textView.setText(getRealPathFromUri(getContext(), Uri.parse(getArguments().getString(ARG_SECTION_IMAGE))));
             //*************************************************************************************************************
 
@@ -269,6 +276,23 @@ public class FileManagerActivity extends AppCompatActivity implements FileManage
                     cursor.close();
                 }
             }
+        }
+
+        public String getRealPathFromUri() {
+            String fileName = "";
+            ContentResolver cr = getActivity().getContentResolver();
+            String[] projection = {MediaStore.MediaColumns.DISPLAY_NAME};
+            Cursor metaCursor = cr.query(Uri.parse(getArguments().getString(ARG_SECTION_IMAGE)), projection, null, null, null);
+            if (metaCursor != null) {
+                try {
+                    if (metaCursor.moveToFirst()) {
+                        fileName = metaCursor.getString(0);
+                    }
+                } finally {
+                    metaCursor.close();
+                }
+            }
+            return fileName;
         }
     }
 

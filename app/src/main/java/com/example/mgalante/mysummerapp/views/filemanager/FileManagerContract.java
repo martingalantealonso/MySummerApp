@@ -31,6 +31,8 @@ public interface FileManagerContract {
         void sendGalleryPhotoToFirebase(StorageReference storageReference, Uri file, final DatabaseReference databaseReference,  final ImageModel imageModel);
 
         String getRealPathFromUri(Context context, Uri contentUri);
+
+        String getRealPathFromUri(String uri);
     }
 
     interface OnFileSentToFirebaseListener{

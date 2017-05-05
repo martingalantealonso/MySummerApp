@@ -274,6 +274,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
                 if (mPaymentsDetailHolder.getVisibility() == View.GONE) {
                     mBackgroundViewShadow.animate().alpha(1.0f);
                     expand(mPaymentsDetailHolder);
+
                 } else {
                     mBackgroundViewShadow.animate().alpha(0.0f);
                     collapse(mPaymentsDetailHolder);
@@ -545,7 +546,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mRecyclerView.setAdapter(userListAdapter);*/
     }
 
-    private void initializeManagers(){
+    private void initializeManagers() {
         mStaggeredLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
         //mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL); // 2 -> number of columns
 
@@ -557,8 +558,43 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         SnapHelper helper = new LinearSnapHelper();
         helper.attachToRecyclerView(mRecyclerView);
+
         SnapHelper helper2 = new LinearSnapHelper();
         helper2.attachToRecyclerView(mRecyclerViewPayments);
+
+    /*    LinearSnapHelper snapHelper = new LinearSnapHelper() {
+            @Override
+            public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
+                View centerView = findSnapView(layoutManager);
+                if (centerView == null)
+                    return RecyclerView.NO_POSITION;
+
+                int position = layoutManager.getPosition(centerView);
+                int targetPosition = -1;
+                if (layoutManager.canScrollHorizontally()) {
+                    if (velocityX < 0) {
+                        targetPosition = position - 1;
+                    } else {
+                        targetPosition = position + 1;
+                    }
+                }
+
+                if (layoutManager.canScrollVertically()) {
+                    if (velocityY < 0) {
+                        targetPosition = position - 1;
+                    } else {
+                        targetPosition = position + 1;
+                    }
+                }
+
+                final int firstItem = 0;
+                final int lastItem = layoutManager.getItemCount() - 1;
+                targetPosition = Math.min(lastItem, Math.max(targetPosition, firstItem));
+                return targetPosition;
+            }
+        };
+        snapHelper.attachToRecyclerView(mRecyclerViewPayments);*/
+
     }
 
     private void addPayment() {

@@ -185,7 +185,7 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
                             }
                         });
-//endregion
+                //endregion
             }
 
             Logger.d("GlideImage loaded from: " + filePath);

@@ -89,6 +89,8 @@ import static com.example.mgalante.mysummerapp.utils.Util.expand;
 //TODO DELETE RECEIPT IMAGE(reference) AFTER UPLOAD IT
 public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView, AppBarLayout.OnOffsetChangedListener {
 
+    //region Declarations
+
     private static final String TAG = "PantinCalculator";
     private static final int IMAGE_GALLERY_REQUEST = 1;
     private static final int IMAGE_CAMERA_REQUEST = 2;
@@ -121,6 +123,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     private Double paymentSum;
     private Double totalPaymentSum;
 
+    //endregion
 
     //region BindViews
     @BindView(R.id.calculator_main_holder)

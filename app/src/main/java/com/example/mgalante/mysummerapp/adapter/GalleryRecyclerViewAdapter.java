@@ -171,7 +171,6 @@ public class GalleryRecyclerViewAdapter extends FirebaseRecyclerAdapter<ImageMod
 
                             @Override
                             public void onResourceReady(final Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                                //TODO STORE IF REQUIRED
                                 //CacheStore.getInstance().saveCacheFile(uid, resource);
                                 ivGalleryPhoto.setImageBitmap(resource);
 

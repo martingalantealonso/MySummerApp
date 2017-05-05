@@ -13,13 +13,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
-import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -75,6 +75,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+import static android.R.attr.offset;
 import static android.app.Activity.RESULT_OK;
 import static com.example.mgalante.mysummerapp.utils.Util.collapse;
 import static com.example.mgalante.mysummerapp.utils.Util.expand;
@@ -84,7 +85,7 @@ import static com.example.mgalante.mysummerapp.utils.Util.expand;
  */
 
 //TODO DELETE RECEIPT IMAGE(reference) AFTER UPLOAD IT
-public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView {
+public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView, AppBarLayout.OnOffsetChangedListener {
 
     private static final String TAG = "PantinCalculator";
     private static final int IMAGE_GALLERY_REQUEST = 1;
@@ -105,6 +106,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     private LinearLayoutManager mLinearLayoutManager;
     private StaggeredGridLayoutManager mStaggeredLayoutManager;
     private StaggeredGridLayoutManager mStaggeredLayoutManagerPayments;
+    private GridLayoutManager mGridLayoutManagerPayments;
     private DatabaseReference mUsersDatabaseReference;
     private DatabaseReference mPaymentsDatabaseReference;
     private UserListArrayAdapter adapter;
@@ -133,6 +135,9 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     RecyclerView mRecyclerView;
     @BindView(R.id.user_payments_list_detail)
     RecyclerView mRecyclerViewPayments;
+
+    @BindView(R.id.main_appbar)
+    AppBarLayout mAppBarLayout;
 
     @BindView(R.id.backgroundViewShadow)
     View mBackgroundViewShadow;
@@ -192,8 +197,10 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_calculator, container, false);
+        View view = inflater.inflate(R.layout.experimental_fragment_calculator, container, false);
         ButterKnife.bind(this, view);
+
+        mAppBarLayout.addOnOffsetChangedListener(this);
 
         llTextHolder.setVisibility(View.INVISIBLE);
         isEditTextVisible = false;
@@ -225,9 +232,11 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         }
 
         mSpentTextView.setText(String.valueOf(prefs.getString(getString(R.string.payments_sum), "00.0") + "€"));
-        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        mStaggeredLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
         //mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL); // 2 -> number of columns
-        mStaggeredLayoutManagerPayments = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+        mStaggeredLayoutManagerPayments = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
+        mGridLayoutManagerPayments = new GridLayoutManager(getContext(),4,LinearLayoutManager.HORIZONTAL,false);
+        //mGridLayoutManagerPayments = new GridLayoutManager(getContext(),1);
 
         mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
 
@@ -446,15 +455,15 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         }
         mSpentTextView.setText(String.valueOf(String.format("%.2f", paymentSum) + "€"));
 
-        mRecyclerViewPayments.setLayoutManager(mStaggeredLayoutManagerPayments);
+        mRecyclerViewPayments.setLayoutManager(mGridLayoutManagerPayments);
+        //mRecyclerViewPayments.setLayoutManager(mGridLayoutManagerPayments);
         PaymentsListArrayAdapter adapter = new PaymentsListArrayAdapter(getContext(), payments);
         mRecyclerViewPayments.setAdapter(adapter);
-        DividerItemDecoration horizontalDecoration = new DividerItemDecoration(mRecyclerViewPayments.getContext(),
+     /*   DividerItemDecoration horizontalDecoration = new DividerItemDecoration(mRecyclerViewPayments.getContext(),
                 DividerItemDecoration.VERTICAL);
         Drawable horizontalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.horizontal_divider);
         horizontalDecoration.setDrawable(horizontalDivider);
-        mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
-
+        mRecyclerViewPayments.addItemDecoration(horizontalDecoration);*/
 
     }
 
@@ -673,4 +682,12 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     }
 
+    @Override
+    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+        int maxScroll = appBarLayout.getTotalScrollRange();
+        float percentage = (float) Math.abs(offset) / (float) maxScroll;
+
+        // handleAlphaOnTitle(percentage);
+        // handleToolbarTitleVisibility(percentage);
+    }
 }

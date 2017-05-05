@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Background -->
         <View
             android:id="@+id/backgroundViewShadow"
             android:layout_width="match_parent"
@@ -130,7 +131,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight=".9"
-                    android:background="@android:color/black"
+                    android:background="@color/primary_dark"
                     android:orientation="horizontal">
 
                     <TextView
@@ -139,7 +140,7 @@
                         android:layout_weight="1"
                         android:gravity="center|end"
                         android:text="Total: "
-                        android:textColor="@android:color/holo_red_light"
+                        android:textColor="@color/colorWhite"
                         android:textSize="24sp" />
 
                     <TextView
@@ -148,7 +149,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center|start"
-                        android:textColor="@android:color/holo_red_light"
+                        android:textColor="@color/colorWhite"
                         android:textSize="24sp"
                         tools:text="+sum" />
                 </LinearLayout>

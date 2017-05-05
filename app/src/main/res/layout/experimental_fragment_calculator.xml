@@ -23,8 +23,7 @@
             android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            >
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <FrameLayout
                 android:id="@+id/main.framelayout.title"
@@ -119,6 +118,15 @@
                         android:orientation="vertical"
                         android:visibility="gone">
 
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/my_payments"
+                            android:textAlignment="center"
+                            android:textColor="@color/colorWhite"
+                            android:visibility="gone" />
+
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/user_payments_list_detail"
                             android:layout_width="match_parent"
@@ -132,7 +140,8 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        tools:visibility="visible">
 
                         <android.support.v4.widget.NestedScrollView
                             android:layout_width="match_parent"
@@ -282,7 +291,7 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/title"
                         android:inputType="textCapSentences|textAutoComplete|textMultiLine"
-                        android:maxLength="40"
+                        android:maxLength="50"
                         android:textColor="@color/colorWhite"
                         android:theme="@style/EditTextTheme"
                         tools:text="Title" />
@@ -303,7 +312,6 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/description"
                         android:inputType="textCapSentences|textAutoComplete|textMultiLine"
-                        android:maxLength="100"
                         android:maxLines="5"
                         android:textColor="@color/colorWhite"
                         android:theme="@style/EditTextTheme"

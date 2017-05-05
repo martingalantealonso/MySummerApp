@@ -15,16 +15,18 @@
         app:columnCount="2">
 
         <View
-            android:layout_height="2dp"
             android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginBottom="10dp"
             android:background="@color/colorWhite"
             app:layout_columnSpan="2"
-            tools:text="Title"
-            android:layout_marginBottom="10dp"/>
+            tools:text="Title" />
 
         <TextView
             android:id="@+id/payment_detail_title"
             android:layout_width="0dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:textColor="@color/colorWhite"
             android:textSize="14sp"
             app:layout_columnWeight="3"
@@ -40,6 +42,8 @@
         <TextView
             android:id="@+id/payment_detail_description"
             android:layout_width="0dp"
+            android:ellipsize="end"
+            android:maxLines="3"
             android:textColor="@color/colorWhite"
             android:textSize="12sp"
             app:layout_columnWeight="3"

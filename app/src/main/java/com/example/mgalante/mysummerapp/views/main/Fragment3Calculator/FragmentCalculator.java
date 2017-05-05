@@ -411,7 +411,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         Toast.makeText(getContext(), user.toString(), Toast.LENGTH_SHORT).show();
     }
 
-    //region stupid things
+    //region stupid commented things
     /*
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {

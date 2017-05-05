@@ -203,5 +203,6 @@
     <string name="img_original_description">original_description</string>
     <string name="uploading_files">Uploading files</string>
     <string name="change_layout_manager">Display</string>
+    <string name="my_payments">My Payments</string>
 
 </resources>

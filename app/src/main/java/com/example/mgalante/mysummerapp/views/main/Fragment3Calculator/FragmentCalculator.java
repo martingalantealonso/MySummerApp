@@ -21,7 +21,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SnapHelper;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -232,13 +234,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         }
 
         mSpentTextView.setText(String.valueOf(prefs.getString(getString(R.string.payments_sum), "00.0") + "€"));
-        mStaggeredLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
-        //mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL); // 2 -> number of columns
-        mStaggeredLayoutManagerPayments = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
-        mGridLayoutManagerPayments = new GridLayoutManager(getContext(),4,LinearLayoutManager.HORIZONTAL,false);
-        //mGridLayoutManagerPayments = new GridLayoutManager(getContext(),1);
 
-        mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
+        initializeManagers();
 
         initializeUsers();
 
@@ -459,6 +456,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         //mRecyclerViewPayments.setLayoutManager(mGridLayoutManagerPayments);
         PaymentsListArrayAdapter adapter = new PaymentsListArrayAdapter(getContext(), payments);
         mRecyclerViewPayments.setAdapter(adapter);
+
      /*   DividerItemDecoration horizontalDecoration = new DividerItemDecoration(mRecyclerViewPayments.getContext(),
                 DividerItemDecoration.VERTICAL);
         Drawable horizontalDivider = ContextCompat.getDrawable(getActivity(), R.drawable.horizontal_divider);
@@ -542,6 +540,22 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
         mRecyclerView.setAdapter(userListAdapter);*/
+    }
+
+    private void initializeManagers(){
+        mStaggeredLayoutManager = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
+        //mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL); // 2 -> number of columns
+
+        mStaggeredLayoutManagerPayments = new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.HORIZONTAL);
+        mGridLayoutManagerPayments = new GridLayoutManager(getContext(), 4, LinearLayoutManager.HORIZONTAL, false);
+        //mGridLayoutManagerPayments = new GridLayoutManager(getContext(),1);
+
+        mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
+
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(mRecyclerView);
+        SnapHelper helper2 = new LinearSnapHelper();
+        helper2.attachToRecyclerView(mRecyclerViewPayments);
     }
 
     private void addPayment() {

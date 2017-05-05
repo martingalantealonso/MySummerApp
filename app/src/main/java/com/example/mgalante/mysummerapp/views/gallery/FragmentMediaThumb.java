@@ -19,6 +19,9 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -38,8 +41,12 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
     public static final int POSITION_KEY = 1;
     private RecyclerView mThumbnailRecyclerView;
     private MediaStoreAdapter mMediaStoreAdapter;
+    private GridLayoutManager gridLayoutManager;
     private static Bundle mBundleRecyclerViewState;
 
+    private boolean isListView;
+
+    private Menu menu;
 
     public FragmentMediaThumb() {
     }
@@ -61,7 +68,8 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
 
         mThumbnailRecyclerView = (RecyclerView) view.findViewById(R.id.thumbnailRecyclerView);
 
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
+        isListView = true;
+        gridLayoutManager = new GridLayoutManager(view.getContext(), 2);
         mThumbnailRecyclerView.setLayoutManager(gridLayoutManager);
 
        /* StaggeredGridLayoutManager mStaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL);
@@ -77,6 +85,23 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
 
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_media_thumb, menu);
+        this.menu = menu;
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.toogle_layout) {
+            toggle();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case READ_EXTERNAL_STORAGE_PERMMISSION_RESULT:
@@ -88,25 +113,6 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
                 break;
             default:
                 super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
-    }
-
-    private void checkReadExternalStoragePermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
-                    PackageManager.PERMISSION_GRANTED) {
-                // Start cursor loader
-                getActivity().getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
-            } else {
-                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                    Toast.makeText(getActivity(), "App needs to view thumbnails", Toast.LENGTH_SHORT).show();
-                }
-                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        READ_EXTERNAL_STORAGE_PERMMISSION_RESULT);
-            }
-        } else {
-            // Start cursor loader
-            getActivity().getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
         }
     }
 
@@ -160,5 +166,39 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
         videoPlayIntent.setData(videoUri);
         startActivity(videoPlayIntent);
 */
+    }
+
+    private void checkReadExternalStoragePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) ==
+                    PackageManager.PERMISSION_GRANTED) {
+                // Start cursor loader
+                getActivity().getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
+            } else {
+                if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                    Toast.makeText(getActivity(), "App needs to view thumbnails", Toast.LENGTH_SHORT).show();
+                }
+                requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        READ_EXTERNAL_STORAGE_PERMMISSION_RESULT);
+            }
+        } else {
+            // Start cursor loader
+            getActivity().getSupportLoaderManager().initLoader(MEDIASTORE_LOADER_ID, null, this);
+        }
+    }
+
+    private void toggle() {
+        MenuItem item = menu.findItem(R.id.toogle_layout);
+        if (isListView) {
+            gridLayoutManager.setSpanCount(2);
+            //item.setIcon(R.drawable.ic_action_list);
+            item.setTitle("Show as list");
+            isListView = false;
+        } else {
+            gridLayoutManager.setSpanCount(4);
+            //item.setIcon(R.drawable.ic_action_grid);
+            item.setTitle("Show as grid");
+            isListView = true;
+        }
     }
 }

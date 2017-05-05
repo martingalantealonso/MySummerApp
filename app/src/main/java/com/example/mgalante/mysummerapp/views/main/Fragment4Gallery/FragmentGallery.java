@@ -95,7 +95,6 @@ public class FragmentGallery extends Fragment implements FragmentGalleryContract
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_gallery, menu);
-
         super.onCreateOptionsMenu(menu, inflater);
     }
 

@@ -78,8 +78,6 @@ import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.app.Activity.RESULT_OK;
-import static com.example.mgalante.mysummerapp.utils.Util.collapse;
-import static com.example.mgalante.mysummerapp.utils.Util.expand;
 
 /**
  * Created by mgalante on 31/03/17.
@@ -121,6 +119,10 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
     private Double paymentSum;
     private Double totalPaymentSum;
+
+
+    boolean flag = true;
+
 
     //endregion
 
@@ -273,11 +275,16 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
                 if (mPaymentsDetailHolder.getVisibility() == View.GONE) {
                     mBackgroundViewShadow.animate().alpha(1.0f);
-                    expand(mPaymentsDetailHolder);
 
+                    mPaymentsDetailHolder.setVisibility(View.VISIBLE);
+
+                    //expand(mPaymentsDetailHolder);
                 } else {
                     mBackgroundViewShadow.animate().alpha(0.0f);
-                    collapse(mPaymentsDetailHolder);
+
+                    mPaymentsDetailHolder.setVisibility(View.GONE);
+
+                    //collapse(mPaymentsDetailHolder);
                 }
             }
         });

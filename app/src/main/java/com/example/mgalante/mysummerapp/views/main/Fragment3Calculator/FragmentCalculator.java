@@ -77,7 +77,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static android.R.attr.offset;
 import static android.app.Activity.RESULT_OK;
 import static com.example.mgalante.mysummerapp.utils.Util.collapse;
 import static com.example.mgalante.mysummerapp.utils.Util.expand;
@@ -87,7 +86,7 @@ import static com.example.mgalante.mysummerapp.utils.Util.expand;
  */
 
 //TODO DELETE RECEIPT IMAGE(reference) AFTER UPLOAD IT
-public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView, AppBarLayout.OnOffsetChangedListener {
+public class FragmentCalculator extends Fragment implements ClickListenerChatFirebase, GetUsersContract.View, GetCurrentUserContract.View, ClickListenerPayment, BaseView {
 
     //region Declarations
 
@@ -128,6 +127,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
     //region BindViews
     @BindView(R.id.calculator_main_holder)
     LinearLayout mMainHolder;
+    @BindView(R.id.users_detail_view)
+    LinearLayout mUsersDetailHolder;
     @BindView(R.id.payments_detail_view)
     LinearLayout mPaymentsDetailHolder;
     @BindView(R.id.calculator_image_name_holder)
@@ -205,7 +206,6 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         View view = inflater.inflate(R.layout.experimental_fragment_calculator, container, false);
         ButterKnife.bind(this, view);
 
-        mAppBarLayout.addOnOffsetChangedListener(this);
 
         llTextHolder.setVisibility(View.INVISIBLE);
         isEditTextVisible = false;
@@ -733,14 +733,5 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         filePathImageCamera = null;
 
-    }
-
-    @Override
-    public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
-        int maxScroll = appBarLayout.getTotalScrollRange();
-        float percentage = (float) Math.abs(offset) / (float) maxScroll;
-
-        // handleAlphaOnTitle(percentage);
-        // handleToolbarTitleVisibility(percentage);
     }
 }

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pantín</string>
+    <string name="MESSAGE">messages_debug</string>
+    <string name="USERS">users</string>
+    <string name="action_settings">Opciones</string>
+    <string name="add_payment">Añadir Pago</string>
+    <string name="amount">Cantidad</string>
+    <string name="cancel">Cancelar</string>
+    <string name="chat_seccion_1">Guardar Imagenes</string>
+    <string name="coming_soon"></string>
+    <string name="description"></string>
+    <string name="from_gallery">Desde Galeria</string>
+    <string name="from_camera">Desde Cámara</string>
+    <string name="menu_calculator_seccion_1">Añadir Pagos</string>
+    <string name="my_payments">Mis Pagos</string>
+    <string name="opcion_profile">Perfil</string>
+    <string name="opcion_sing_out">Cerrar Sesión</string>
+    <string name="otras_opciones"></string>
+    <string name="payment_success">Pago añadido</string>
+    <string name="seccion_1">Home</string>
+    <string name="seccion_3">Pagos</string>
+    <string name="seccion_4">Galería</string>
+    <string name="select_picture_title">Completar acción usando</string>
+    <string name="settings_save_chat_images">Guardar imagenes del Chat</string>
+    <string name="settings_save_gallery_images">Guardar imagenes de la Galería</string>
+    <string name="sign_in">Acceder</string>
+    <string name="seccion_2">Chat</string>
+</resources>

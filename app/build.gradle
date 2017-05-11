@@ -114,6 +114,9 @@ dependencies {
     //compile 'com.github.andremion:louvre:1.0.1'
     testCompile 'junit:junit:4.12'
     apt 'com.jakewharton:butterknife-compiler:8.5.1'
+
+    debugCompile 'com.amitshekhar.android:debug-db:1.0.0'
+
 }
 
 

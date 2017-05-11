@@ -4,9 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/grid_main_holder"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:background="@drawable/drw_pantin1">
+    tools:background="@drawable/drw_pantin1"
+    android:background="@drawable/gradient_shadow"
+    >
 
     <android.support.v7.widget.GridLayout
         android:layout_width="match_parent"

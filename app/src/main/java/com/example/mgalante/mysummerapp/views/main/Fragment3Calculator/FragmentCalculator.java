@@ -507,7 +507,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mGetUsersPresenter.getAllUsers();
         mGetUsersPresenter.getAllUsersPayments();
 
-
+        //region non sei que
         // with firebaserecyclerview adapter
         /*final PaymentsFirebaseAdapter paymentsFirebaseAdapter = new PaymentsFirebaseAdapter(getContext(), mPaymentsDatabaseReference, userModel.getUid(), this);
         paymentsFirebaseAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver(){
@@ -533,7 +533,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         mRecyclerViewPayments.addItemDecoration(horizontalDecoration);
         mGetUsersPresenter.getAllUsers();*/
 
-/*
+        /*
         final UserListAdapter userListAdapter = new UserListAdapter(getContext(), mUsersDatabaseReference, this);
         userListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -551,6 +551,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
 
         mRecyclerView.setLayoutManager(mStaggeredLayoutManager);
         mRecyclerView.setAdapter(userListAdapter);*/
+        //endregion non sei que
+
     }
 
     private void initializeManagers() {
@@ -569,7 +571,8 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
         SnapHelper helper2 = new LinearSnapHelper();
         helper2.attachToRecyclerView(mRecyclerViewPayments);
 
-    /*    LinearSnapHelper snapHelper = new LinearSnapHelper() {
+        //region non sei que
+        /*LinearSnapHelper snapHelper = new LinearSnapHelper() {
             @Override
             public int findTargetSnapPosition(RecyclerView.LayoutManager layoutManager, int velocityX, int velocityY) {
                 View centerView = findSnapView(layoutManager);
@@ -601,6 +604,7 @@ public class FragmentCalculator extends Fragment implements ClickListenerChatFir
             }
         };
         snapHelper.attachToRecyclerView(mRecyclerViewPayments);*/
+        //endregion
 
     }
 

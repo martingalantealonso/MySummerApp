@@ -83,6 +83,11 @@ public class MainActivity extends BaseActivity implements GetUsersContract.View,
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+/*
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }*/
 
         fragmentMain = new FragmentMain();
         fragmentChat = new FragmentChat();

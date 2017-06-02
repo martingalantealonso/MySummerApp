@@ -171,6 +171,7 @@
             </FrameLayout>
 
         </android.support.design.widget.CollapsingToolbarLayout>
+
     </android.support.design.widget.AppBarLayout>
 
     <!-- Calculate View -->

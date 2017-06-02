@@ -11,6 +11,7 @@ import android.support.annotation.NonNull;
 import android.transition.Fade;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
@@ -88,13 +89,14 @@ public class SplashActivity extends BaseActivity {
 
         setupWindowAnimations();
 
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Window w = getWindow();
+            w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
+        }*/
+
         //AuthUI.getInstance().signOut(this);
 
         makeVisibilityGone();
-
-
-        Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
-        mImageView.setAnimation(animFadeIn);
 
         mUsername = ANONYMOUS;
 
@@ -104,7 +106,17 @@ public class SplashActivity extends BaseActivity {
 
         mFirebaseRemoteConfig = FirebaseRemoteConfig.getInstance();
 
-        mAuthStateListener = new FirebaseAuth.AuthStateListener() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            onSignedInIntialize(user.getDisplayName());
+        }
+
+        Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
+        mImageView.setAnimation(animFadeIn);
+
+        mAuthStateListener = new FirebaseAuth.AuthStateListener()
+
+        {
             @Override
             public void onAuthStateChanged(@NonNull final FirebaseAuth firebaseAuth) {
 
@@ -146,9 +158,13 @@ public class SplashActivity extends BaseActivity {
                     }
                 }, 2000);
             }
-        };
+        }
 
-        mSignInButton.setOnClickListener(new View.OnClickListener() {
+        ;
+
+        mSignInButton.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 startActivityForResult(
@@ -178,7 +194,13 @@ public class SplashActivity extends BaseActivity {
 
     private void makeVisibilityVisible() {
         Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_in);
-        mSignInButton.setAnimation(animFadeIn);
+        Animation animScaleUp = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_up);
+        AnimationSet s = new AnimationSet(false);
+        s.addAnimation(animFadeIn);
+        s.addAnimation(animScaleUp);
+        s.addAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.translate_up));
+        //mSignInButton.setAnimation(animFadeIn);
+        mSignInButton.startAnimation(s);
         mSignInButton.setVisibility(View.VISIBLE);
         mEmailEdt.setAnimation(animFadeIn);
         //mEmailEdt.setVisibility(View.VISIBLE);
@@ -254,6 +276,7 @@ public class SplashActivity extends BaseActivity {
         Intent intent = new Intent(this, MainActivity.class);
         startActivityForResult(intent, RC_SIGNED);
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        finish();
     }
 
     public void addFireUserToDatabase(Context context, final FirebaseUser firebaseUser) {

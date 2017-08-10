@@ -44,6 +44,7 @@ import java.util.Arrays;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import pl.droidsonroids.gif.GifImageView;
 
 public class SplashActivity extends BaseActivity {
 
@@ -79,6 +80,8 @@ public class SplashActivity extends BaseActivity {
     EditText mPasswordEdt;
     @BindView(R.id.mainTitle)
     TextView mMainTitle;
+    @BindView(R.id.splash_background_gif)
+    GifImageView mGifBackgroundView;
 
 
     @Override
@@ -188,8 +191,6 @@ public class SplashActivity extends BaseActivity {
 
     private void makeVisibilityGone() {
         mSignInButton.setVisibility(View.GONE);
-        mEmailEdt.setVisibility(View.GONE);
-        mPasswordEdt.setVisibility(View.GONE);
     }
 
     private void makeVisibilityVisible() {

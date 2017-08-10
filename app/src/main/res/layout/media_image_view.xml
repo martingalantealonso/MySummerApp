@@ -3,23 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="@dimen/default_small_margin">
+    android:padding="1dp">
 
-     <com.gjiazhe.scrollparallaximageview.ScrollParallaxImageView
-         android:id="@+id/mediastoreImageView"
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:maxHeight="250dp"
-         android:adjustViewBounds="true"
-         tools:src="@drawable/drw_pantin1" />
-
-  <!--  <com.gjiazhe.scrollparallaximageview.ScrollParallaxImageView
+    <!--<com.gjiazhe.scrollparallaximageview.ScrollParallaxImageView
         android:id="@+id/mediastoreImageView"
         android:layout_width="match_parent"
-        android:layout_height="128dp"
-        android:cropToPadding="true"
-        android:foreground="?attr/selectableItemBackground"
-        android:scaleType="centerCrop"
+        android:layout_height="match_parent"
+        android:maxHeight="250dp"
+        android:adjustViewBounds="true"
         tools:src="@drawable/drw_pantin1" />-->
+
+    <ImageView
+        android:id="@+id/mediastoreImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="center"
+        tools:src="@drawable/drw_pantin1" />
+
+    <!--  <com.gjiazhe.scrollparallaximageview.ScrollParallaxImageView
+          android:id="@+id/mediastoreImageView"
+          android:layout_width="match_parent"
+          android:layout_height="128dp"
+          android:cropToPadding="true"
+          android:foreground="?attr/selectableItemBackground"
+          android:scaleType="centerCrop"
+          tools:src="@drawable/drw_pantin1" />-->
 
 </RelativeLayout>

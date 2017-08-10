@@ -4,86 +4,120 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".views.splash.SplashActivity">
 
     <!-- Background-->
 
-
-    <ImageView
-        android:id="@+id/splash_img_backgroud"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:contentDescription="@string/splas_himg_backgroud"
-        android:scaleType="centerCrop"
-        android:src="@drawable/drw_pantin1" />
+        android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/splash_img_backgroud"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/splas_himg_backgroud"
+            android:scaleType="centerCrop"
+            android:src="@drawable/drw_pantin1"
+            android:visibility="gone" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/gradient_splash_background_transparent_dark" />
+        <pl.droidsonroids.gif.GifImageView
+            android:id="@+id/splash_background_gif"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/splas_himg_backgroud"
+            android:src="@drawable/drw_back_splash_medium_monochrome"
+            android:scaleType="centerCrop"
+            />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_splash_background_transparent_dark" />
+
+    </FrameLayout>
     <!-- Body -->
 
-    <TextView
-        android:id="@+id/mainTitle"
+    <android.support.v7.widget.GridLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="62dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="@string/pantin_classic_2017"
-        android:textAlignment="center"
-        android:textColor="#ffffff"
-        android:textSize="36sp"
-        android:typeface="sans" />
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp"
+        app:columnCount="2">
 
-    <Button
-        android:id="@+id/sign_in_button_splash"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:layout_marginBottom="43dp"
-        android:background="@color/colorAccent"
-        android:text="@string/sign_in"
-        android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textColor="#ffffff" />
+        <TextView
+            android:id="@+id/mainTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-condensed"
+            android:text="@string/pantin_classic_2017"
+            android:textAlignment="center"
+            android:textColor="#ffffff"
+            android:textSize="36sp"
+            android:typeface="sans"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="1" />
 
-    <EditText
-        android:id="@+id/email"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/password"
-        android:layout_below="@+id/mainTitle"
-        android:layout_marginTop="54dp"
-        android:enabled="false"
-        android:hint="@string/email"
-        android:inputType="textEmailAddress"
-        android:maxLines="1"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white" />
+        <LinearLayout
+            android:orientation="vertical"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="1">
 
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/email"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:enabled="false"
-        android:focusableInTouchMode="true"
-        android:hint="@string/hint_password"
-        android:imeActionId="@+id/login"
-        android:imeOptions="actionUnspecified"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white" />
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="54dp"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:visibility="gone" />
 
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:focusableInTouchMode="true"
+                android:hint="@string/hint_password"
+                android:imeActionId="@+id/login"
+                android:imeOptions="actionUnspecified"
+                android:inputType="textPassword"
+                android:maxLines="1"
+                android:textColor="@android:color/white"
+                android:textColorHint="@android:color/white"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+        <android.support.v4.widget.Space app:layout_rowWeight="1" />
+
+        <Button
+            android:id="@+id/sign_in_button_splash"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
+            android:background="@color/colorAccent"
+            android:text="@string/sign_in"
+            android:textAppearance="@style/TextAppearance.AppCompat"
+            android:textColor="#ffffff"
+            app:layout_columnSpan="2"
+            app:layout_columnWeight="1"
+            app:layout_gravity="center" />
+
+        <!--       <com.google.android.gms.common.SignInButton
+                   android:id="@+id/sign_in_button_splash"
+                   android:layout_width="250dp"
+                   android:layout_height="wrap_content"
+                   android:layout_marginBottom="43dp"
+                   android:textAppearance="@style/TextAppearance.AppCompat"
+                   app:layout_columnSpan="2"
+                   app:layout_columnWeight="1"
+                   app:layout_gravity="center" />-->
+
+    </android.support.v7.widget.GridLayout>
 
 </RelativeLayout>

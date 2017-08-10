@@ -13,8 +13,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.mgalante.mysummerapp.R;
-import com.gjiazhe.scrollparallaximageview.ScrollParallaxImageView;
-import com.gjiazhe.scrollparallaximageview.parallaxstyle.VerticalMovingStyle;
 
 /**
  * Created by nigelhenshaw on 1/06/2016.
@@ -62,13 +60,14 @@ public class MediaStoreAdapter extends RecyclerView.Adapter<MediaStoreAdapter.Vi
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        private final ScrollParallaxImageView mImageView;
+        private final ImageView mImageView;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            mImageView = (ScrollParallaxImageView) itemView.findViewById(R.id.mediastoreImageView);
-            mImageView.setParallaxStyles(new VerticalMovingStyle()); // or other parallax styles
+            //mImageView = (ScrollParallaxImageView) itemView.findViewById(R.id.mediastoreImageView);
+            mImageView = (ImageView) itemView.findViewById(R.id.mediastoreImageView);
+            //mImageView.setParallaxStyles(new VerticalMovingStyle()); // or other parallax styles
             mImageView.setOnClickListener(this);
         }
 

@@ -77,6 +77,8 @@ public class FragmentMediaThumb extends Fragment implements LoaderManager.Loader
         mMediaStoreAdapter = new MediaStoreAdapter(getActivity());
         mThumbnailRecyclerView.setAdapter(mMediaStoreAdapter);
 
+        //mTwvGrid.setAdapter();
+
         checkReadExternalStoragePermission();
 
 

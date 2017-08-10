@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient_splash_background_transparent_dark"
-    tools:background="@drawable/gradient_splash_background_transparent_dark">
+    android:background="@drawable/gradient_splash_background_transparent_dark">
     <!-- android:background="@drawable/gradient_dark_shadow">-->
+    <!--android:background="@drawable/gradient_splash_background_transparent_dark"-->
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/thumbnailRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical" />
-
 
 </RelativeLayout>
